@@ -1,10 +1,11 @@
 <template>
-  <div :class="['comp-content', component.active ? 'active' : '']"
+  <div style="padding:10px;background:#fff" :class="['comp-content', component.active ? 'active' : '']"
        :style="getStyle">
-    <div class="swiper-container" :id="component.domId" :style="{width: width, height: height}">
+    <!-- <div class="swiper-container" :id="component.domId" :style="{width: width, height: height}"> -->
+    <div class="swiper-container" :id="component.domId">
       <div class="swiper-wrapper">
-        <div v-for="banner in banners" class="swiper-slide">
-          <img v-if="banner.val" :src="banner.val">
+        <div v-for="banner in banners" class="swiper-slide" :key="banner.key">
+          <img class="swiper-slide-img" v-if="banner.val" :src="banner.val">
           <div v-else class="image-placeholder"><i class="fa fa-caret-square-o-right"></i></div>
         </div>
       </div>
@@ -46,6 +47,7 @@
     watch: {
       component: {
         handler() {
+          console.log(123)
           this.banners = this.component.action.config
           this.pagination = this.component.base[1].val
           this.height = this.getMaxHeight()
@@ -56,6 +58,9 @@
         },
         deep: true
       }
+    },
+    created() {
+
     },
     methods: {
       getMaxHeight() {
@@ -87,16 +92,18 @@
 <style lang="scss" scoped>
   .swiper-container {
     width: 100%;
-
+    height: 150px;
     .swiper-slide {
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
-
+      border-radius: 8px;
+      overflow: hidden;
       > img {
         width: 100%;
         height: auto;
+        border-radius: 8px;
       }
     }
   }

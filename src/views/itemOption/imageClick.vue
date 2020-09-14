@@ -1,292 +1,170 @@
 <template>
-  <el-dialog id="imageClick"
-             title="图片跳转配置"
-             :close-on-click-modal="false"
-             :append-to-body="false"
-             :visible.sync="dialogShow"
-             @close="$emit('update:show', false)"
-             width="780px">
-    <el-row>
-      <el-col :span="12" style="text-align:center;width:375px;">
-        <div class="area-container" id="areaMap">
-          <img class="area-img" :src="img">
+  <div>
+    <template>
+      <div>
+        <div class="option-config-container">
+          <p class="comp-tips">最多可添加10个图片，图片大小不超过2M，拖动选中的图片可对其进 行排序</p>
         </div>
-        <!--拖动区域的模板-->
-        <div class="crop-box" id="cropBox-0" data-index="0"
-             style="display:none;width:225px;height:64px;left:0px;top:0px;">
-          <div class="crop-box-content"></div>
-          <span class="cropper-point point-e" data-direct="e"></span>
-          <span class="cropper-point point-n" data-direct="n"></span>
-          <span class="cropper-point point-w" data-direct="w"></span>
-          <span class="cropper-point point-s" data-direct="s"></span>
-          <span class="cropper-point point-ne" data-direct="ne"></span>
-          <span class="cropper-point point-nw" data-direct="nw"></span>
-          <span class="cropper-point point-sw" data-direct="sw"></span>
-          <span class="cropper-point point-se" data-direct="se"></span>
-        </div>
-      </el-col>
-      <el-col :span="12" class="form-right-list">
-        <el-form label-width="90px">
-          <template v-for="(area, idx) in areas">
-            <el-form-item :class="['small', current === idx ? 'edit' : '']"
-                          :data-index="idx" label="配置点击：">
-              <span :class="['right-list-span', area.click ? '' : 'warn' ]">
-                {{ area.click ? area.click.href : '尚未配置' }}</span>
-              <a class="right-list-a" v-if="idx > 0" @click="delArea(area, idx)"><i
-                class="el-icon-delete"></i></a>
-              <a class="right-list-a" @click="showClick(area, idx)"><i
-                class="el-icon-edit"></i></a>
+        <div class="line-options" style="margin-bottom:0;border-bottom:0">
+          <el-form>
+            <el-form-item>
+              <h4 style="margin:10px 0;color:#999">一行显示</h4>
+              <div>
+                <el-radio v-model="action.num" label="2">2张</el-radio>
+                <el-radio v-model="action.num" label="3">3张</el-radio>
+                <el-radio v-model="action.num" label="swiper">轮播图</el-radio>
+              </div>
             </el-form-item>
-          </template>
-        </el-form>
-      </el-col>
-    </el-row>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="dialogShow = false">确 定</el-button>
-    </div>
-  </el-dialog>
+          </el-form>
+        </div>
+        <div class="line-options" style="margin-top:0">
+          <el-form>
+            <el-form-item>
+              <h4 style="margin:10px 0;color:#999">内容样式</h4>
+              <div>
+                <el-radio v-model="action.displayType" label="space">留边</el-radio>
+                <el-radio v-model="action.displayType" label="fill">填充</el-radio>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="option-config-container">
+          <div
+            ref="itemlist"
+            class="option-container"
+            @dragstart="onDragStart"
+            @dragover="onDragOver"
+            @dragend="onDragEnd"
+          >
+            <div
+              class="form-list-panel"
+              style="margin-top: 0;margin-bottom:8px;"
+              v-for="(item, idx) in list"
+              :key="item.key"
+            >
+              <upload :index="idx" :item="item" @removeitem="removeItem"></upload>
+            </div>
+            <div class="add-option" style="height:50px">
+              <el-button type="text" icon="el-icon-plus" @click="addItem">添加图文</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
-  import dragArea from '@/utils/dragarea.js'
-  export default {
-    props: {
-      show: {
-        type: Boolean,
-        default: false
-      },
-      clicks: {
-        type: Array
-      },
-      img: {
-        type: String
+import util from "@/utils/util.js"
+import upload from "@/common/navUpload.vue"
+import compConfig from "@/config/comp.config.js"
+import { createUniqueString } from "@/utils/index"
+export default {
+  components: {
+    upload,
+  },
+  data() {
+    return {
+      list: this.items,
+      defaultConf: util.copyObj(compConfig["fenlei"]),
+      draging: null,
+      target: null
+    };
+  },
+  props: {
+    items: {
+      type: Array,
+    },
+    action: {
+      type: Object,
+      default: () => ({ display: 1 }),
+    },
+  },
+  methods: {
+    removeItem(index) {
+      console.log(index)
+      this.list.splice(index, 1)
+    },
+    onDragStart(event) {
+      this.draging = event.target;
+    },
+    onDragOver(event) {
+      this.target = this.getParent(event.target);
+      if (!this.target) {
+        return
+      }
+      if (this.target !== this.draging) {
+        const dragingIndex = this._index(this.draging)
+        const targetIndex = this._index(this.target)
+        const dragingItem = this.list[dragingIndex]
+        const targetItem = this.list[targetIndex]
+        this.list.splice(dragingIndex, 1, targetItem)
+        this.list.splice(targetIndex, 1, dragingItem)
       }
     },
-    data() {
-      return {
-        areas: this.clicks,
-        current: 0,
-        dialogShow: this.show
+    onDragEnd(event) {
+
+    },
+    _index(el){
+      let domData=Array.from(this.$refs.itemlist.childNodes)
+      return domData.findIndex(i=>i.getAttribute('data-key') === el.getAttribute('data-key'))
+    },
+    getParent(node) {
+      if (node.className !== 'form-list-panel') {
+        return this.getParent(node.parentNode)
+      } else {
+        return node
       }
     },
-    watch: {
-      clicks(list) {
-        this.areas = list
-      },
-      show(isShow) {
-        this.dialogShow = isShow
-        this.current = 0
-        if (isShow) {
-          this.$nextTick(() => {
-            dragArea.init({
-              container: 'areaMap',
-              cropBox: 'cropBox-0',
-              initareas: this.areas,
-              newcallback: (area) => {
-                this.areas.push({
-                  index: parseInt(area.dataset.index),
-                  x: parseInt(area.style.left),
-                  y: parseInt(area.style.top),
-                  w: parseInt(area.style.width),
-                  h: parseInt(area.style.height),
-                  click: ''
-                })
-                this.current = parseInt(area.dataset.index)
-              },
-              clickcallback: (area) => {
-                this.current = parseInt(area.dataset.index)
-              },
-              dragpointcallback: (area) => {
-                const idx = parseInt(area.dataset.index)
-                this.current = idx
-                const item = this.areas.find((item) => item.index === idx)
-                item.x = parseInt(area.style.left)
-                item.y = parseInt(area.style.top)
-                item.w = parseInt(area.style.width)
-                item.h = parseInt(area.style.height)
-              },
-              dragareacallback: (area) => {
-                const idx = parseInt(area.dataset.index)
-                this.current = idx
-                const item = this.areas.find((item) => item.index === idx)
-                item.x = parseInt(area.style.left)
-                item.y = parseInt(area.style.top)
-                item.w = parseInt(area.style.width)
-                item.h = parseInt(area.style.height)
-              }
-            })
-          })
-        }
-      }
+    upItem(idx) {
+      const tmp = util.copyObj(this.list[idx]);
+      this.list.splice(idx, 1);
+      this.list.splice(idx - 1, 0, tmp);
     },
-    methods: {
-      delArea(area, idx) {
-        const n = this.areas.findIndex((item) => item.index === idx)
-        this.areas.splice(n, 1)
-        const box = document.getElementById('cropBox-' + idx)
-        box && box.remove()
-        // 重置样式
-        document.querySelectorAll('div.crop-box').forEach((val) => {
-          val.classList.remove('active')
-        })
-        this.current = 0
-        document.getElementById('cropBox-0').classList.add('active')
-      },
-      showClick(area, idx) {
-        this.$bus.$emit('click:show', idx)
-      }
-    }
-  }
+    removeClass(index) {
+      this.$confirm("确认删除分类" + this.list[index].label + "吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      }).then((_) => {
+        this.$bus.$emit("removefenleiclass", {
+          index,
+          key: this.list[index].key,
+        });
+        this.list.splice(index, 1);
+      });
+    },
+    downItem(idx) {
+      const tmp = util.copyObj(this.list[idx]);
+      this.list.splice(idx, 1);
+      this.list.splice(idx + 1, 0, tmp);
+    },
+    delItem(idx) {
+      this.list.splice(idx, 1);
+    },
+    addItem() {
+      // if (this.list.length < 4) {
+      // } else {
+      //   this.$alert("最多添加4个分类！");
+      // }
+      // const newConfig = util.copyObj(this.defaultConf.action.config[0]);
+      // newConfig.key = this.list.length + 1;
+      // this.list.push(newConfig);
+      const item = this.defaultConf.action.config[0];
+      item.key = createUniqueString();
+      this.list.push(util.copyObj(item));
+    },
+    addClassItem(cls) {
+      // const newObj = util.copyObj(this.list[0]);
+      // (newObj.key = this.list.length + 1),
+      //   (newObj.val = ""),
+      //   (newObj.desc = "默认文案描述，默认文案描述，默认文案描述默认文案描述"),
+      //   (newObj.click = null);
+      // this.list.push(newObj);
+    },
+  },
+};
 </script>
 
-<style lang="scss">
-  #imageClick {
+<style rel="stylesheet/scss" lang="scss">
 
-    .el-dialog__body {
-      padding: 0 10px 0 10px !important;
-
-      .area-container {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        margin: 0 auto;
-
-        .area-img {
-          display: block;
-          width: 100%;
-          height: auto;
-          -webkit-user-drag: none;
-        }
-
-        .crop-box {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          top: 0;
-          box-sizing: border-box;
-          direction: ltr;
-          font-size: 0;
-          line-height: 0;
-          touch-action: none;
-          user-select: none;
-
-          &.active {
-            border: 1px solid #39f;
-
-            .cropper-point {
-              display: block;
-            }
-          }
-
-          .crop-box-content {
-            width: 100%;
-            height: 100%;
-            background-color: #2aa7ff;
-            //border: 1px solid #39f;
-            opacity: .3;
-            cursor: move;
-          }
-
-          .cropper-point {
-            display: none;
-            position: absolute;
-            background-color: #39f;
-            height: 6px;
-            opacity: .75;
-            width: 6px;
-            box-sizing: border-box;
-
-            &.point-e {
-              cursor: ew-resize;
-              margin-top: -3px;
-              right: -4px;
-              top: 50%;
-            }
-            &.point-n {
-              cursor: ns-resize;
-              left: 50%;
-              margin-left: -3px;
-              top: -4px;
-            }
-            &.point-w {
-              cursor: ew-resize;
-              left: -4px;
-              margin-top: -3px;
-              top: 50%;
-            }
-            &.point-s {
-              bottom: -4px;
-              cursor: s-resize;
-              left: 50%;
-              margin-left: -3px;
-            }
-            &.point-ne {
-              cursor: nesw-resize;
-              right: -4px;
-              top: -4px;
-            }
-            &.point-nw {
-              cursor: nwse-resize;
-              left: -4px;
-              top: -4px;
-            }
-            &.point-sw {
-              bottom: -4px;
-              cursor: nesw-resize;
-              left: -4px;
-            }
-            &.point-se {
-              bottom: -4px;
-              right: -4px;
-              cursor: nwse-resize;
-            }
-          }
-        }
-      }
-
-      .el-form-item {
-        &.small {
-          margin-bottom: 0px;
-          margin-left: 20px;
-          padding: 5px 0 5px 0;
-          border: 1px dashed #fff;
-
-          &.hide {
-            display: none;
-          }
-          &.edit {
-            border-color: #2aa7ff;
-            color: #2aa7ff;
-          }
-        }
-      }
-
-      .form-right-list {
-        overflow-y: auto;
-
-        .right-list-span {
-          display: inline-block;
-          vertical-align: middle;
-          width: 200px;
-          line-height: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-
-          &.warn {
-            color: #f32e37;
-          }
-        }
-        .right-list-a {
-          margin-left: 10px;
-          cursor: pointer;
-          &:hover {
-            color: #2aa7ff;
-          }
-        }
-      }
-    }
-  }
 </style>

@@ -17,6 +17,7 @@ import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
 import { getToken, getTokenType } from '@/utils/auth'
+import { Host } from '@/config'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
@@ -44,7 +45,7 @@ export default {
     },
     menubar: {
       type: String,
-      default: 'file edit insert view format table'
+      default: 'file edit insert'
     },
     height: {
       type: [Number, String],
@@ -116,9 +117,8 @@ export default {
     initTinymce() {
       const _this = this
       window.tinymce.init({
-        // images_upload_url: 'http://49.234.156.48:8083/api/goods/upImgFile',
         selector: `#${this.tinymceId}`,
-        language: this.languageTypeList['en'],
+        language: this.languageTypeList['zh'],
         height: this.height,
         body_class: 'panel-body ',
         object_resizing: false,
@@ -154,7 +154,7 @@ export default {
           var xhr, formData
           xhr = new XMLHttpRequest()
           xhr.withCredentials = false
-          xhr.open('POST', 'http://49.234.156.48:8083/api/goods/upImgFile')
+          xhr.open('POST', Host + '/api/goods/upImgFile')
           xhr.setRequestHeader('Authorization', getTokenType() + ' ' + getToken())
           xhr.onload = function() {
             var json
@@ -163,7 +163,7 @@ export default {
               return
             }
             json = JSON.parse(xhr.responseText)
-            success('http://49.234.156.48:8083' + json.data.url)
+            success(Host + json.data.url)
           }
           formData = new FormData()
           formData.append('file', blobInfo.blob(), blobInfo.filename())
@@ -190,7 +190,7 @@ export default {
     imageSuccessCBK(arr) {
       const _this = this
       arr.forEach(v => {
-        window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
+        window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" style="width:100%" src="${v.url}" >`)
       })
     }
   }
@@ -230,5 +230,9 @@ export default {
 
 .editor-upload-btn {
   display: inline-block;
+}
+
+.mce-flow-layout {
+  overflow-x: scroll !important;
 }
 </style>

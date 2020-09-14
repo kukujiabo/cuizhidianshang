@@ -8,9 +8,10 @@
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
 import editorDashboard from './editor'
+import { getAppId } from '@/utils/auth'
 
 export default {
-  name: "首页",
+  name: "index",
   components: { adminDashboard, editorDashboard },
   data() {
     return {
@@ -25,6 +26,9 @@ export default {
   created() {
     if (!this.roles.includes('admin')) {
       this.currentRole = 'editorDashboard'
+    }
+    if (!getAppId()) {
+      this.$router.push({ path: '/shopboard' })
     }
   }
 }

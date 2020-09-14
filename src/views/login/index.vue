@@ -6,7 +6,7 @@
     <div class="login-info">
       <div class="login-form-container">
         <div class="logo">
-          <img src="@/assets/loogo.png" />
+          <img src="@/assets/logo.png" />
         </div>
 
         <!-- 注册 -->
@@ -217,7 +217,7 @@
         </el-card>
       </div>
       <div class="copy-right">
-        <p>Copyright © 2019-2025 TunzhouTech All Rights Reserved.</p>
+        <span>Copyright © 2019-2025 TunzhouTech All Rights Reserved.</span>
       </div>
     </div>
     <!-- <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -246,8 +246,10 @@ export default {
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码不得少于6位！'))
+      if (value.length < 8) {
+        callback(new Error('密码不得少于8位！'))
+      } else if (value.length > 16) {
+        callback(new Error('密码不得大于16位！'))
       } else {
         callback()
       }
@@ -564,11 +566,10 @@ $light_background: #F3F5F7;
       right: 0;
       bottom: 0;
       margin: 0 auto;
-      height: 150px;
-      font-size: 14px;
+      height: 50px;
+      font-size: 12px;
       color: $textMidDark;
       position: absolute;
-      line-height: 150px;
       text-align: center;
     }
     .login-form-container {
@@ -590,8 +591,8 @@ $light_background: #F3F5F7;
         @extend .flex-justify-center;
         @extend .flex-align-center;
         img {
-          width: 215px;
-          height: 69.33px;
+          width: 130px;
+          height: 83px;
         }
         .company-name {
           margin: 16px 0;
@@ -606,7 +607,7 @@ $light_background: #F3F5F7;
         overflow: hidden;
       }
       .lf-inner {
-        padding: 20px;
+        padding: 20px 20px 0 20px;
         position: relative;
         .get-checkcode {
           border: 1px solid $themeBlue;

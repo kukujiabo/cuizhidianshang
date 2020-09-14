@@ -1,170 +1,196 @@
 <template>
   <div class="app-option">
-    <el-form ref="options-form" label-width="80px" size="mini">
-
-      <h2>【{{option.title}}】</h2>
-      <el-form-item class="small" label="组件编号：">
-        <span>{{option.domId}}</span>
-      </el-form-item>
-      <el-form-item class="small" label="组件名称：">
-        <el-input v-model="option.domName"
-                  maxlength="30"
-                  placeholder="非必填，页内跳转配置使用"></el-input>
-      </el-form-item>
-
-      <template v-if="option.base && option.base.length">
-        <template v-for="(item, idx) in option.base">
-          <form-item :item="item" :index="idx"></form-item>
+    <div class="shop-management">
+      <el-button type="primary" plain @click="manageShopNav">店铺导航管理</el-button>
+      <el-button @click="showSubjectManage">店铺主题管理</el-button>
+    </div>
+    <el-form ref="options-form" style="padding:0" label-width="66px">
+      <div style="padding-top:12px;color:#000">
+        <h2>{{option.title}}</h2>
+      </div>
+      <div class="option-list">
+        <template v-if="option.action">
+          <template v-if="option.action.type === 'image-click'">
+            <image-click :action="option.action" :items="option.action.config"></image-click>
+          </template>
+          <template v-if="option.action.type === 'swiper-click'">
+            <banner-item :domId="option.domId" :banners="option.action.config"></banner-item>
+          </template>
+          <template v-if="option.action.type === 'bottom-menu-click'">
+            <bottom-menu-item :items="option.action.config"></bottom-menu-item>
+          </template>
+          <template v-if="option.action.type === 'floor-menu-click'">
+            <floor-menu-item :menus="option.action.config"></floor-menu-item>
+          </template>
+          <template v-if="option.action.type === 'left-scroll-click'">
+            <scroll-item :scrolls="option.action.config"></scroll-item>
+          </template>
+          <template v-if="option.action.type === 'horizontal-item-click'">
+            <horizontal-item :items="option.action.config"></horizontal-item>
+          </template>
+          <template v-if="option.action.type === 'richtext'">
+            <richtext-item :action="option.action"></richtext-item>
+          </template>
+          <template v-if="option.action.type === 'fenlei-item-click'">
+            <fenlei-item :action="option.action" :items="option.action.config"></fenlei-item>
+          </template>
+          <template v-if="option.action.type === 'vertical-item-click'">
+            <vertical-item :items="option.action.config"></vertical-item>
+          </template>
+          <template v-if="option.action.type === 'form-submit'">
+            <input-item :forms="option.action.config"></input-item>
+          </template>
+          <template v-if="option.action.type === 'timeout-click'">
+            <timeout-item
+              :show.sync="timeoutClickShow"
+              :end="option.style[0].val"
+              :img="option.style[1].val"
+              :times="option.action.config"
+            ></timeout-item>
+            <el-button
+              icon="el-icon-plus"
+              :disabled="!option.style[1].val"
+              round
+              @click="timeoutClickShow = true"
+            >时间项配置</el-button>
+          </template>
+          <template v-if="option.action.type === 'grid-menu-click'">
+            <grid-menu-item :action="option.action" :grids.sync="option.action.config"></grid-menu-item>
+          </template>
+          <template v-if="option.action.type === 'marquee-click'">
+            <marquee-item :marquees="option.action.config"></marquee-item>
+          </template>
+          <template v-if="option.action.type === 'page-paragraph'">
+            <page-paragraph-item :action="option.action"></page-paragraph-item>
+          </template>
+          <template v-if="option.action.type === 'page-faq-list'">
+            <page-faq-item :paragraphs="option.action.config"></page-faq-item>
+          </template>
         </template>
-      </template>
-
-      <template v-if="option.style && option.style.length">
-        <h3><i class="el-icon-setting"></i> 样式配置</h3>
-        <template v-for="(item, idx) in option.style">
-          <form-item :item="item" :index="idx"></form-item>
-        </template>
-      </template>
-
-      <template v-if="option.others && option.others.config.length">
-        <h3><i class="el-icon-setting"></i> {{option.others.title}}</h3>
-        <template v-for="(item, idx) in option.others.config">
-          <form-item :item="item" :index="idx"></form-item>
-        </template>
-      </template>
-
-      <template v-if="option.action">
-        <h3><i class="el-icon-setting"></i> {{option.action.title}}</h3>
-
-        <template v-if="option.action.type === 'image-click'">
-          <image-click :show.sync="imageClickShow"
-                       :img="option.style[1].val"
-                       :clicks="option.action.config"></image-click>
-          <el-button icon="el-icon-plus" :disabled="!option.style[1].val" round
-                     @click="imageClickShow = true">点击区域配置</el-button>
-        </template>
-
-        <template v-if="option.action.type === 'swiper-click'">
-          <banner-item :banners="option.action.config"></banner-item>
-        </template>
-
-        <template v-if="option.action.type === 'bottom-menu-click'">
-          <bottom-menu-item :items="option.action.config"></bottom-menu-item>
-        </template>
-
-        <template v-if="option.action.type === 'floor-menu-click'">
-          <floor-menu-item :menus="option.action.config"></floor-menu-item>
-        </template>
-
-        <template v-if="option.action.type === 'left-scroll-click'">
-          <scroll-item :scrolls="option.action.config"></scroll-item>
-        </template>
-
-        <template v-if="option.action.type === 'horizontal-item-click'">
-          <horizontal-item :items="option.action.config"></horizontal-item>
-        </template>
-
-        <template v-if="option.action.type === 'vertical-item-click'">
-          <vertical-item :items="option.action.config"></vertical-item>
-        </template>
-
-        <template v-if="option.action.type === 'form-submit'">
-          <input-item :forms="option.action.config"></input-item>
-        </template>
-
-        <template v-if="option.action.type === 'timeout-click'">
-          <timeout-item :show.sync="timeoutClickShow"
-                        :end="option.style[0].val"
-                        :img="option.style[1].val"
-                        :times="option.action.config"></timeout-item>
-          <el-button icon="el-icon-plus" :disabled="!option.style[1].val" round
-                     @click="timeoutClickShow = true">时间项配置</el-button>
-        </template>
-
-        <template v-if="option.action.type === 'grid-menu-click'">
-          <grid-menu-item :grids="option.action.config"></grid-menu-item>
-        </template>
-
-        <template v-if="option.action.type === 'marquee-click'">
-          <marquee-item :marquees="option.action.config"></marquee-item>
-        </template>
-
-        <template v-if="option.action.type === 'page-paragraph-list'">
-          <page-paragraph-item :paragraphs="option.action.config"></page-paragraph-item>
-        </template>
-
-        <template v-if="option.action.type === 'page-faq-list'">
-          <page-faq-item :paragraphs="option.action.config"></page-faq-item>
-        </template>
-
-      </template>
-
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
-  import formItem from '@/common/formItem.vue'
-  import imageClick from '@/views/itemOption/imageClick.vue'
-  import timeoutItem from '@/views/itemOption/timeoutItem.vue'
-  import bannerItem from '@/views/itemOption/bannerItem.vue'
-  import bottomMenuItem from '@/views/itemOption/bottomMenuItem.vue'
-  import floorMenuItem from '@/views/itemOption/floorMenuItem.vue'
-  import horizontalItem from '@/views/itemOption/horizontalItem.vue'
-  import verticalItem from '@/views/itemOption/verticalItem.vue'
-  import scrollItem from '@/views/itemOption/scrollItem.vue'
-  import inputItem from '@/views/itemOption/inputItem.vue'
-  import gridMenuItem from '@/views/itemOption/gridMenuItem.vue'
-  import marqueeItem from '@/views/itemOption/marqueeItem.vue'
-  import pageParagraphItem from '@/views/itemOption/pageParagraphItem.vue'
-  import pageFaqItem from '@/views/itemOption/pageFaqItem.vue'
+import formItem from "@/common/formItem.vue";
+import imageClick from "@/views/itemOption/imageClick.vue";
+import timeoutItem from "@/views/itemOption/timeoutItem.vue";
+import bannerItem from "@/views/itemOption/bannerItem.vue";
+import bottomMenuItem from "@/views/itemOption/bottomMenuItem.vue";
+import floorMenuItem from "@/views/itemOption/floorMenuItem.vue";
+import horizontalItem from "@/views/itemOption/horizontalItem.vue";
+import fenleiItem from "@/views/itemOption/fenleiItem.vue";
+import verticalItem from "@/views/itemOption/verticalItem.vue";
+import scrollItem from "@/views/itemOption/scrollItem.vue";
+import inputItem from "@/views/itemOption/inputItem.vue";
+import gridMenuItem from "@/views/itemOption/gridMenuItem.vue";
+import marqueeItem from "@/views/itemOption/marqueeItem.vue";
+import pageParagraphItem from "@/views/itemOption/pageParagraphItem.vue";
+import pageFaqItem from "@/views/itemOption/pageFaqItem.vue";
+import richtextItem from "@/views/itemOption/richtextItem";
 
-  export default {
-    name: 'AppOption',
-    data() {
-      return {
-        imageClickShow: false,
-        timeoutClickShow: false
-      }
+export default {
+  name: "AppOption",
+  data() {
+    return {
+      imageClickShow: false,
+      timeoutClickShow: false,
+    };
+  },
+  components: {
+    formItem,
+    imageClick,
+    timeoutItem,
+    bannerItem,
+    bottomMenuItem,
+    floorMenuItem,
+    scrollItem,
+    horizontalItem,
+    verticalItem,
+    inputItem,
+    gridMenuItem,
+    marqueeItem,
+    pageParagraphItem,
+    pageFaqItem,
+    fenleiItem,
+    richtextItem,
+  },
+  props: {
+    option: {
+      type: Object,
     },
-    components: {
-      formItem,
-      imageClick,
-      timeoutItem,
-      bannerItem,
-      bottomMenuItem,
-      floorMenuItem,
-      scrollItem,
-      horizontalItem,
-      verticalItem,
-      inputItem,
-      gridMenuItem,
-      marqueeItem,
-      pageParagraphItem,
-      pageFaqItem
-    },
-    props: {
-      option: {
-        type: Object
-      }
+    pageOption: {
+      type: Object,
+      default: () => ({})
     }
-  }
+  },
+  methods: {
+    manageShopNav() {
+      this.$bus.$emit("showManageShopNav");
+    },
+    showSubjectManage() {
+      this.$bus.$emit("showManageSubject")
+    }
+  },
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+@import "~@/styles/color.scss";
 .app-option {
-  width: 360px;
-  padding: 0 10px 0 5px;
+  width: 400px;
   overflow: auto;
   border-left: 1px solid #e8e8e8;
-
+  .option-list {
+    // padding: 0 20px;
+    .option-config-container {
+      padding: 10px 20px;
+      .config-item-container {
+        padding: 15px;
+        background-color: #f3f5f7;
+        border-radius: 6px;
+        .add-item-btn {
+          height: 42px;
+          color: $themeBlue;
+          background-color: #fff;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          border: 0.5px solid #e1e1e1;
+        }
+        .add-item-btn:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .divider {
+      height: 1px;
+      width: 100%;
+      background-color: #F2F2F2;
+      margin: 5px 0;
+    }
+  }
+  .el-dropdown-link {
+    font-size: 12px;
+    color: $themeBlue;
+  }
+  .shop-management {
+    height: 80px;
+    border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
   h2 {
     margin: 13px 0;
     font-size: 14px;
   }
-
   .el-form {
-    padding-bottom: 30px;
-
+    padding: 10px 25px 10px 25px;
     > h3 {
       background-color: #f2f3f4;
       padding: 5px 10px;
@@ -206,26 +232,63 @@
         font-size: 13px;
       }
     }
-
-    .form-list-panel {
-      margin-top: 15px;
-      border: 1px solid #e8e8e8;
-      padding: 10px 10px 5px 5px;
-
-      &:first-child {
-        margin-top: 0;
-      }
-
-      .list-item-opt {
-        text-align: right;
-
-        > a {
-          margin-left: 10px;
-          color: #2aa7ff;
-          font-size: 12px;
-        }
+    .foo-wrapper {
+      padding: 6px;
+      background-color: #f3f5f7;
+      .add {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
     }
+  }
+}
+.comp-tips {
+  font-size: 12px;
+  color: #a1a1a1;
+}
+.line-options {
+  // margin: 20px 0;
+  // border-top: 0.5px solid #efefef;
+  // border-bottom: 0.5px solid #efefef;
+  .el-form {
+    padding-bottom: 0 !important;
+  }
+}
+.option-container {
+  padding: 10px;
+  background-color: #f3f5f7;
+  .form-list-panel {
+    margin-top: 8px;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    padding: 0px 10px 0px 0px;
+    border-radius: 6px;
+    height: 92px;
+    &:first-child {
+      margin-top: 0;
+    }
+    .list-item-opt {
+      text-align: right;
+
+      > a {
+        margin-left: 10px;
+        color: #2aa7ff;
+        font-size: 12px;
+      }
+    }
+  }
+  .add-option {
+    display: flex;
+    border-radius: 6px;
+    margin-top: 10px;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    border: 0.5px solid #efefef;
   }
 }
 </style>

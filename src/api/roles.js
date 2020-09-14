@@ -38,6 +38,34 @@ export async function getRoleList(data) {
   })
 }
 
+export async function getRolePermissionByCode(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/auth/getRolePermission`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  }) 
+}
+
+/**
+ * 查询角色权限
+ * @param {*} data 
+ */
+export async function getRolePermission() {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/auth/getRolePermission`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  }) 
+}
+
 /**
  * 查询全部菜单
  * @param {}} data 
@@ -47,7 +75,7 @@ export async function getAllMenus() {
     Authorization: getTokenType() + ' ' + getToken()
   }
   return request({
-    url: `${host}/auth/getAllMenu`,
+    url: `${host}/auth/getMenus`,
     method: 'get',
     headers: { ...headers, ...postHeader }
   })
@@ -110,10 +138,25 @@ export async function getCruList(data) {
     Authorization: getTokenType() + ' ' + getToken()
   }
   return request({
-    url: `${host}/auth/getPerson`,
+    url: `${host}/auth/queryPersonList`,
     method: 'post',
     headers: { ...headers, ...postHeader },
     data
+  })
+}
+
+/**
+ * 查询单个员工信息
+ * @param {*} id 
+ */
+export async function getCruDetail(id) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/auth/getPerson/${id}` ,
+    method: 'get',
+    headers: { ...headers, ...postHeader }
   })
 }
 

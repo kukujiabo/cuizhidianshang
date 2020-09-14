@@ -10,6 +10,8 @@
       />
       <span>创建直播</span>
     </div>
+    <orientation ref="orientation" />
+    <div class="form-section-divider" />
     <video-basic ref="videoBasic" />
     <div class="form-section-divider" />
     <goods-info ref="goodsInfo" />
@@ -17,9 +19,13 @@
     <on-shelf ref="onSelf" />
     <div class="form-section-divider" />
     <business-operate ref="businessOperation" />
+    <div class="form-section-divider" />
+    <interactive-info ref="interactiveInfo" />
+    <div class="form-section-divider" />
+    <review-info ref="reviewInfo" />
     <div class="btns">
-      <el-button type="primary" plain>取消</el-button>
-      <el-button v-loading="loading" type="primary" @click="submit">保存</el-button>
+      <el-button type="primary" plain @click="goBack">取消</el-button>
+      <el-button :disabled="loading" v-loading="loading" type="primary" @click="submit">保存</el-button>
     </div>
   </div>
 </template>
@@ -65,17 +71,30 @@ import BusinessOperate from './components/businessOperate'
 import VideoBasic from './components/onAirVideoBasic'
 import GoodsInfo from './components/goodsInfo'
 import OnShelf from './components/onShelf'
+import interactiveInfo from './components/interactiveInfo'
+import reviewInfo from './components/reviewInfo'
+import Orientation from './components/orientation'
+import Cookies from 'js-cookie'
 import { getToken, getTokenType } from '@/utils/auth'
+import { mapGetters } from 'vuex'
+import { Host } from '@/config'
 
 export default {
   components: {
     OnShelf,
     GoodsInfo,
+    reviewInfo,
     VideoBasic,
-    BusinessOperate
+    Orientation,
+    BusinessOperate,
+    interactiveInfo
+  },
+  computed: {
+    ...mapGetters([ 'getCurrentShop' ])
   },
   data() {
     return {
+      Host,
       loading: false
     }
   },
@@ -88,7 +107,9 @@ export default {
       const goodsInfo = this.$refs.goodsInfo.getFormData()
       const selfInfo = this.$refs.onSelf.getFormData()
       const binfo = this.$refs.businessOperation.getFormData()
-      const formData = { ...videoBasicInfo, ...goodsInfo, ...selfInfo, ...binfo }
+      const airData = this.$refs.interactiveInfo.getFormData()
+      const reviewData = this.$refs.reviewInfo.getFormData()
+      const formData = { ...videoBasicInfo, ...goodsInfo, ...selfInfo, ...binfo, ...reviewData, ...airData }
       if (!formData.title) {
         this.$message({
           type: 'error',
@@ -138,22 +159,38 @@ export default {
         })
         return
       }
+      if (formData.includeGoods && !formData['goods[0]']) {
+        this.$message({
+          type: 'error',
+          message: '请选择商品'
+        })
+        return
+      }
+      if (formData.includeCoupon && !formData['coupon[0]']) {
+        this.$message({
+          type: 'error',
+          message: '请选择优惠券'
+        })
+        return
+      }
       const xhr = new XMLHttpRequest()
       xhr.withCredentials = false
-      xhr.open('POST', 'http://49.234.156.48:8083/api/goods/addTv')
+      xhr.open('POST', Host + '/api/goods/addTv')
       xhr.setRequestHeader('Authorization', getTokenType() + ' ' + getToken())
+      xhr.setRequestHeader('appid', Cookies.get('appid'))
       xhr.onload = () => {
-        this.loading = false
-        if (xhr.status !== 200) {
+        if (xhr.status !== 200)   {
           return
         }
         const { success, message } = JSON.parse(xhr.responseText)
         if (success) {
           this.$message({ type: 'success', message: '添加成功！' })
           setTimeout(_ => {
+            this.loading = false
             this.$router.back()
           }, 1000)
         } else {
+          this.loading = false
           this.$message({ type: 'error', message: message })
         }
       }
@@ -171,23 +208,53 @@ export default {
 
       // 商品信息
       goodsForm.append('clsId', formData.clsId) // 分组
-      goodsForm.append('singleSell', formData.singleSell) // 单独售卖
+      goodsForm.append('singleSell', formData.singleSell ? 1 : 0) // 单独售卖
       goodsForm.append('sellMode', formData.sellMode) // 售卖方式：1.付费，0.免费
       goodsForm.append('stdUnitPrice', formData.stdUnitPrice) // 原价
       goodsForm.append('realUnitPrice', formData.realUnitPrice) // 现价
 
       // 上架信息
       goodsForm.append('putMode', formData.putMode)
+      goodsForm.append('isHide', formData.isHide ? 1: 0)
+      goodsForm.append('isClose', formData.isClose ? 1 : 0)
       goodsForm.append('readyPutDate', formData.readyPutDate)
 
       // 引导加群
       goodsForm.append('joinGroup', formData.joinGroup ? 1 : 0) // 引导加群
-      goodsForm.append('joinGroupOfPage', formData.joinGroupOfPage ? 1 : 0) // 引导方式：详情页
-      goodsForm.append('joinGroupOfPageTitle', formData.joinGroupOfPageTitle) // 前端标题
-      goodsForm.append('joinGroupOfBuy', formData.joinGroupOfBuy ? 1 : 0) // 购买成功引导加群
-      goodsForm.append('qrTitle', formData.qrTitle) // 二维码标题
-      goodsForm.append('qrRemark', formData.qrRemark) // 二维码描述
-      goodsForm.append('qrImage', formData.rawQrcode, formData.rawQrcode.filename)
+      if (formData.joinGroup) {
+        goodsForm.append('joinGroupOfPage', formData.joinGroupOfPage ? 1 : 0) // 引导方式：详情页
+        goodsForm.append('joinGroupOfPageTitle', formData.joinGroupOfPageTitle) // 前端标题
+        goodsForm.append('joinGroupOfBuy', formData.joinGroupOfBuy ? 1 : 0) // 购买成功引导加群
+        goodsForm.append('qrTitle', formData.qrTitle) // 二维码标题
+        goodsForm.append('qrRemark', formData.qrRemark) // 二维码描述
+        goodsForm.append('qrImage', formData.rawQrcode, formData.rawQrcode.filename)
+      }
+
+      // 商品信息
+      goodsForm.append('includeGoods', formData.includeGoods)
+      goodsForm.append('includeCoupon', formData.includeCoupon)
+      goodsForm.append('recommendCard', formData.recommendCard)
+      goodsForm.append('tipping', formData.tipping)
+      goodsForm.append('includeGoodsDisplay', formData.includeGoodsDisplay)
+
+      // 回放
+      goodsForm.append('eachPlay', formData.eachPlay)
+
+      if (formData.includeGoods === 1) {
+        for (const key in formData) {
+          if (key.indexOf('goods[') === 0) {
+            goodsForm.append(key, formData[key])
+          }
+        }
+      }
+      if (formData.includeCoupon === 1) {
+        for (const key in formData) {
+          if (key.indexOf('coupons[') === 0) {
+            goodsForm.append(key, formData[key])
+          }
+        }
+      }
+      this.loading = true
       xhr.send(goodsForm)
     }
   }

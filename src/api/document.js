@@ -23,6 +23,39 @@ export async function queryDocuments(data) {
 }
 
 /**
+ * 查询档案详情
+ * @param {*} id 
+ */
+export async function getDocumentDetail(id) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/goods/get/${id}`,
+    method: 'get',
+    headers: { ...headers, ...postHeader },
+    data: {}
+  })
+}
+
+/**
+ * 编辑档案状态接口
+ * @param {}} data 
+ */
+export async function editStatus(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/goods/upGoodsStatus`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  })
+}
+
+
+/**
  * 删除档案接口
  * @param {}} data 
  */
@@ -36,4 +69,44 @@ export async function removeGoods(data) {
     headers: { ...headers, ...postHeader },
     data
   })
+}
+
+/**
+ * 档案移出分组
+ * @param {*} data 
+ */
+export async function removeFromGroup(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/goods/moveOut`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  }) 
+}
+
+export async function stopGoods(id, api) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/goods/${api}`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data: { id, putMode: 1 }
+  }) 
+}
+
+export async function moveGoodsInClass(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/goods/moveIn`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data: data
+  }) 
 }

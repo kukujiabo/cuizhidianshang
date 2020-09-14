@@ -18,10 +18,13 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 
+import 'element-ui/lib/theme-chalk/index.css'
+import 'font-awesome/css/font-awesome.min.css'
+import 'normalize.css/normalize.css'
 import * as filters from './filters' // global filters
-// import Components from './components'
+import Components from './components'
 
-// Vue.use(Components)
+Vue.use(Components)
 
 /**
  * If you don't want to use mock-server
@@ -32,12 +35,19 @@ import * as filters from './filters' // global filters
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
+  // const { mockXHR } = require('../mock')
+  // mockXHR()
 }
 
+const eventBus = {
+  install(Vue) {
+    Vue.prototype.$bus = new Vue()
+  }
+}
+
+Vue.use(eventBus)
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
+  size: 'medium' // Cookies.get('size') || 'medium' // set element-ui default size
   // locale: enLang // 如果使用中文，无需设置，请删除
 })
 
@@ -47,6 +57,37 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+// lee 动态加载模板的必要的依赖 start
+// import upperFirst from 'lodash/upperFirst'
+// import camelCase from 'lodash/camelCase'
+var requireComponent
+// 动态加载模板的必要的依赖 end
+// 默认获取leeui里的所有组件 start
+// import './components/leeui/leeui.css';
+requireComponent = require.context(
+  // 其组件目录的相对路径
+  './components/lee',
+  // 是否查询其子目录
+  true,
+  // 匹配基础组件文件名的正则表达式
+  /[A-Z]\w+\.(vue|js|css)$/
+)
+requireComponent.keys().forEach(fileName => {
+  // 获取组件配置
+  var componentConfig = requireComponent(fileName)
+  // 获取组件的 PascalCase 命名
+  var componentName = fileName.replace(/.*\/(\w+)\.\w+$/, '$1')
+  // 全局注册组件
+  Vue.component(
+    componentName,
+    // 如果这个组件选项是通过 `export default` 导出的，
+    // 那么就会优先使用 `.default`，
+    // 否则回退到使用模块的根。
+    componentConfig.default || componentConfig
+  )
+})
+// lee 默认获取leeui里的所有组件 end
 
 new Vue({
   el: '#app',

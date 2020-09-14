@@ -1,50 +1,88 @@
 <template>
   <el-row class="app-toolbar">
     <el-col :span="12">
-      <span><i class="fa fa-mobile-phone"></i> 当前适配设计稿：750x1334 px</span>
+      <div class="pages">
+        <div
+          v-for="tabbar in tabbars"
+          :key="tabbar.key"
+          :class="currentKey === tabbar.key ? 'active' : ''"
+          class="page-nav"
+          @click="switchPage(tabbar)"
+        >
+          <span>{{ tabbar.title }}</span>
+        </div>
+      </div>
     </el-col>
     <el-col :span="12">
-      <div class="bar-btn" @click="saveAll()">
-        <i class="el-icon-edit"></i>
-        <span>保存</span>
-      </div>
-      <div class="bar-btn" @click="showPreview()">
-        <i class="el-icon-view"></i>
-        <span>预览</span>
-      </div>
-      <div class="bar-btn" @click="showPageSet">
-        <i class="el-icon-setting"></i>
-        <span>页面设置</span>
-      </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
-  export default {
-    name: 'AppToolbar',
-    methods: {
-      showPageSet() {
-        this.$emit('showPageSet')
-      },
-      showPreview() {
-        this.$emit('showPreview')
-      },
-      saveAll() {
-        this.$emit('savePageSet')
-      }
+export default {
+  name: 'AppToolbar',
+  props: {
+    tabbars: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      currentKey: ''
+    }
+  },
+  created() {
+    this.currentKey = this.tabbars[0].key
+  },
+  methods: {
+    showPageSet() {
+      this.$emit('showPageSet')
+    },
+    showPreview() {
+      this.$emit('showPreview')
+    },
+    saveAll() {
+      this.$emit('savePageSet')
+    },
+    switchPage(tabbar) {
+      this.currentKey = tabbar.key
+      console.log(this.currentKey)
+      this.$emit('switchPage', this.currentKey)
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .app-toolbar {
     position: relative;
-    height: 40px;
-    line-height: 38px;
+    height: 80px;
+    line-height: 78px;
     background-color: #fff;
     border-bottom: 1px solid #e8e8e8;
-    padding-left: 15px;
+    background-color: #F4F4F9;
+    .pages {
+      display: flex;
+      flex-direction: row;
+      .page-nav {
+        width: 150px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: #a1a1a1;
+      }
+      .page-nav:hover {
+        cursor: pointer;
+      }
+      .active {
+        background-color: #fff;
+        color: #000;
+        font-weight: 900;
+      }
+    }
 
     > :last-child {
       text-align: right;

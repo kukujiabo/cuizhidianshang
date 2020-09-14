@@ -12,7 +12,7 @@
 
 module.exports = {
   text: {
-    title: '文本',
+    title: '搜索',
     domId: '',
     domName: '',
     base: [
@@ -24,128 +24,128 @@ module.exports = {
       }
     ],
     style: [
-      {
-        type: 'font',
-        label: '字体',
-        attr: ['font-weight', 'text-decoration', 'font-style', 'text-align'],
-        val: ['400', 'none', 'inherit', 'left'],
-        isNecessary: false
-      }, {
-        type: 'color-picker',
-        label: '字体颜色',
-        attr: 'color',
-        val: '#333333',
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '容器高度',
-        attr: 'height',
-        val: '',
-        unit: 'px',
-        isNecessary: false
-      }, {
-        type: 'upload',
-        label: '背景图',
-        attr: 'background-image',
-        val: '',
-        isNecessary: false
-      }, {
-        type: 'color-picker',
-        label: '背景颜色',
-        attr: 'background-color',
-        val: '',
-        isNecessary: false
-      }, {
-        type: 'select',
-        label: '背景尺寸',
-        attr: 'background-size',
-        val: 'contain',
-        options: [
-          {
-            name: '无',
-            val: 'inherit'
-          }, {
-            name: '宽高裁剪',
-            val: 'cover'
-          }, {
-            name: '宽高自适应',
-            val: 'contain'
-          }
-        ]
-      }, {
-        type: 'input-number',
-        label: '字体大小',
-        attr: 'font-size',
-        val: 12,
-        unit: 'px',
-        step: 1,
-        max: 100,
-        min: 10,
-        isNecessary: false
-      }, {
-        type: 'input-number',
-        label: '文本行距',
-        attr: 'line-height',
-        val: 1.5,
-        step: 0.5,
-        max: 12,
-        min: 0.5,
-        isNecessary: false
-      }, {
-        type: 'input-number',
-        label: '字间距',
-        attr: 'letter-spacing',
-        val: 0,
-        step: 1,
-        max: 50,
-        min: 0,
-        unit: 'px',
-        isNecessary: false
-      }, {
-        type: 'input-number',
-        label: '上边距',
-        attr: 'padding-top',
-        val: 10,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '右边距',
-        attr: 'padding-right',
-        val: 15,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '下边距',
-        attr: 'padding-bottom',
-        val: 10,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '左边距',
-        attr: 'padding-left',
-        val: 15,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }
+      // {
+      //   type: 'font',
+      //   label: '字体',
+      //   attr: ['font-weight', 'text-decoration', 'font-style', 'text-align'],
+      //   val: ['400', 'none', 'inherit', 'left'],
+      //   isNecessary: false
+      // }, {
+      //   type: 'color-picker',
+      //   label: '字体颜色',
+      //   attr: 'color',
+      //   val: '#333333',
+      //   isNecessary: true
+      // }, {
+      //   type: 'input-number',
+      //   label: '容器高度',
+      //   attr: 'height',
+      //   val: '',
+      //   unit: 'px',
+      //   isNecessary: false
+      // }, {
+      //   type: 'upload',
+      //   label: '背景图',
+      //   attr: 'background-image',
+      //   val: '',
+      //   isNecessary: false
+      // }, {
+      //   type: 'color-picker',
+      //   label: '背景颜色',
+      //   attr: 'background-color',
+      //   val: '',
+      //   isNecessary: false
+      // }, {
+      //   type: 'select',
+      //   label: '背景尺寸',
+      //   attr: 'background-size',
+      //   val: 'contain',
+      //   options: [
+      //     {
+      //       name: '无',
+      //       val: 'inherit'
+      //     }, {
+      //       name: '宽高裁剪',
+      //       val: 'cover'
+      //     }, {
+      //       name: '宽高自适应',
+      //       val: 'contain'
+      //     }
+      //   ]
+      // }, {
+      //   type: 'input-number',
+      //   label: '字体大小',
+      //   attr: 'font-size',
+      //   val: 12,
+      //   unit: 'px',
+      //   step: 1,
+      //   max: 100,
+      //   min: 10,
+      //   isNecessary: false
+      // }, {
+      //   type: 'input-number',
+      //   label: '文本行距',
+      //   attr: 'line-height',
+      //   val: 1.5,
+      //   step: 0.5,
+      //   max: 12,
+      //   min: 0.5,
+      //   isNecessary: false
+      // }, {
+      //   type: 'input-number',
+      //   label: '字间距',
+      //   attr: 'letter-spacing',
+      //   val: 0,
+      //   step: 1,
+      //   max: 50,
+      //   min: 0,
+      //   unit: 'px',
+      //   isNecessary: false
+      // }, {
+      //   type: 'input-number',
+      //   label: '上边距',
+      //   attr: 'padding-top',
+      //   val: 10,
+      //   unit: 'px',
+      //   min: 0,
+      //   max: 50,
+      //   step: 1,
+      //   isNecessary: true
+      // }, {
+      //   type: 'input-number',
+      //   label: '右边距',
+      //   attr: 'padding-right',
+      //   val: 15,
+      //   unit: 'px',
+      //   min: 0,
+      //   max: 50,
+      //   step: 1,
+      //   isNecessary: true
+      // }, {
+      //   type: 'input-number',
+      //   label: '下边距',
+      //   attr: 'padding-bottom',
+      //   val: 10,
+      //   unit: 'px',
+      //   min: 0,
+      //   max: 50,
+      //   step: 1,
+      //   isNecessary: true
+      // }, {
+      //   type: 'input-number',
+      //   label: '左边距',
+      //   attr: 'padding-left',
+      //   val: 15,
+      //   unit: 'px',
+      //   min: 0,
+      //   max: 50,
+      //   step: 1,
+      //   isNecessary: true
+      // }
     ]
   },
-  img: {
-    title: '图片',
+  richtext: {
+    title: '富文本框',
     domId: '',
     domName: '',
     style: [
@@ -155,18 +155,23 @@ module.exports = {
         attr: 'background-color',
         val: '',
         isNecessary: false
-      }, {
+      },
+      {
         type: 'upload',
         label: '上传图片',
         attr: 'src',
         val: '',
-        /* limit: {
+        id: '',
+        ty: '',
+        cls: 0,
+        limit: {
           w: 750,
           h: 200,
           s: 500
-        },*/
+        },
         isNecessary: true
-      }, {
+      },
+      {
         type: 'input-number',
         label: '上边距',
         attr: 'padding-top',
@@ -209,15 +214,181 @@ module.exports = {
       }
     ],
     action: {
+      type: 'richtext',
+      title: '富文本',
+      config: ''
+    }
+  },
+  img: {
+    title: '图片广告',
+    domId: '',
+    domName: '',
+    base: [
+      {
+        type: 'radio',
+        label: '自动播放',
+        attr: 'autoplay',
+        val: true,
+        options: [{
+          name: '是',
+          val: true
+        }, {
+          name: '否',
+          val: false
+        }],
+        isNecessary: false
+      }, {
+        type: 'radio',
+        label: '显示分页',
+        attr: 'pagination',
+        val: true,
+        options: [{
+          name: '是',
+          val: true
+        }, {
+          name: '否',
+          val: false
+        }],
+        isNecessary: false
+      }
+    ],
+    style: [
+      {
+        type: 'color-picker',
+        label: '背景颜色',
+        attr: 'background-color',
+        val: '#ffffff',
+        isNecessary: false
+      }, {
+        type: 'input-number',
+        label: '左内边距',
+        attr: 'padding-left',
+        val: 0,
+        unit: 'px',
+        min: 0,
+        max: 50,
+        step: 1,
+        isNecessary: true
+      }, {
+        type: 'input-number',
+        label: '右内边距',
+        attr: 'padding-right',
+        val: 0,
+        unit: 'px',
+        min: 0,
+        max: 50,
+        step: 1,
+        isNecessary: true
+      }
+    ],
+    others: {
+      type: 'item-style',
+      title: '列表项样式',
+      config: [
+        {
+          type: 'input-number',
+          label: '上内边距',
+          attr: 'horizontal-list-item_padding-top',
+          val: 0,
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '下内边距',
+          attr: 'horizontal-list-item_padding-bottom',
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '图片宽度',
+          attr: 'horizontal-list-logo_width',
+          val: 140,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '图片高度',
+          attr: 'horizontal-list-logo_height',
+          val: 78,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题大小',
+          attr: 'horizontal-list-title_font-size',
+          val: 16,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '标题颜色',
+          attr: 'horizontal-list-title_color',
+          val: '#333333',
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题粗细',
+          attr: 'horizontal-list-title_font-weight',
+          val: 500,
+          unit: '',
+          min: 300,
+          max: 900,
+          step: 100,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '描述大小',
+          attr: 'horizontal-list-desc_font-size',
+          val: 11,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '描述颜色',
+          attr: 'horizontal-list-desc_color',
+          val: '#999999',
+          isNecessary: false
+        }
+      ]
+    },
+    action: {
       type: 'image-click',
-      title: '点击区域配置',
+      title: '列表项配置',
+      display: 1,
+      num: '2',
+      displayType: 'space',
       config: [{
-        index: 0,
-        x: 0,
-        y: 0,
-        w: 225,
-        h: 64,
-        click: null
+        key: 1,
+        val: '',
+        title: '默认标题',
+        desc: '默认文案描述，默认文案描述，默认文案描述默认文案描述',
+        selectedPage: '选择跳转页面',
+        link: null
+      }, {
+        key: 2,
+        val: '',
+        title: '默认标题',
+        desc: '默认文案描述，默认文案描述，默认文案描述默认文案描述',
+        selectedPage: '选择跳转页面',
+        link: null
       }]
     }
   },
@@ -534,7 +705,7 @@ module.exports = {
         type: 'color-picker',
         label: '背景颜色',
         attr: 'background-color',
-        val: 'rgba(255, 255, 255, 0)',
+        val: 'rgba(255, 255, 255)',
         isNecessary: true
       }, {
         type: 'input-number',
@@ -582,8 +753,11 @@ module.exports = {
       type: 'swiper-click',
       title: '图片项配置',
       config: [{
+        key: 1,
         val: '',
-        click: null
+        title: '',
+        link: '',
+        selectedPage: '选择跳转页面'
       }]
     }
   },
@@ -666,7 +840,9 @@ module.exports = {
       config: [
         {
           val: '',
-          click: null
+          title: '',
+          selectedPage: '选择跳转页面',
+          link: null
         }
       ]
     }
@@ -829,7 +1005,7 @@ module.exports = {
     }
   },
   'grid-menu': {
-    title: '金刚位',
+    title: '图文导航',
     domId: '',
     domName: '',
     base: [
@@ -897,15 +1073,26 @@ module.exports = {
     action: {
       type: 'grid-menu-click',
       title: '点击项配置',
+      num: 3,
       config: [
         {
+          key: 1,
           val: '',
-          text: '导航项一',
-          click: null
+          title: '导航项一',
+          link: null,
+          selectedPage: '选择跳转页面'
         }, {
+          key: 2,
           val: '',
-          text: '导航项二',
-          click: null
+          title: '导航项二',
+          link: null,
+          selectedPage: '选择跳转页面'
+        }, {
+          key: 3,
+          val: '',
+          title: '导航项三',
+          link: null,
+          selectedPage: '选择跳转页面'
         }
       ]
     }
@@ -943,22 +1130,23 @@ module.exports = {
     }
   },
   'page-title': {
-    title: '页面标题',
+    title: '公众号组件',
     domId: '',
     domName: '',
     base: [
       {
         type: 'text',
         label: '主标题',
-        val: '主标题文案',
+        val: '渔燕',
         isNecessary: true
       }, {
         type: 'text',
         label: '副标题',
-        val: '副标题文案 - 作者 - 2019.09.09',
+        val: '关注公众号',
         isNecessary: false
       }
     ],
+    
     style: [
       {
         type: 'color-picker',
@@ -967,7 +1155,7 @@ module.exports = {
         val: '#ffffff',
         isNecessary: false
       }, {
-        type: 'upload',
+        type: 'uploads',
         label: '背景图片',
         attr: 'background-image',
         val: '',
@@ -1114,73 +1302,31 @@ module.exports = {
     }
   },
   'page-paragraph': {
-    title: '段落模块',
+    title: '优惠券组件',
     domId: '',
     domName: '',
-    base: [
-      {
-        type: 'select',
-        label: '标题风格',
-        attr: 'theme',
-        val: 'theme-1',
-        options: [
-          {
-            name: '风格一',
-            val: 'theme-1'
-          }, {
-            name: '风格二',
-            val: 'theme-2'
-          }
-        ]
-      }, {
-        type: 'text',
-        label: '标题文案',
-        val: '标题',
-        isNecessary: true
-      }
-    ],
     style: [
-      /* {
+      {
         type: 'color-picker',
         label: '背景颜色',
         attr: 'background-color',
         val: '#ffffff',
         isNecessary: false
-      },*/ {
-        type: 'input-number',
-        label: '上边距',
-        attr: 'padding-top',
-        val: 10,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
       }, {
         type: 'input-number',
-        label: '右边距',
-        attr: 'padding-right',
-        val: 10,
-        unit: 'px',
-        min: 0,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '下边距',
-        attr: 'padding-bottom',
-        val: 0,
-        unit: 'px',
-        min: 10,
-        max: 50,
-        step: 1,
-        isNecessary: true
-      }, {
-        type: 'input-number',
-        label: '左边距',
+        label: '左内边距',
         attr: 'padding-left',
-        val: 10,
+        val: 15,
+        unit: 'px',
+        min: 0,
+        max: 50,
+        step: 1,
+        isNecessary: true
+      }, {
+        type: 'input-number',
+        label: '右内边距',
+        attr: 'padding-right',
+        val: 15,
         unit: 'px',
         min: 0,
         max: 50,
@@ -1188,13 +1334,100 @@ module.exports = {
         isNecessary: true
       }
     ],
+    others: {
+      type: 'item-style',
+      title: '列表项样式',
+      config: [
+        {
+          type: 'input-number',
+          label: '上内边距',
+          attr: 'horizontal-list-item_padding-top',
+          val: 10,
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '下内边距',
+          attr: 'horizontal-list-item_padding-bottom',
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '图片宽度',
+          attr: 'horizontal-list-logo_width',
+          val: 140,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '图片高度',
+          attr: 'horizontal-list-logo_height',
+          val: 78,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题大小',
+          attr: 'horizontal-list-title_font-size',
+          val: 16,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '标题颜色',
+          attr: 'horizontal-list-title_color',
+          val: '#333333',
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题粗细',
+          attr: 'horizontal-list-title_font-weight',
+          val: 500,
+          unit: '',
+          min: 300,
+          max: 900,
+          step: 100,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '描述大小',
+          attr: 'horizontal-list-desc_font-size',
+          val: 11,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '描述颜色',
+          attr: 'horizontal-list-desc_color',
+          val: '#999999',
+          isNecessary: false
+        }
+      ]
+    },
     action: {
-      type: 'page-paragraph-list',
-      title: '段落项',
-      config: [{
-        label: '1、',
-        content: 'H5制作工厂是一个移动端页面设计和制作平台，无需任何开发经营也可以制作自己的移动端站点和页面，从灵感到实现，您只需要10分钟。'
-      }]
+      type: 'page-paragraph',
+      title: '列表项配置',
+      fetchMode: 'menul',
+      hideUsed: false,
+      config: []
     }
   },
   'page-intro': {
@@ -1351,8 +1584,8 @@ module.exports = {
       }]
     }
   },
-  'horizontal-list': {
-    title: '横向列表',
+  'fenlei': {
+    title: '分类组件',
     domId: '',
     domName: '',
     style: [
@@ -1412,7 +1645,7 @@ module.exports = {
           type: 'input-number',
           label: '图片宽度',
           attr: 'horizontal-list-logo_width',
-          val: 100,
+          val: 140,
           unit: 'px',
           step: 1,
           max: 300,
@@ -1422,7 +1655,7 @@ module.exports = {
           type: 'input-number',
           label: '图片高度',
           attr: 'horizontal-list-logo_height',
-          val: 60,
+          val: 78,
           unit: 'px',
           step: 1,
           max: 300,
@@ -1458,7 +1691,142 @@ module.exports = {
           type: 'input-number',
           label: '描述大小',
           attr: 'horizontal-list-desc_font-size',
-          val: 13,
+          val: 11,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '描述颜色',
+          attr: 'horizontal-list-desc_color',
+          val: '#999999',
+          isNecessary: false
+        }
+      ]
+    },
+    action: {
+      type: 'fenlei-item-click',
+      title: '列表项配置',
+      display: 'list',
+      config: [{
+        key: 1,
+        label: '分类1',
+        children: [
+
+        ]
+      }]
+    }
+  },
+  'horizontal-list': {
+    title: '直播',
+    domId: '',
+    domName: '',
+    style: [
+      {
+        type: 'color-picker',
+        label: '背景颜色',
+        attr: 'background-color',
+        val: '#ffffff',
+        isNecessary: false
+      }, {
+        type: 'input-number',
+        label: '左内边距',
+        attr: 'padding-left',
+        val: 15,
+        unit: 'px',
+        min: 0,
+        max: 50,
+        step: 1,
+        isNecessary: true
+      }, {
+        type: 'input-number',
+        label: '右内边距',
+        attr: 'padding-right',
+        val: 15,
+        unit: 'px',
+        min: 0,
+        max: 50,
+        step: 1,
+        isNecessary: true
+      }
+    ],
+    others: {
+      type: 'item-style',
+      title: '列表项样式',
+      config: [
+        {
+          type: 'input-number',
+          label: '上内边距',
+          attr: 'horizontal-list-item_padding-top',
+          val: 10,
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '下内边距',
+          attr: 'horizontal-list-item_padding-bottom',
+          val: 10,
+          unit: 'px',
+          min: 0,
+          max: 50,
+          step: 1,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '图片宽度',
+          attr: 'horizontal-list-logo_width',
+          val: 140,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '图片高度',
+          attr: 'horizontal-list-logo_height',
+          val: 78,
+          unit: 'px',
+          step: 1,
+          max: 300,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题大小',
+          attr: 'horizontal-list-title_font-size',
+          val: 16,
+          unit: 'px',
+          step: 1,
+          max: 100,
+          min: 10,
+          isNecessary: false
+        }, {
+          type: 'color-picker',
+          label: '标题颜色',
+          attr: 'horizontal-list-title_color',
+          val: '#333333',
+          isNecessary: false
+        }, {
+          type: 'input-number',
+          label: '标题粗细',
+          attr: 'horizontal-list-title_font-weight',
+          val: 500,
+          unit: '',
+          min: 300,
+          max: 900,
+          step: 100,
+          isNecessary: true
+        }, {
+          type: 'input-number',
+          label: '描述大小',
+          attr: 'horizontal-list-desc_font-size',
+          val: 11,
           unit: 'px',
           step: 1,
           max: 100,
@@ -1477,7 +1845,7 @@ module.exports = {
       type: 'horizontal-item-click',
       title: '列表项配置',
       config: [{
-        val: 'https://yangyuji.github.io/h5-factory/static/img/logo.png',
+        val: '',
         title: '默认标题',
         desc: '默认文案描述，默认文案描述，默认文案描述默认文案描述',
         click: null
@@ -1620,12 +1988,12 @@ module.exports = {
       type: 'vertical-item-click',
       title: '列表项配置',
       config: [{
-        val: 'https://yangyuji.github.io/h5-factory/static/img/logo.png',
+        val: '',
         title: '默认标题',
         desc: '默认文案描述，默认文案描述，默认文案描述默认文案描述',
         click: null
       }, {
-        val: 'https://yangyuji.github.io/h5-factory/static/img/logo.png',
+        val: '',
         title: '默认标题',
         desc: '默认文案描述，默认文案描述，默认文案描述默认文案描述',
         click: null

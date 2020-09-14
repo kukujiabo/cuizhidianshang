@@ -23,6 +23,38 @@ export async function updatePhone(data) {
 }
 
 /**
+ * 
+ * @param {*} data 
+ */
+export async function updateUserCode(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/account/upUserCode`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  }) 
+}
+
+/**
+ * 
+ * @param {*} data 
+ */
+export async function updateUserName(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/account/upUserName`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  }) 
+}
+
+/**
  * 更新密码
  * @param {} data 
  */
@@ -163,5 +195,20 @@ export function logout() {
   return request({
     url: '/vue-element-admin/user/logout',
     method: 'post'
+  })
+}
+
+/**
+ * 修改微信号
+ */
+export function updateUserWxNo(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/account/upWxNo`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
   })
 }

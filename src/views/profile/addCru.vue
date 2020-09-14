@@ -8,9 +8,9 @@
         icon="el-icon-arrow-left"
         @click="goBack"
       />
-      <span>添加员工</span>
+      <span>{{ id ? '编辑' : '添加员工' }}</span>
     </div>
-    <add-role-form ref="addCruForm" />
+    <add-role-form ref="addCruForm"  />
   </div>
 </template>
 
@@ -42,7 +42,7 @@
 
 <script>
 import addRoleForm from './components/AddCruForm'
-
+import { getCruDetail } from '@/api/roles'
 export default {
   components: {
     addRoleForm
@@ -53,13 +53,11 @@ export default {
       cruData: null
     }
   },
-  created() {
+  async created() {
     if (this.$route.query.id) {
       this.id = this.$route.query.id
-      this.cruData = JSON.parse(this.$route.query.cru_data)
-      setTimeout(_ => {
-        this.$refs.addCruForm.setData(this.cruData)
-      }, 100)
+      const { data } = await getCruDetail(this.id)
+      this.$refs.addCruForm.setData(data)
     }
   },
   methods: {

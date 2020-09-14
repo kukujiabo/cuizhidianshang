@@ -22,16 +22,16 @@
           </el-form-item>
           <el-form-item label=" ">
             <el-radio-group v-model="form.sellMode">
-              <el-radio :label="0">付费</el-radio>
-              <el-radio :label="1">免费</el-radio>
+              <el-radio :disabled="!form.singleSell" :label="1">付费</el-radio>
+              <el-radio :disabled="!form.singleSell" :label="0">免费</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="">
             <div class="inline-input">
-              <el-input v-model="form.stdUnitPrice" placeholder="输入商品原价">
+              <el-input type="number" :min="0.01" :disabled="!form.singleSell ? true : form.sellMode === 0" @input="val => val < 0.01 ? form.stdUnitPrice = 0.01 : form.stdUnitPrice = Number(val.toFixed(2))" v-model="form.stdUnitPrice" placeholder="输入商品原价">
                 <template slot="append">元</template>
               </el-input>
-              <el-input v-model="form.realUnitPrice" placeholder="输入商品现价">
+              <el-input type="number" :min="0.01" :disabled="!form.singleSell ? true : form.sellMode === 0" @input="val => val  < 0.01 ? form.realUnitPrice = 0.01 : form.realUnitPrice = Number(val.toFixed(2))" v-model="form.realUnitPrice" placeholder="输入商品现价">
                 <template slot="append">元</template>
               </el-input>
             </div>
@@ -114,6 +114,13 @@ export default {
     },
     toGroups() {
       this.$router.push({ path: '/commodity/category' })
+    },
+    setData(data) {
+      this.form.clsId = data.clsId
+      this.form.singleSell = data.singleSell === 1 ? true : false
+      this.form.sellMode = data.sellMode
+      this.form.stdUnitPrice = data.stdUnitPrice
+      this.form.realUnitPrice = data.realUnitPrice
     }
   }
 }

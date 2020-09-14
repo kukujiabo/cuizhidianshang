@@ -1,11 +1,11 @@
 <template>
   <div class="navbar">
     <div class="version">
-      当前版本： &nbsp;<el-button type="primary" plain style="background-color:#FFF;border:1px solid #1f71ff;color:#1f71ff">高级版</el-button>
+      当前版本： &nbsp;<el-button type="primary" plain style="background-color:#FFF;border:1px solid #1f71ff;color:#1f71ff">旗舰版</el-button>
     </div>
-    <!-- <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <!-- <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
+    <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -46,6 +46,8 @@ import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
+import Cookies from 'js-cookie'
+import { removeToken, removeTokenType, removeAppId } from '@/utils/auth'
 
 export default {
   components: {
@@ -66,9 +68,15 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$message({ type: 'success', message: '您已登出！' })
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('shop/setCurrentShop', {})
+      await this.$store.dispatch('shop/setAllShop', [])
+      this.$store.dispatch('user/logout')
+      // Cookies.remove('appid')
+      removeAppId()
+      removeToken()
+      removeTokenType()
+      this.$message({ type: 'success', message: '您已退出成功！' })
+      this.$router.push('/login')
     }
   }
 }

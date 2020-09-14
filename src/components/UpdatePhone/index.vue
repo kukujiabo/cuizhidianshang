@@ -4,6 +4,8 @@
       width="500px"
       title="修改手机号"
       :visible.sync="visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <div class="update-phone-dialog-form">
         <el-form

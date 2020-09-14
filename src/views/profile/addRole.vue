@@ -61,7 +61,7 @@ export default {
     if (this.$route.query.id) {
       this.id = this.$route.query.id
       this.roleData = JSON.parse(this.$route.query.role_data)
-      const menus = await this.getRoleMenus(this.roleData.id)
+      const menus = await this.getRoleMenus(this.roleData.roleCode)
       setTimeout(_ => {
         this.$refs.addRoleForm.setData(this.roleData, menus)
       }, 100)
@@ -71,10 +71,10 @@ export default {
     goBack() {
       this.$router.back()
     },
-    async getRoleMenus(roleId) {
+    async getRoleMenus(roleCode) {
       try {
-        const { data: { list: { menus }}} = await getAllRoleMenus({ roleId })
-        return menus
+        const { data } = await getAllRoleMenus({ roleCode })
+        return data
       } catch (error) {
         return error.message
       }

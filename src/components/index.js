@@ -15,6 +15,8 @@ import SwiperBanner from './swiper/swiper-banner'
 
 import HorizontalList from './list/horizontal-list'
 import VerticalList from './list/vertical-list'
+import FenLei from './general/fenlei'
+import Richtext from './general/richtext'
 
 import PageFaq from './pageModule/page-faq'
 import PageIntro from './pageModule/page-intro'
@@ -41,5 +43,7 @@ export default {
     Vue.component(PageIntro.name, PageIntro)
     Vue.component(PageParagraph.name, PageParagraph)
     Vue.component(PageTitle.name, PageTitle)
+    Vue.component(FenLei.name, FenLei)
+    Vue.component(Richtext.name, Richtext)
   }
 }

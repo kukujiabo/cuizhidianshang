@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>标签/选中</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="设计稿V1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="裂变海报-新建" transform="translate(-390.000000, -1030.000000)">
+            <g id="海报设置" transform="translate(200.000000, 956.000000)">
+                <g id="获取设置" transform="translate(10.000000, 42.000000)">
+                    <g id="Group" transform="translate(110.000000, 0.000000)">
+                        <g id="证书样式1" transform="translate(24.000000, 32.000000)">
+                            <g id="标签/选中" transform="translate(46.000000, 0.000000)">
+                                <path d="M0,0 L20,0 C22.209139,-4.05812251e-16 24,1.790861 24,4 L24,24 L0,0 Z" id="Rectangle-5" fill="#2A75ED"></path>
+                                <path d="M19.1671149,4.15619122 C19.3576489,3.94793626 19.6665655,3.94793626 19.8570995,4.15619122 C20.0476335,4.36444619 20.0476335,4.7020942 19.8570995,4.91034917 L15.3434422,9.84380775 C15.160033,10.0442753 14.8651774,10.0528452 14.67228,9.86331496 L12.1617272,7.39658567 C11.9613364,7.19969286 11.9449188,6.86252202 12.1250575,6.64349352 C12.3051962,6.42446502 12.6136762,6.4065205 12.814067,6.60341331 L14.9805773,8.73210565 L19.1671149,4.15619122 Z" id="Path-2" fill="#FFFFFF" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

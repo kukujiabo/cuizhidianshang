@@ -6,8 +6,50 @@
       </div>
       <div class="capacity">
         <div class="capacity-tips" style="height:66px">
-          <span>空间容量：5MB/10GB</span>
-          <span style="color:#1F71FF">详情</span>
+          <div>
+            <span>空间容量：{{capacity.usedAmount}} MB/{{(capacity.amount/1024).toFixed(2)}} GB</span>
+            <el-popover
+              placement="bottom-end"
+              width="200"
+              trigger="hover"
+              content="当前店铺为基础版，（试用版 10GB,高级版200GB、旗舰版 1000GB）。">
+              <el-button icon="el-icon-question" type="text" slot="reference"></el-button>
+            </el-popover>
+          </div>
+          <div> 
+            <el-popover
+              placement="bottom"
+              trigger="hover"
+              >
+              <div>
+                <h4 style="margin:5px 0">素材大小</h4>
+                <el-table
+                  size="mini"
+                  :data="capacityData"
+                  :show-header="false"
+                  :border="false"
+                  :row-style="{ 'border-bottom': 0 }"
+                >
+                  <el-table-column width="36" property="date" label="color">
+                    <template slot-scope="scope">
+                      <div :style="{ 
+                        width:'12px',
+                        height:'12px',
+                        'background-color': scope.row.color
+                      }"></div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column width="72" property="name" label="名称"></el-table-column>
+                  <el-table-column align="right" width="72" property="size" label="大小">
+                    <template slot-scope="scope">
+                      <span>共{{scope.row.size}}M</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <el-button slot="reference" type="text">详情</el-button>
+            </el-popover>
+          </div>
         </div>
         <div>
           <el-progress :show-text="false" :percentage="5" :stroke-width="12" />
@@ -25,11 +67,11 @@
             </div>
             <div>
               <el-input
-                v-model="listTextImageQuery.keywords"
+                v-model="imgListQuery.searchOfFileName"
                 placeholder="搜索图片名称"
                 class="input-with-select"
               >
-                <el-button slot="append" type="primary">搜索</el-button>
+                <el-button slot="append" type="primary" @click="() => getImageList(imgListQuery)">搜索</el-button>
               </el-input>
             </div>
           </div>
@@ -46,13 +88,30 @@
                       :props="defaultProps"
                       :data="treeData"
                       @node-click="(node) => handleNodeClick(node, 1)"
-                    />
+                    >
+                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span style="display:flex;flex-direction:row;align-items:center">
+                          <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
+                          {{ node.label }}
+                        </span>
+                        <span v-if="data.id > 0">
+                          <el-button
+                            type="text"
+                            size="mini"
+                            icon="el-icon-error"
+                            @click.prevent="() => removeGroup(node, data, 1)"
+                            >
+                          </el-button>
+                        </span>
+                      </span>
+                    </el-tree>
                   </div>
                 </el-card>
               </el-col>
               <el-col :xl="20" :md="18">
                 <el-table
                   stripe
+                  :height="tableHeight"
                   :data="tidocuments"
                   class="content-table"
                   empty-text="没有数据"
@@ -72,31 +131,31 @@
                 >
                   <el-table-column
                     type="selection"
-                    width="65"
+                    width="55px"
                   />
-                  <el-table-column prop="image" label="图片">
+                  <el-table-column prop="image" label="图片" min-width="300px">
                     <template slot-scope="scope">
                       <div class="row-image-info">
-                        <img class="row-image" :src="'http://49.234.156.48:8083/res/' + scope.row.src">
+                        <img class="row-image" :src="Host + '/res/' + scope.row.src">
                         <div class="row-info">
-                          <span>{{scope.row.title}}</span>
+                          <span>{{ scope.row.title }}</span>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="fileSize" label="大小">
+                  <el-table-column prop="fileSize" align="center" label="大小" min-width="120px">
                     <template slot-scope="scope">
-                      <span>{{ scope.row.fileSize/1000 }}kb</span>
+                      <span>{{ scope.row.fileSize > 1000 ? scope.row.fileSize/1000 : scope.row.fileSize }}{{ scope.row.fileSize > 1000 ? 'M' : 'kb' }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="createDate" label="上传时间" />
-                  <el-table-column prop="isNet" label="状态">
+                  <el-table-column prop="createDate" label="上传时间" min-width="160px" />
+                  <el-table-column prop="isNet" label="状态" width="100px">
                     <template slot-scope="scope">
-                      <span class="process-fail" v-if="scope.row.isNet === 0">下架</span>
-                      <span class="process-success" v-if="scope.row.isNet === 1">正常</span>
+                      <span v-if="scope.row.isNet === 0" class="process-success">正常</span>
+                      <span v-if="scope.row.isNet === 1" class="process-fail">失效</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="right" label="操作">
+                  <el-table-column align="right" label="操作" min-width="190px">
                     <template slot-scope="scope">
                       <div style="padding-right:18px;">
                         <el-button type="text" @click="textDocumentEdit(scope.row, 1)">编辑</el-button>
@@ -115,8 +174,8 @@
               :page-size="imgListQuery.limit"
               :total="listTextImageTotal"
               layout="prev, pager, next, sizes, jumper"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+              @size-change="(val) => { imgListQuery.limit = val; getImageList(imgListQuery) }"
+              @current-change="(val) => { imgListQuery.page = val; getImageList(imgListQuery) }"
             />
           </div>
         </div>
@@ -131,11 +190,11 @@
             </div>
             <div>
               <el-input
-                v-model="listTextImageQuery.keywords"
+                v-model="audioListQuery.searchOfFileName"
                 placeholder="搜索音频名称"
                 class="input-with-select"
               >
-                <el-button slot="append" type="primary">搜索</el-button>
+                <el-button slot="append" type="primary" @click="() => getAudioList(this.audioListQuery)">搜索</el-button>
               </el-input>
             </div>
           </div>
@@ -148,7 +207,27 @@
                   </div>
                   <div class="tree-node">
                     <img class="plus" src="@/assets/plus.png" @click="showClassDialog(2)" />
-                    <el-tree :props="defaultProps" :data="treeData2" @node-click="handleNodeClick(2)" />
+                    <el-tree
+                      :props="defaultProps"
+                      :data="treeData2"
+                      @node-click="(node) => handleNodeClick(node, 2)"
+                      >
+                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span style="display:flex;flex-direction:row;align-items:center">
+                          <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
+                          {{ node.label }}
+                        </span>
+                        <span v-if="data.id > 0">
+                          <el-button
+                            type="text"
+                            size="mini"
+                            icon="el-icon-error"
+                            @click.prevent="() => removeGroup(node, data, 2)"
+                            >
+                          </el-button>
+                        </span>
+                      </span>
+                    </el-tree>
                   </div>
                 </el-card>
               </el-col>
@@ -158,6 +237,7 @@
                   :data="audioDocuments"
                   class="content-table"
                   empty-text="没有数据"
+                  :height="tableHeight"
                   header-row-class-name="light-table-header-background"
                   :header-cell-style="{
                     'background':'transparent',
@@ -174,28 +254,32 @@
                 >
                   <el-table-column
                     type="selection"
-                    width="65"
+                    width="55px"
                   />
-                  <el-table-column prop="image" label="音频">
+                  <el-table-column prop="image" label="音频" min-width="300px">
                     <template slot-scope="scope">
                       <div class="row-image-info">
-                        <img class="row-image" style="padding:10px 15px;box-sizing:border-box;cursor:pointer" src="@/assets/audio.png" @click="play(scope.row.src)">
-                        <audio :id="scope.row.src" :src="'http://49.234.156.48:8083/res/' + scope.row.src" />
+                        <img class="row-image" style="box-sizing:border-box;cursor:pointer" src="@/assets/playmedia.png" @click="play(scope.row.src)">
+                        <audio :id="scope.row.src" :src="Host + '/res/' + scope.row.src" />
                         <div class="row-info">
                           <span>{{scope.row.title}}</span>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="fileSize" label="大小" />
-                  <el-table-column prop="createDate" label="上传时间" />
-                  <el-table-column prop="isNet" label="状态">
+                  <el-table-column prop="fileSize" label="大小" min-width="120px">
                     <template slot-scope="scope">
-                      <span class="process-fail" v-if="scope.row.isNet === 0">下架</span>
-                      <span class="process-success" v-if="scope.row.isNet === 1">正常</span>
+                      <span>{{ scope.row.fileSize > 1000 ? scope.row.fileSize/1000 : scope.row.fileSize }}{{ scope.row.fileSize > 1000 ? 'M' : 'kb' }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="right" label="操作">
+                  <el-table-column prop="createDate" label="上传时间" min-width="160px" />
+                  <el-table-column prop="isNet" label="状态" min-width="100px">
+                    <template slot-scope="scope">
+                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
+                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="right" label="操作" min-width="190px">
                     <template slot-scope="scope">
                       <div style="padding-right:18px;">
                         <el-button type="text" @click="textDocumentEdit(scope.row, 2)">编辑</el-button>
@@ -214,8 +298,8 @@
               :page-size="audioListQuery.limit"
               :total="listAudioTotal"
               layout="prev, pager, next, sizes, jumper"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+              @size-change="val => { audioListQuery.limit = val; getAudioList(audioListQuery) }"
+              @current-change="val => { audioListQuery.page = val; getAudioList(audioListQuery) }"
             />
           </div>
         </div>
@@ -230,11 +314,11 @@
             </div>
             <div>
               <el-input
-                v-model="listTextImageQuery.keywords"
+                v-model="videoListQuery.searchOfFileName"
                 placeholder="搜索视频名称"
                 class="input-with-select"
               >
-                <el-button slot="append" type="primary">搜索</el-button>
+                <el-button slot="append" type="primary" @click="() => getVideoList(videoListQuery)">搜索</el-button>
               </el-input>
             </div>
           </div>
@@ -247,7 +331,27 @@
                   </div>
                   <div class="tree-node">
                     <img class="plus" src="@/assets/plus.png" @click="showClassDialog(3)">
-                    <el-tree :props="defaultProps" :data="treeData3" @node-click="handleNodeClick(3)" />
+                    <el-tree
+                      :props="defaultProps"
+                      :data="treeData3"
+                      @node-click="(node) => handleNodeClick(node, 3)"
+                      >
+                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span style="display:flex;flex-direction:row;align-items:center">
+                          <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
+                          {{ node.label }}
+                        </span>
+                        <span v-if="data.id > 0">
+                          <el-button
+                            type="text"
+                            size="mini"
+                            icon="el-icon-error"
+                            @click.prevent="() => removeGroup(node, data, 3)"
+                            >
+                          </el-button>
+                        </span>
+                      </span>
+                    </el-tree>
                   </div>
                 </el-card>
               </el-col>
@@ -257,6 +361,7 @@
                   :data="videoDocuments"
                   class="content-table"
                   empty-text="没有数据"
+                  :height="tableHeight"
                   header-row-class-name="light-table-header-background"
                   :header-cell-style="{
                     'background':'transparent',
@@ -273,27 +378,31 @@
                 >
                   <el-table-column
                     type="selection"
-                    width="65"
+                    width="55px"
                   />
-                  <el-table-column prop="image" label="视频">
+                  <el-table-column prop="image" label="视频" min-width="300px">
                     <template slot-scope="scope">
                       <div class="row-image-info">
-                        <img class="row-image"/>
+                        <img class="row-image" src="@/assets/playmedia.png" />
                         <div class="row-info">
                           <span>{{scope.row.title}}</span>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="fileSize" label="大小" />
-                  <el-table-column prop="createDate" label="上传时间" />
-                  <el-table-column prop="isNet" label="状态">
+                  <el-table-column prop="fileSize" label="大小" min-width="120px">
                     <template slot-scope="scope">
-                      <span class="process-fail" v-if="scope.row.isNet === 0">下架</span>
-                      <span class="process-success" v-if="scope.row.isNet === 1">正常</span>
+                      <span>{{ scope.row.fileSize > 1000 ? scope.row.fileSize/1000 : scope.row.fileSize }}{{ scope.row.fileSize > 1000 ? 'M' : 'kb' }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="right" label="操作">
+                  <el-table-column prop="createDate" label="上传时间" min-width="160px" />
+                  <el-table-column prop="isNet" label="状态" min-width="100px">
+                    <template slot-scope="scope">
+                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
+                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="right" label="操作" min-width="190px">
                     <template slot-scope="scope">
                       <div style="padding-right:18px;">
                         <el-button type="text" @click="textDocumentEdit(scope.row, 3)">编辑</el-button>
@@ -312,8 +421,8 @@
               :page-size="videoListQuery.limit"
               :total="listVideoTotal"
               layout="prev, pager, next, sizes, jumper"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+              @size-change="val => { videoListQuery.limit = val; getVideoClass(videoListQuery) }"
+              @current-change="val => { videoListQuery.page = val; getVideoClass(videoListQuery) }"
             />
           </div>
         </div>
@@ -328,11 +437,11 @@
             </div>
             <div>
               <el-input
-                v-model="listTextImageQuery.keywords"
+                v-model="eBookListQuery.searchOfFileName"
                 placeholder="搜索电子书名称"
                 class="input-with-select"
               >
-                <el-button slot="append" type="primary">搜索</el-button>
+                <el-button slot="append" type="primary" @click="() => getEbookList(eBookListQuery)">搜索</el-button>
               </el-input>
             </div>
           </div>
@@ -345,7 +454,28 @@
                   </div>
                   <div class="tree-node">
                     <img class="plus" src="@/assets/plus.png" @click="showClassDialog(4)">
-                    <el-tree :props="defaultProps" :data="treeData4" @node-click="handleNodeClick(4)" />
+                    <el-tree
+                      icon-class="el-icon-folder-opened"
+                      :props="defaultProps"
+                      :data="treeData4"
+                      @node-click="(node) => handleNodeClick(node, 4)"
+                      >
+                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <span style="display:flex;flex-direction:row;align-items:center">
+                          <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
+                          {{ node.label }}
+                        </span>
+                        <span v-if="data.id > 0">
+                          <el-button
+                            type="text"
+                            size="mini"
+                            icon="el-icon-error"
+                            @click.prevent="() => removeGroup(node, data, 4)"
+                            >
+                          </el-button>
+                        </span>
+                      </span>
+                    </el-tree>
                   </div>
                 </el-card>
               </el-col>
@@ -353,6 +483,7 @@
                 <el-table
                   stripe
                   :data="eBookDocuments"
+                  :height="tableHeight"
                   class="content-table"
                   empty-text="没有数据"
                   header-row-class-name="light-table-header-background"
@@ -371,27 +502,32 @@
                 >
                   <el-table-column
                     type="selection"
-                    width="65"
+                    width="55px"
                   />
-                  <el-table-column prop="image" label="电子书">
+                  <el-table-column prop="image" label="电子书" min-width="300px">
                     <template slot-scope="scope">
                       <div class="row-image-info">
-                        <img class="row-image">
+                        <img v-if="scope.row.title.indexOf('pdf') > 0" class="row-image" src="@/assets/pdf.png">
+                        <img v-if="scope.row.title.indexOf('epub') > 0" class="row-image" src="@/assets/epub.png">
                         <div class="row-info">
                           <span>{{scope.row.title}}</span>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="fileSize" label="大小" />
-                  <el-table-column prop="createDate" label="上传时间" />
-                  <el-table-column prop="isNet" label="状态">
+                  <el-table-column prop="fileSize" label="大小" min-width="120px">
                     <template slot-scope="scope">
-                      <span class="process-fail" v-if="scope.row.isNet === 0">下架</span>
-                      <span class="process-success" v-if="scope.row.isNet === 1">正常</span>
+                      <span>{{ scope.row.fileSize > 1000 ? scope.row.fileSize/1000 : scope.row.fileSize }}{{ scope.row.fileSize > 1000 ? 'M' : 'kb' }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="right" label="操作">
+                  <el-table-column prop="createDate" label="上传时间" min-width="160px" />
+                  <el-table-column prop="isNet" label="状态" min-width="100px">
+                    <template slot-scope="scope">
+                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
+                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="right" label="操作" min-width="190px">
                     <template slot-scope="scope">
                       <div style="padding-right:18px;">
                         <el-button type="text" @click="textDocumentEdit(scope.row, 4)">编辑</el-button>
@@ -410,8 +546,8 @@
               :page-size="eBookListQuery.limit"
               :total="listEbookTotal"
               layout="prev, pager, next, sizes, jumper"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+              @size-change="val => { eBookListQuery.limit = val; getEbookList(eBookListQuery) }"
+              @current-change="val => { eBookListQuery.page = val; getEbookList(eBookListQuery) }"
             />
           </div>
         </div>
@@ -471,7 +607,7 @@
               ref="fileUploader"
               name="file"
               class="upload-demo"
-              action="http://49.234.156.48:8083/api/res/addRes"
+              :action="Host + '/api/res/addRes'"
               :accept="uploadFileType[classIndex]"
               :list-type="classIndex === 1 ? 'picture-card' : ''"
               :auto-upload="false"
@@ -481,8 +617,11 @@
               :data="uploadData"
               :on-success="fileUploaded"
               :on-change="uploadFileChange"
+              :on-progress="fileUploadProgress"
+              :on-error="uploadError"
               :headers="{
-                Authorization: uploadToken
+                Authorization: uploadToken,
+                appid: appid
               }"
             >
               <div v-if="classIndex === 1">
@@ -507,14 +646,14 @@
         </el-form>
       </div>
       <div class="submit">
-        <el-button style="width:100px" plain type="primary" @click="cancelUploader">取消</el-button>
-        <el-button :loading="uploadLoading" style="width:100px" type="primary" @click="confirmUploader">确认上传</el-button>
+        <el-button style="min-width:100px" plain type="primary" @click="cancelUploader">取消</el-button>
+        <el-button :loading="uploadLoading" style="min-width:100px" type="primary" @click="confirmUploader">确认上传</el-button>
       </div>
     </el-dialog>
     <!-- 更新 -->
-    <el-dialog width="902px" class="x-el-dialog" :title="editTitle" :visible.sync="showEditBox">
+    <el-dialog width="902px" class="x-el-dialog" :title="editTitle" :visible.sync="showEditBox" @closed="clearEditData">
       <div class="upload-container">
-        <el-form ref="uploadForm" :model="editFormData" label-width="100px">
+        <el-form ref="editUploadForm" :model="editFormData" label-width="100px">
           <el-form-item required prop="pId" label="上传到：">
             <el-cascader
               v-model="editFormData.pId"
@@ -526,24 +665,28 @@
               placeholder="请选择上级分类"
             />
           </el-form-item>
+          <el-form-item required props="title" label="素材名称：">
+            <el-input v-model="editFormData.title" style="width:200px" />
+          </el-form-item>
           <el-form-item required prop="file" label="本地文件：">
             <el-upload
-              ref="fileUploader"
+              ref="editFileUploader"
               name="file"
               class="upload-demo"
-              action="http://49.234.156.48:8083/api/res/addRes"
+              :action="Host + '/api/res/addRes'"
               :auto-upload="false"
               :file-list="uploadList"
               :limit="100"
               :data="uploadData"
               :on-success="fileUploaded"
-              :on-change="uploadFileChange"
+              :on-change="editFileChange"
               :headers="{
-                Authorization: uploadToken
+                Authorization: uploadToken,
+                appid: getCurrentShop.appId
               }"
             >
               <div v-if="classIndex === 1">
-                <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar">
+                <img v-if="editFormData.src" :src="editFormData.file ? editFormData.src : Host + '/res/' + editFormData.src" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </div>
               <el-button v-if="classIndex > 1" slot="trigger" size="small" plain type="primary">选取文件</el-button>
@@ -564,8 +707,8 @@
         </el-form>
       </div>
       <div class="submit">
-        <el-button style="width:100px" plain type="primary" @click="cancelUploader">取消</el-button>
-        <el-button :loading="uploadLoading" style="width:100px" type="primary" @click="confirmUploader">确认上传</el-button>
+        <el-button style="width:100px" plain type="primary" @click="showEditBox = false">取消</el-button>
+        <el-button :loading="uploadLoading" style="width:100px" type="primary" @click="confirmEdit">确认修改</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -582,7 +725,7 @@
         />
       </div>
       <div class="submit">
-        <el-button style="width:100px" plain type="primary" @click="cancelUploader">取消</el-button>
+        <el-button style="width:100px" plain type="primary" @click="visibleMove = false">取消</el-button>
         <el-button :loading="uploadLoading" style="width:100px" type="primary" @click="confirmMovement">确定</el-button>
       </div>
     </el-dialog>
@@ -593,6 +736,14 @@
 @import "~@/styles/index.scss";
 .goods-container {
   padding: 0;
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
   .title {
     display: flex;
     flex-direction: row;
@@ -607,7 +758,11 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 350px;
+        width: 400px;
+        .color-block {
+          width:28px;
+          height: 28px;
+        }
       }
     }
   }
@@ -650,26 +805,26 @@
       }
       .content-table {
         min-height: 500px;
-        .process-fail::before {
-          content: "";
-          display: inline-block;
-          width: 6px;
-          height: 6px;
-          border-radius: 5px;
-          margin-right: 10px;
-          margin-bottom: 2px;
-          background-color: #ff0000;
-        }
-        .process-success::before {
-          content: "";
-          display: inline-block;
-          width: 6px;
-          height: 6px;
-          border-radius: 5px;
-          margin-right: 10px;
-          margin-bottom: 2px;
-          background-color: #52c41a;
-        }
+        // .process-fail::before {
+        //   content: "";
+        //   display: inline-block;
+        //   width: 6px;
+        //   height: 6px;
+        //   border-radius: 5px;
+        //   margin-right: 10px;
+        //   margin-bottom: 2px;
+        //   background-color: #ff0000;
+        // }
+        // .process-success::before {
+        //   content: "";
+        //   display: inline-block;
+        //   width: 6px;
+        //   height: 6px;
+        //   border-radius: 5px;
+        //   margin-right: 10px;
+        //   margin-bottom: 2px;
+        //   background-color: #52c41a;
+        // }
       }
       .light-table-header-background {
         background-color: #f8fbff;
@@ -681,8 +836,9 @@
         .row-image {
           width: 100px;
           height: 70px;
-          background-color: #FFF;
+          background-color: #fafafa;
           border: 0 !important;
+          object-fit: scale-down;
           @include radius(8px);
         }
         .row-info {
@@ -785,16 +941,54 @@
 </style>
 
 <script>
-import { createMateiralClass, moveMaterial, getMaterialClass, getMaterialList, batchRemoveMaterial, getBlobFile } from '@/api/material'
+import { 
+  createMateiralClass,
+  moveMaterial,
+  getMaterialClass,
+  getMaterialList,
+  batchRemoveMaterial,
+  getBlobFile,
+  getCapacity,
+  removeMaterialClass
+} from '@/api/material'
 import { getToken, getTokenType } from '@/utils/auth'
+import { Host } from '@/config'
+import { mapGetters } from 'vuex'
+import Cookies from 'js-cookie'
+import reqform from '@/utils/request-form'
 
 export default {
+  computed: {
+    ...mapGetters(['getCurrentShop'])
+  },
   data() {
     const token = getTokenType() + ' ' + getToken()
     return {
+      uploadProgressNumber: 0,
+      uploadFileNumber: 0,
+      capacityData: [
+        { name: '图片', size: 200, color: 'red' },
+        { name: '音频', size: 200, color: 'yellow' },
+        { name: '视频', size: 200, color: 'purple' },
+        { name: '电子书', size: 200, color: 'green' },
+      ],
+      capacity: {
+        amount: 0,
+        resourceFileTypeSpaceCapacity: {
+          image: 0,
+          audio: 0,
+          video: 0,
+          ebook: 0
+        },
+        usedAmount: 0
+      },
+      tableHeight: 0,
+      dloading: false,
+      Host: Host,
+      appid: Cookies.get('appid'),
       moveNode: null,
       visibleMove: false,
-      uploadFileType: ['', 'image/*', '.mda,.mp3', 'mp4,wmv,avi', '.pdf,.epub'],
+      uploadFileType: ['', 'image/*', '.mda,.mp3', '.mp4,.wmv,.avi', '.pdf,.epub'],
       editTitle: '',
       showEditBox: false,
       uploadLoading: false,
@@ -833,6 +1027,7 @@ export default {
       listAudioTotal: 0,
       listVideoTotal: 0,
       listEbookTotal: 0,
+      imagePage: 1,
       listTextImageQuery: {
         status: "",
         keywords: "",
@@ -844,7 +1039,10 @@ export default {
         pId: []
       },
       editFormData: {
-        pId: []
+        pId: [],
+        title: '',
+        src: '',
+        file: null
       },
       uploadList: [],
       uploadData: {
@@ -879,10 +1077,12 @@ export default {
       imageSelection: [],
       ebookSelection: [],
       videoSelection: [],
-      audioSelection: []
+      audioSelection: [],
+      uploadFileList: []
     }
   },
   created() {
+    this.tableHeight = window.innerHeight - 450
     this.getImageClass()
     this.getAudioClass()
     this.getVideoClass()
@@ -891,21 +1091,81 @@ export default {
     this.getAudioList(this.audioListQuery)
     this.getVideoList(this.videoListQuery)
     this.getEbookList(this.eBookListQuery)
+    this.getCapacity()
   },
   methods: {
+    async getCapacity() {
+      try {
+        const { data } = await getCapacity({ appId: this.appid })
+        this.capacity = data
+        this.capacityData[0].size = data.resourceFileTypeSpaceCapacity.image
+        this.capacityData[1].size = data.resourceFileTypeSpaceCapacity.audio
+        this.capacityData[2].size = data.resourceFileTypeSpaceCapacity.video
+        this.capacityData[3].size = data.resourceFileTypeSpaceCapacity.ebook
+      } catch (error) {
+        
+      }
+    },
+    removeGroup(node, data, index) {
+      this.$confirm(`确认删除分组 ${data.title} ?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(async _ => {
+        try {
+          const { success } = await removeMaterialClass({ clsId: data.id })
+          if (success) {
+            this.$message({
+              type: 'success',
+              message: '分类已删除'
+            })
+            switch(index) {
+              case 1:
+                this.getImageClass()
+                break
+              case 2:
+                this.getAudioClass()
+                break
+              case 3:
+                this.getVideoClass()
+                break
+              case 4:
+                this.getEBookClass()
+                break
+            }
+          }
+        } catch (error) {
+          
+        }
+      })
+    },
+    // 清除编辑表单数据
+    clearEditData() {
+      this.$refs.editUploadForm.clearFields()
+      this.$refs.editFileUploader.clearFiles()
+    },
+    // 上传编辑图片
+    editFileChange(file) {
+      this.editFormData.src = URL.createObjectURL(file.raw)
+      this.editFormData.file = file.raw
+    },
+    // 标签页切换
     handleTabClick() {
       switch (this.activeName) {
         case 'first':
-          this.moveClassTree = this.treeData
+          this.classIndex = 1
+          this.moveClassTree = this.treeData.filter(tree => tree.id !== 0)
           break
         case 'second':
-          this.moveClassTree = this.treeData2
+          this.classIndex = 2
+          this.moveClassTree = this.treeData2.filter(tree => tree.id !== 0)
           break
         case 'third':
-          this.moveClassTree = this.treeData3
+          this.classIndex = 3
+          this.moveClassTree = this.treeData3.filter(tree => tree.id !== 0)
           break
         case 'fourth':
-          this.moveClassTree = this.treeData4
+          this.classIndex = 4
+          this.moveClassTree = this.treeData4.filter(tree => tree.id !== 0)
           break
       }
     },
@@ -944,16 +1204,17 @@ export default {
         materials = this.ebookSelection
       }
       try {
-        const { success } = await moveMaterial({ targetClsId: this.moveNode.id, resIds: materials.map(i => i.Id) })
+        const { success, message } = await moveMaterial({ targetClsId: this.moveNode.id, resIds: materials.map(i => i.Id) })
         if (success) {
           this.getImageList(this.imgListQuery)
           this.moveNode = null
           this.$message({ type: 'success', message: '移动成功！' })
           this.visibleMove = false
         } else {
-          this.$message({ type: 'error', message: '移动失败，请联系管理员！' })
+          this.$message({ type: 'error', message })
         }
       } catch (error) {
+        console.log(error)
         this.$message({ type: 'error', message: '移动失败，请联系管理员！' })
       }
     },
@@ -961,11 +1222,42 @@ export default {
       this.moveNode = node
     },
     showMovement() {
+      switch(this.activeName) {
+        case 'first':
+          if (this.imageSelection.length === 0) {
+            this.$message({ type: 'error', message: '请先选择素材！' })
+            return
+          }
+          break
+        case 'second':
+          if (this.audioSelection.length === 0) {
+            this.$message({ type: 'error', message: '请先选择素材！' })
+            return
+          }
+          break
+        case 'third':
+          if (this.videoSelection.length === 0) {
+            this.$message({ type: 'error', message: '请先选择素材！' })
+            return
+          }
+          break
+        case 'fourth':
+          if (this.ebookSelection.length === 0) {
+            this.$message({ type: 'error', message: '请先选择素材！' })
+            return
+          }
+          break
+      }
       this.visibleMove = true
     },
-    uploadFileChange(evt) {
-      console.log(evt)
+    uploadFileChange(file, fileList) {
+      this.uploadFileList = fileList
+      this.uploadFileNumber = fileList.length
     },
+    uploadError(err) {
+      console.log(err, 'err')
+    },
+    // 播放
     play(id) {
       const audio = document.getElementById(id)
       if (audio.paused) {
@@ -974,22 +1266,71 @@ export default {
         audio.pause()
       }
     },
+    // 取消上传
     cancelUploader() {
       this.showUploadBox = false
       this.$refs.uploadForm.resetFields()
       this.$refs.fileUploader.clearFiles()
     },
+    // 确认新增
     confirmUploader() {
       if (this.uploadFormData.pId.length === 0) {
         this.$message({ type: 'error', message: '分类必须选择！' })
         return
       }
+      if (this.uploadFileList.length === 0) {
+        this.$message({ type: 'error', message: '请选择要上传的文件！' })
+        return
+      }
       this.uploadData.clsId = this.uploadFormData.pId[this.uploadFormData.pId.length - 1]
       this.uploadLoading = true
+      this.confirmFileNumber = this.uploadFileNumber
       this.$refs.fileUploader.submit()
+    },
+    // 确认修改
+    async confirmEdit() {
+      if (!this.editFormData.title) {
+        this.$message({ type: 'error', message: '素材名称必须填写' })
+        return
+      }
+      try {
+        const formData = {
+          resId: this.editFormData.id,
+          title: this.editFormData.title,
+          clsId: this.editFormData.pId[0]
+        }
+        if (this.editFormData.file) {
+          formData.file = this.editFormData.file
+        }
+        const { success, message } = await reqform('res/editRes', formData)
+        if (success) {
+          this.$message({ type: 'success', message: '修改成功！' })
+          this.showEditBox = false
+          switch (this.activeName) {
+            case 'first':
+              this.getImageList(this.imgListQuery)
+              break
+            case 'second':
+              this.getAudioList(this.audioListQuery)
+              break
+            case 'third':
+              this.getVideoList(this.videoListQuery)
+              break
+            case 'fourth':
+              this.getEbookList(this.eBookListQuery)
+              break
+          }
+        } else {
+          this.showEditBox = false
+          this.$message({ type: 'success', message })
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     textDocumentEdit(row, index) {
       this.showEditBox = true
+      this.classIndex = index
       if (index === 1) {
         this.editTitle = '编辑图片'
         this.classOptions = this.treeData
@@ -1003,22 +1344,72 @@ export default {
         this.editTitle = '编辑电子书'
         this.classOptions = this.treeData4
       }
+      this.editFormData.id = row.Id
       this.editFormData.pId.push(Number(row.clsId))
       this.editFormData.title = row.title
       this.editFormData.content = row.content
+      this.editFormData.src = row.src
+      console.log(this.editFormData)
     },
-    fileUploaded(evt) {
-      this.uploadLoading = false
+    fileUploadProgress(event, file, fileList) {
+      if (event.percent === 100) {
+        this.uploadProgressNumber++
+        if (this.uploadProgressNumber === this.confirmFileNumber) {
+          // this.$message({ type: 'success', message: '上传成功！' })
+          this.uploadFileList = []
+          this.uploadLoading = false
+          this.uploadProgressNumber = 0
+          this.showUploadBox = false
+          this.$refs.uploadForm.resetFields()
+          this.$refs.fileUploader.clearFiles()
+          if (this.classIndex === 1) {
+            this.getImageList(this.imgListQuery)
+          } else if (this.classIndex === 2) {
+            this.getAudioList(this.audioListQuery)
+          } else if (this.classIndex === 3) {
+            this.getVideoList(this.videoListQuery)
+          } else if (this.classIndex === 4) {
+            this.getEbookList(this.eBookListQuery)
+          }
+        }
+      }
+      // if (this.uploadFileNumber === this.confirmFileNumber) {
+      //   this.$message({ type: 'success', message: '上传成功！' })
+      //   this.showUploadBox = false
+      //   this.$refs.uploadForm.resetFields()
+      //   this.$refs.fileUploader.clearFiles()
+      //   if (this.classIndex === 1) {
+      //     this.getImageList(this.imgListQuery)
+      //   } else if (this.classIndex === 2) {
+      //     this.getAudioList(this.audioListQuery)
+      //   } else if (this.classIndex === 3) {
+      //     this.getVideoList(this.videoListQuery)
+      //   } else if (this.classIndex === 4) {
+      //     this.getEbookList(this.eBookListQuery)
+      //   }
+      //   this.uploadFileList = []
+      //   this.uploadLoading = false
+      // }
+    },
+    fileUploaded(evt, fileList) {
+      // this.uploadLoading = false
       if (evt.success) {
         this.$message({ type: 'success', message: '上传成功！' })
-        this.showUploadBox = false
-        this.$refs.uploadForm.resetFields()
-        this.$refs.fileUploader.clearFiles()
-        if (this.classIndex === 1) {
-          this.getImageList(this.imgListQuery)
-        } else if (this.classIndex === 2) {
-          this.getAudioList(this.audioListQuery)
-        }
+        // this.$message({ type: 'success', message: '上传成功！' })
+        // this.showUploadBox = false
+        // this.$refs.uploadForm.resetFields()
+        // this.$refs.fileUploader.clearFiles()
+        // if (this.classIndex === 1) {
+        //   this.getImageList(this.imgListQuery)
+        // } else if (this.classIndex === 2) {
+        //   this.getAudioList(this.audioListQuery)
+        // } else if (this.classIndex === 3) {
+        //   this.getVideoList(this.videoListQuery)
+        // } else if (this.classIndex === 4) {
+        //   this.getEbookList(this.eBookListQuery)
+        // }
+        // this.uploadFileList = []
+        // this.$refs.fileUploader.()
       } else {
         this.$message({ type: 'error', message: evt.message })
       }
@@ -1026,16 +1417,16 @@ export default {
     toUpload(index) {
       if (index === 1) {
         this.uploadTitle = '上传图片'
-        this.classOptions = this.treeData
+        this.classOptions = this.treeData.filter(tree => tree.id !== 0)
       } else if (index === 2) {
         this.uploadTitle = '上传音频'
-        this.classOptions = this.treeData2
+        this.classOptions = this.treeData2.filter(tree => tree.id !== 0)
       } else if (index === 3) {
         this.uploadTitle = '上传视频'
-        this.classOptions = this.treeData3
+        this.classOptions = this.treeData3.filter(tree => tree.id !== 0)
       } else if (index === 4) {
         this.uploadTitle = '新增电子书'
-        this.classOptions = this.treeData4
+        this.classOptions = this.treeData4.filter(tree => tree.id !== 0)
       }
       this.classIndex = index
       this.showUploadBox = true
@@ -1045,6 +1436,7 @@ export default {
     },
     clearDataChildren(arr) {
       arr.forEach(a => this.removeChildren(a))
+      arr.unshift({"id": 0,"pId":0,"title":"全部","content":"全部分组","children":[]})
       return arr
     },
     removeChildren(data) {
@@ -1185,6 +1577,7 @@ export default {
     },
     // 选择列表分类
     handleNodeClick(node, index) {
+      console.log(index)
       if (index === 1) {
         this.imgListQuery.clsId = node.id
         this.getImageList(this.imgListQuery)
@@ -1248,16 +1641,19 @@ export default {
             this.classDialog = false
             switch (this.classIndex) {
               case 1:
-                this.getImageClass()
+                await this.getImageClass()
                 break
               case 2:
-                this.getAudioClass()
+                await this.getAudioClass()
+                this.moveClassTree = this.treeData2
                 break
               case 3:
-                this.getVideoClass()
+                await this.getVideoClass()
+                this.moveClassTree = this.treeData3
                 break
               case 4:
-                this.getEBookClass()
+                await this.getEBookClass()
+                this.moveClassTree = this.treeData4
                 break
             }
           } else {
@@ -1277,18 +1673,23 @@ export default {
     },
     async textDocumentDownload(row) {
       try {
+        const not = this.$notify({
+          message: '正在下载...',
+          duration: 0
+        })
         const res = await getBlobFile(row.Id)
         const url = window.URL.createObjectURL(res)
         const link = document.createElement('a')
         link.style.display = 'none'
         link.href = url
-        link.setAttribute('download', row.title + '.' + row.src.split('.')[1])// 文件名
+        link.setAttribute('download', row.title )// 文件名
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link) // 下载完成移除元素
         window.URL.revokeObjectURL(url) // 释放掉blob对象
+        not.close()
       } catch (error) {
-        console.log(error.message)
+        console.log('error', error.message)
       }
     },
     textDocumentRemove(row, index) {

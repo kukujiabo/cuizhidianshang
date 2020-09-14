@@ -14,6 +14,10 @@ const getters = {
   getPhone: state => state.user.phone,
   getUserName: state => state.user.userName,
   getUserCode: state => state.user.userCode,
-  getUserIcon: state => state.user.icon
+  getUserIcon: state => state.user.icon,
+  getUserPhone: state => state.user.phone,
+  getCurrentShop: state => state.shop.currentShop,
+  getShopList: state => state.shop.shopList,
+  getWxNo: state => state.user.wxno
 }
 export default getters

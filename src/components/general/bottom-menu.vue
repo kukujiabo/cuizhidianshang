@@ -8,39 +8,39 @@
 </template>
 
 <script>
-  export default {
-    name: 'BottomMenu',
-    props: {
-      component: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        menus: this.component.action.config
-      }
-    },
-    computed: {
-      getStyle() {
-        const ret = []
-        this.component.style.forEach((item) => {
-          if (item.val) {
-            const unit = item.unit || ''
-            ret.push(item.attr + ':' + item.val + unit)
-          }
-        })
-        return ret.join(';')
-      }
-    },
-    watch: {
-      component: {
-        handler() {
-          this.menus = this.component.action.config
-        },
-        deep: true
-      }
+export default {
+  name: 'BottomMenu',
+  props: {
+    component: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      menus: this.component.action.config
+    }
+  },
+  computed: {
+    getStyle() {
+      const ret = []
+      this.component.style.forEach((item) => {
+        if (item.val) {
+          const unit = item.unit || ''
+          ret.push(item.attr + ':' + item.val + unit)
+        }
+      })
+      return ret.join(';')
+    }
+  },
+  watch: {
+    component: {
+      handler() {
+        this.menus = this.component.action.config
+      },
+      deep: true
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

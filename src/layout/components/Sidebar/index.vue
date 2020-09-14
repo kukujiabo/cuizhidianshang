@@ -1,6 +1,6 @@
 <template>
   <div :class="{'has-logo':showLogo}">
-    <logo v-if="showLogo" :collapse="isCollapse" />
+    <logo v-if="showLogo" :collapse="true" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <div class="company-logo">
         <img src="@/assets/logo-wt.png">
@@ -11,12 +11,16 @@
           <img v-else src="@/assets/header.png" class="shop-head">
           <div class="shop-name">
             <span class="myshop">我的店铺</span>
-            <span class="create-shop">立即创建店铺</span>
+            <span class="create-shop">共有 {{total}} 个店铺</span>
           </div>
           <div class="arrow-right">
             <img src="@/assets/arrow-right.png">
           </div>
         </div>
+      </div>
+      <div class="shop-decoration" @click="toDecoration">
+        <i class="el-icon-s-shop" style="font-size:18px"></i>
+        <span style="margin-left:12px">店铺装修</span>
       </div>
       <el-menu
         :default-active="activeMenu"
@@ -28,7 +32,12 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item
+          v-for="route in permission_routes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -54,6 +63,20 @@
   }
   .my-shop:hover {
     cursor: pointer;
+  }
+  .shop-decoration {
+    margin-top: 30px;
+    height: 50px;
+    color: #1f71ff;
+    font-size: 15px;
+    line-height: 50px;
+    padding: 0 20px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #132456;
   }
   .my-shop {
     box-sizing: border-box;
@@ -108,19 +131,25 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import Cookies from 'js-cookie'
+import { getAllShop, createShop } from '@/api/shop'
 
 export default {
   components: { SidebarItem, Logo },
   data() {
     return {
+      total: 0,
       headImage: ''
     }
+  },
+  created() {
+    this.getAllShop()
   },
   computed: {
     ...mapGetters([
       'permission_routes',
       'sidebar',
-      'getUserIcon'
+      'getUserIcon',
     ]),
     activeMenu() {
       const route = this.$route
@@ -142,8 +171,20 @@ export default {
     }
   },
   methods: {
+    async getAllShop() {
+      try {
+        const { data } = await getAllShop({})
+        this.total = data.length
+      } catch (error) {
+        console.log(error)
+      }
+    },
     toMyShop() {
       this.$router.push({ path: '/shop/index' })
+    },
+    toDecoration() {
+      const id = Cookies.get('shopid')
+      this.$router.push({ path: '/decoration/' + id })
     }
   }
 }

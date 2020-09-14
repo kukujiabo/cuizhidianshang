@@ -1,0 +1,230 @@
+.btn.default{
+  color: #FFFFFF;
+  color:$themeBlue;
+}
+.lee .el-dialog__header{
+  border-bottom: 1px solid #ddd;
+}
+.lee.border-none{
+  .el-card__header{
+    border-bottom: none;
+  }
+}
+.lee {
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 10px;
+    margin-right: 10px;
+    background-color: $themeBlue;
+    @include radius(2px);
+  }
+  .el-radio.none{
+    .el-radio__label{
+      display: none;
+    }
+  }
+}
+
+.input-with-select {
+  width: 300px;
+  margin-bottom: 10px;
+}
+// table组件去掉并重新定义偏移
+.none {
+  .el-table__row td {
+    padding-left: 3px !important;
+    // border-bottom: 1px solid #ededde;
+  }
+}
+
+// tabs页签公用修改 start
+.el-tabs--top .el-tabs__item.is-top:nth-child(2) {
+  padding-left: 20px !important;
+}
+// tabs页签公用修改 end
+
+.app-container {
+  .sec-title {
+    font-size: 20px;
+    font-weight: 800;
+    height: 29px;
+    line-height: 29px;
+    .section-back {
+      height: 24px;
+      width: 24px;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 24px;
+      margin-right: 10px;
+      font-weight: 800;
+      border: 1px solid $themeBlue;
+      color: $themeBlue;
+    }
+  }
+  .form-section-divider {
+    height: 30px;
+  }
+  .btns {
+    padding: 30px 100px;
+    .el-button {
+      width: 120px;
+      height: 40px;
+      line-height: 20px;
+      margin: 0 20px;
+    }
+  }
+}
+
+.group-container {
+  padding: 24px 30px;
+  .operation-btns {
+    @extend .flex;
+    @extend .flex-row;
+    @extend .flex-space-between;
+    .btn{
+      border-radius:2px;
+      font-size:14px;
+      font-family:Helvetica;
+      line-height:17px;
+    }
+    .primary{
+      background-color:$themeBlue;
+      color: #FFFFFF;
+    }
+    .default{
+      color: #FFFFFF;
+      color:$themeBlue;
+    }
+    .input-with-select {
+      width: 370px;
+    }
+    .el-input-group__append {
+      color: #FFFFFF;
+      background-color: $themeBlue;
+    }
+    .el-select{
+      width: 150px;
+      margin-right: 20px;
+      top:1px;
+    }
+    .el-input__inner{
+      border-radius:2px;
+    }
+  }
+  .main-table {
+    margin-top: 26px;
+    .content-table {
+      min-height: 500px;
+    }
+    .light-table-header-background {
+      background-color: #f8fbff;
+      border-bottom: 0;
+    }
+  }
+  .pagenigation {
+    padding: 40px 0;
+    text-align: right;
+    .el-pagination__jump {
+      margin-left: 0;
+    }
+  }
+  .el-table__row {
+    td {
+      padding-left: 15px;
+    }
+  }
+}
+
+.new {
+  margin-top: 20px;
+  .el-card {
+    margin-bottom: 20px;
+  }
+  .radius-tips {
+    font-size: 12px;
+    color: #b1b1b1;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 10px;
+    margin-right: 10px;
+    background-color: $themeBlue;
+    @include radius(2px);
+  }
+  .input-left{
+    margin-right: 10px;
+  }
+  .input-right{
+    margin-left: 10px;
+  }
+  p{
+    color:rgba(153,153,153,1);
+  }
+  .radius-item {
+    display: block;
+    height: 45px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .el-radio {
+      .el-radio__label {
+        color: $textGray;
+      }
+    }
+    .radius-tips {
+      font-size: 10px;
+      color: #b1b1b1;
+    }
+  }
+  .el-input__suffix{
+    color: rgba(51,51,51,1);
+    padding-right: 7px;
+  }
+  // .el-radio-fixed{
+  //   margin-left:-30px;
+  // }
+  .inner-form-wrapper {
+    padding: 15px 10px;
+    .el-form-item {
+      min-height: 50px;
+      .el-input--medium {
+        // width: 310px;
+        height: 40px;
+        background-color: $lightBackground;
+        border-radius: 5px;
+        .el-input__inner {
+          border: 0;
+          height: 40px;
+          line-height: 20px;
+          background: transparent;
+        }
+        .el-input__count-inner {
+          background: transparent !important;
+        }
+      }
+      .cover-image {
+        width: 190px;
+        height: 100px;
+        background-color: $lightBackground;
+        margin-bottom: 10px;
+        border: 0 !important;
+        @include radius(5px);
+      }
+      .radio-item {
+        width: 500px;
+        p {
+          font-size: 13px !important;
+          color: #a1a1a1 !important;
+          height: 50px !important;
+          line-height: 30px !important;
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+}

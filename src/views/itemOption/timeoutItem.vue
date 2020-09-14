@@ -380,7 +380,6 @@
 
     .el-dialog__body {
       padding: 0 10px 0 10px !important;
-
       .el-form-item {
 
         &.small {

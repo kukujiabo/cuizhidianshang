@@ -1,6 +1,7 @@
-import { login, logout, getInfo, pwdlogin, updatePhone, updatePassword } from '@/api/user'
+import { login, logout, getInfo, pwdlogin, updatePhone, updatePassword, updateUserCode, updateUserName, updateUserWxNo } from '@/api/user'
 import { getToken, setToken, removeToken, getTokenType, setTokenType, removeTokenType } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { Host } from '@/config'
 
 const state = {
   token: getToken(),
@@ -10,6 +11,7 @@ const state = {
   introduction: '',
   roles: [],
   id: 0,
+  wxno: '',
   phone: '',
   icon: '',
   userName: '',
@@ -46,6 +48,9 @@ const mutations = {
   },
   SET_PHONE: (state, phone) => {
     state.phone = phone
+  },
+  SET_WX_NO: (state, wxno) => {
+    state.wxno = wxno
   },
   SET_USER_CODE: (state, userCode) => {
     state.userCode = userCode
@@ -102,14 +107,20 @@ const actions = {
         if (!data) {
           reject('登录失败，请重新登录！')
         }
-        const { Id, Phone, UserCode, Icon, UserName, WxOpenId, RegisterDateTime, LastLoginDate } = data
+        console.log(data, 'userinfo')
+        const { Id, Phone, UserCode, Icon, UserName, WxOpenId, RegisterDateTime, LastLoginDate, WxNo } = data
         commit('SET_ROLES', ['admin'])
-        commit('SET_ICON', 'http://49.234.156.48:8083/res/' + Icon)
+        if (Icon) {
+          commit('SET_ICON', Host + '/res/' + Icon)
+        } else {
+          commit('SET_ICON', null)
+        }
         commit('SET_ID', Id)
         commit('SET_PHONE', Phone)
         commit('SET_USER_CODE', UserCode)
         commit('SET_USER_NAME', UserName)
         commit('SET_WX_OPENID', WxOpenId)
+        commit('SET_WX_NO', WxNo)
         commit('SET_REGISTER_DATE_TIME', RegisterDateTime)
         commit('SET_LAST_LOGIN_DATE', LastLoginDate)
         resolve(data)
@@ -128,6 +139,36 @@ const actions = {
       })
     })
   },
+  updateUserCode({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      updateUserCode({ ...params }).then(response => {
+        commit('SET_USER_CODE', params.userCode)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  updateUserName({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      updateUserName({ ...params }).then(response => {
+        commit('SET_USER_NAME', params.userName)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  updateUserWxNo({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      updateUserWxNo({ ...params }).then(response => {
+        commit('SET_WX_NO', params.newWxNo)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   upPwd({ commit }, params) {
     return new Promise((resolve, reject) => {
       updatePassword({ ...params }).then(response => {
@@ -138,18 +179,19 @@ const actions = {
     })
   },
   logout({ commit, state, dispatch }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resetRouter()
-        dispatch('tagsView/delAllViews', null, { root: true })
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    commit('SET_TOKEN', '')
+    commit('SET_ROLES', [])
+    // return new Promise((resolve, reject) => {
+    //   logout(state.token).then(() => {
+
+    //     removeToken()
+    //     resetRouter()
+    //     dispatch('tagsView/delAllViews', null, { root: true })
+    //     resolve()
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
   },
 
   resetToken({ commit }) {

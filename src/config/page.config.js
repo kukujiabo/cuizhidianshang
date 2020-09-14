@@ -118,5 +118,63 @@ module.exports = {
               msg: '不为空则提示该消息'
            }`
     }
-  ]
+  ],
+  index: {
+    key: 'index',
+    pageName: '首页'
+  },
+  car: {
+    key: 'car',
+    pageName: '直通车',
+    brandInfo: {
+      logo: '',
+      brandName: '',
+      brandDesc: ''
+    },
+    goodsList: []
+  },
+  goods: {
+    key: 'goods',
+    searchHolder: '搜索相关关键词',
+    searchDisplay: 1,
+    pageName: '好物分享',
+    displayType: 1,
+    goodsList: []
+  },
+  message: {
+    key: 'message',
+    pageName: '消息中心'
+  },
+  me: {
+    key: 'me',
+    pageName: '个人中心',
+    inviteBonus: {
+      type: 1,
+      display: 1,
+      words: '赚高额佣金'
+    },
+    items: {
+      layoutType: 1,
+      menu: ['money', 'asset', 'rank', 'opinion'],
+      menus: [
+        {
+          key: 'money',
+          title: '快速赚钱',
+          display: 1
+        }, {
+          key: 'asset',
+          title: '我的资产',
+          display: 1
+        }, {
+          key: 'rank',
+          title: '我的等级',
+          display: 1
+        }, {
+          key: 'opinion',
+          title: '意见反馈',
+          display: 1
+        }
+      ]
+    }
+  }
 }

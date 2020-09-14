@@ -11,20 +11,21 @@
               v-model="form.title"
               maxlength="45"
               show-word-limit
+              style="width:400px;"
               placeholder="请输入图文名称，建议字数在14字以内，不超过45个字"
             />
-            <a class="text-blue" href="javascript:void(0);" style="margin-left:10px">修改</a>
+            <!-- <a class="text-blue" href="javascript:void(0);" style="margin-left:10px">修改</a> -->
           </el-form-item>
           <el-form-item required prop="cover" label="封面图片：">
-            <el-input v-show="false" v-model="form.cover" type="hidden" />
+            <!-- <el-input v-show="false" v-model="form.cover" type="hidden" /> -->
             <div>
               <img v-if="form.cover" class="cover-image" :src="form.cover">
               <img v-else class="cover-image" src="@/assets/emptyimageholder.jpg">
             </div>
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
               multiple
+              :action="Host"
               :show-file-list="false"
               :limit="1"
               :file-list="fileList"
@@ -42,7 +43,7 @@
               :height="300"
             />
           </el-form-item>
-          <el-form-item prop="allowCopy" label="文字仿复制：">
+          <el-form-item prop="allowCopy" label="文字防复制：">
             <div style="padding-top:10px">
               <el-radio-group v-model="form.allowCopy">
                 <div class="radio-item">
@@ -50,7 +51,7 @@
                   <p>课程的文字内容允许复制，图片点击放大和长按识别二维码功能允许使用</p>
                 </div>
                 <div class="radio-item">
-                  <el-radio :label="1">材料</el-radio>
+                  <el-radio :label="1">禁止复制</el-radio>
                   <p>课程的文字内容禁止复制，图片点击放大和长按识别二维码功能不允许使用</p>
                 </div>
               </el-radio-group>
@@ -118,6 +119,7 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
+import { Host } from '@/config'
 
 export default {
   components: {
@@ -125,6 +127,7 @@ export default {
   },
   data() {
     return {
+      Host,
       imgUrl: '',
       uploadUrl: '',
       imageUrl: '',
@@ -149,6 +152,12 @@ export default {
     },
     getFormData() {
       return this.form
+    },
+    setData(data) {
+      this.form.cover = data.cover
+      this.form.title = data.title
+      this.form.content = data.content
+      this.form.allowCopy = data.allowCopy
     }
   }
 }

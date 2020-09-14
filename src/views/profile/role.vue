@@ -10,11 +10,11 @@
             <el-button type="primary" @click="toCreateRole">添加角色</el-button>
             <div>
               <el-input
-                v-model="listTextImageQuery.keywords"
+                v-model="roleListQuery.search"
                 placeholder="搜索角色名称"
                 class="input-with-select"
               >
-                <el-button slot="append" type="primary">搜索</el-button>
+                <el-button slot="append" type="primary" @click="getRoleList(roleListQuery)">搜索</el-button>
               </el-input>
             </div>
           </div>
@@ -48,7 +48,7 @@
               <el-table-column width="300px" align="right" label="操作">
                 <template slot-scope="scope">
                   <div style="padding-right:18px;">
-                    <el-button type="text" @click="textDocumentEdit(scope.row)">详情</el-button>
+                    <el-button type="text" @click="roleDetail(scope.row)">详情</el-button>
                     <el-button type="text" @click="editRole(scope.row)">编辑</el-button>
                     <el-button type="text" @click="removeRole(scope.row)">删除</el-button>
                   </div>
@@ -106,7 +106,7 @@
               <el-table-column prop="phone" label="手机号" />
               <el-table-column prop="role" label="角色">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.roleNames.join(',') }}</span>
+                  <span>{{ scope.row.roles }}</span>
                 </template>
               </el-table-column>
               <el-table-column prop="admin" label="添加人" />
@@ -124,7 +124,7 @@
               <el-table-column width="300px" align="right" label="操作">
                 <template slot-scope="scope">
                   <div style="padding-right:18px;">
-                    <el-button type="text" @click="textDocumentEdit(scope.row)">详情</el-button>
+                    <el-button type="text" @click="cruDetail(scope.row)">详情</el-button>
                     <el-button type="text" @click="editCru(scope.row)">编辑</el-button>
                     <el-button type="text" @click="removeUser(scope.row)">删除</el-button>
                   </div>
@@ -164,52 +164,57 @@
             </el-card>
           </el-col>
           <el-col :lg="18" :xl="20">
-            <el-card v-if="currentRole">
-              <div v-for="menu in allMenus" :key="menu.id" class="section-item">
+            <el-card v-if="currentRole && getRoleList">
+              <div v-for="menu in allMenus" :key="menu.code" class="section-item">
                 <div class="section-title">
                   <div>
                     <span>{{ menu.name }}</span>
                   </div>
-                  <div>
-                    <el-switch v-model="menu1" active-color="#1f71f" />
+                  <div v-if="menu.code !== undefined">
+                    <el-switch
+                      v-if="menu.code === 'CommoditFiles'"
+                      v-model="CommoditFiles"
+                      active-color="#1f71f"
+                      @change="(evt) => switchAuth(evt, menu.code, menu.children)"
+                      />
+                    <el-switch
+                      v-if="menu.code === 'MarketingManage'"
+                      v-model="MarketingManage"
+                      active-color="#1f71f"
+                      @change="(evt) => switchAuth(evt, menu.code, menu.children)"
+                      />
+                    <el-switch
+                      v-if="menu.code === 'MaterialManage'"
+                      v-model="MaterialManage"
+                      active-color="#1f71f"
+                      @change="(evt) => switchAuth(evt, menu.code, menu.children)"
+                      />
+                    <el-switch
+                      v-if="menu.code === 'SetupManage'"
+                      v-model="SetupManage"
+                      active-color="#1f71f"
+                      @change="(evt) => switchAuth(evt, menu.code, menu.children)"
+                      />
+                    <el-switch
+                      v-if="menu.code === 'ShopDecoration'"
+                      v-model="ShopDecoration"
+                      active-color="#1f71f"
+                      @change="(evt) => switchAuth(evt, menu.code, menu.children)"
+                      />
                   </div>
                 </div>
                 <div class="section-options">
-                  <el-checkbox-group v-model="checkedCities">
-                    <el-checkbox v-for="menu in menus" :key="menu" :label="menu">{{ menu }}</el-checkbox>
-                  </el-checkbox-group>
+                  <el-tree
+                    show-checkbox
+                    node-key="code"
+                    :ref="menu.code"
+                    :props="defaultProps"
+                    :data="menu.children"
+                    :default-expand-all="true"
+                    @node-click="(node) => handleNodeClick(node, 1)"
+                  />
                 </div>
               </div>
-              <!-- <div class="section-item">
-                <div class="section-title">
-                  <div>
-                    <span>素材管理</span>
-                  </div>
-                  <div>
-                    <el-switch v-model="menu2" active-color="#1f71f" />
-                  </div>
-                </div>
-                <div class="section-options">
-                  <el-checkbox-group v-model="checkedCities">
-                    <el-checkbox v-for="menu in menus" :key="menu" :label="menu">{{ menu }}</el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div>
-              <div class="section-item">
-                <div class="section-title">
-                  <div>
-                    <span>设置</span>
-                  </div>
-                  <div>
-                    <el-switch v-model="menu3" active-color="#1f71f" />
-                  </div>
-                </div>
-                <div class="section-options">
-                  <el-checkbox-group v-model="checkedCities">
-                    <el-checkbox v-for="menu in menus" :key="menu" :label="menu">{{ menu }}</el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div> -->
               <div style="height:100px" />
             </el-card>
           </el-col>
@@ -347,7 +352,15 @@ const routerPath = {
   '/profile/cur': 'second',
   '/profile/auth': 'third'
 }
-import { getRoleList, removeRole, getCruList, removeCru, getAllRoleMenus, getAllMenus } from '@/api/roles'
+import { 
+  getRoleList,
+  removeRole,
+  getCruList,
+  removeCru,
+  getAllRoleMenus,
+  getAllMenus,
+  getRolePermission
+} from '@/api/roles'
 export default {
   components: {},
   data() {
@@ -361,6 +374,11 @@ export default {
       cruList: [],
       cruTotal: 0,
       allRoleList: [],
+      subChecked: {},
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
       videoDocuments: [
         {
           image: '',
@@ -385,6 +403,7 @@ export default {
       ],
       checkedCities: '',
       roleListQuery: {
+        search: '',
         start: 1,
         limit: 20
       },
@@ -395,7 +414,14 @@ export default {
       },
       currentRole: null,
       allMenus: [],
-      roleMenuList: []
+      roleMenuList: [],
+      checkedKeys: {},
+      menuSwitch: {},
+      CommoditFiles: false,
+      MarketingManage: false,
+      MaterialManage: false,
+      SetupManage: false,
+      ShopDecoration: false
     }
   },
   created() {
@@ -406,13 +432,39 @@ export default {
     this.getAllMenus()
   },
   methods: {
+    switchAuth(evt, code, roots) {
+      console.log(roots)
+      if (evt) {
+        this.$refs[code][0].setCheckedKeys(roots.map(root => root.code), false)
+      } else {
+        this.$refs[code][0].setCheckedKeys([], false)
+      }
+    },
+    roleDetail(row) {
+      this.$router.push({ path: `/profile/roleDetail?id=${row.id}&roleName=${row.roleName}&remark=${row.remark}&roleCode=${row.roleCode}` })
+    },
+    /**
+     * 员工详情
+     */
+    cruDetail(row) {
+      this.$router.push({ path: '/profile/cruDetail?id=' + row.id })
+    },
+    handleNodeClick(node) {
+      console.log(node)
+    },
     /**
      * 查询全部菜单
      */
     async getAllMenus() {
       try {
-        const { data: { list }} = await getAllMenus()
-        this.allMenus = list
+        const { data } = await getAllMenus()
+        console.log(data)
+        this.allMenus = data
+        this.allMenus.forEach(menu => {
+          this.menuSwitch[menu.code] = false
+          this.subChecked[menu.code] = []
+        })
+        console.log(this.menuSwitch)
       } catch (error) {
         console.log(error)
       }
@@ -421,7 +473,7 @@ export default {
      * 选择角色
      */
     selectRole(row) {
-      // this.getRoleMenus(row)
+      this.getRoleMenus(row)
       this.currentRole = row
     },
     /**
@@ -465,7 +517,7 @@ export default {
      * 编辑员工
      */
     editCru(row) {
-      this.$router.push({ path: '/profile/editCru', query: { id: row.id, cru_data: JSON.stringify(row) }})
+      this.$router.push({ path: '/profile/editCru', query: { id: row.id }})
     },
     handleSizeChange() {
 
@@ -478,8 +530,17 @@ export default {
      */
     async getRoleMenus(role) {
       try {
-        const { data: { list }} = await getAllRoleMenus({ roleId: role.id })
-        this.roleMenuList = list
+        const { data } = await getAllRoleMenus({ roleCode: role.roleCode })
+        this.roleMenuList = data
+        data.forEach(m => {
+          this.checkedKeys[m.code] = []
+          this.$set(this.menuSwitch, m.code, true)
+          this.filterAllCode(m)
+        })
+        for(let key in this.checkedKeys) {
+          this.$refs[key][0].setCheckedKeys(this.checkedKeys[key])
+        }
+        this.$forceUpdate()
       } catch (error) {
         console.log(error)
       }
@@ -500,6 +561,11 @@ export default {
      */
     async getRoleList(query) {
       try {
+        for(let key in query) {
+          if (query[key] === '' || query[key] === undefined) {
+            delete query[key]
+          }
+        }
         const { data: { list, total }} = await getRoleList(query)
         this.roleList = list
         this.roleTotal = total
@@ -518,6 +584,18 @@ export default {
         this.cruTotal = total
       } catch (error) {
         console.log(error)
+      }
+    },
+    filterAllCode(data) {
+      if (data.children && data.children.length > 0) {
+        data.children.forEach(m => {
+          this.checkedKeys[data.code].push(m.code)
+          if (m.children && m.children.length > 0) {
+            m.children.forEach(sm => {
+              this.checkedKeys[data.code].push(sm.code)
+            })
+          }
+        })
       }
     },
     /**

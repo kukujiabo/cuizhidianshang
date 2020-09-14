@@ -28,7 +28,7 @@
 
 <script>
   import util from '@/utils/util.js'
-  import upload from '@/common/upload.vue'
+  import upload from '@/common/navUpload.vue'
   import compConfig from '@/config/comp.config.js'
   export default {
     components: {

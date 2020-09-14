@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -56,8 +56,8 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/decoration',
-    component: () => import('@/views/shop/decoration'),
+    path: '/decoration/:id',
+    component: () => import('@/views/shop/app'),
     hidden: true
   },
   {
@@ -65,11 +65,16 @@ export const constantRoutes = [
     component: () => import('@/views/login/forget-password'),
     hidden: true
   },
-  // {
-  //   path: '/auth-redirect',
-  //   component: () => import('@/views/login/auth-redirect'),
-  //   hidden: true
-  // },
+  {
+    path: '/shopboard',
+    component: () => import('@/views/shopboard/index'),
+    hidden: true
+  },
+  {
+    path: '/hsetting',
+    component: () => import('@/views/shopboard/settings'),
+    hidden: true
+  },
   // {
   //   path: '/404',
   //   component: () => import('@/views/error-page/404'),
@@ -79,42 +84,34 @@ export const constantRoutes = [
   //   path: '/401',
   //   component: () => import('@/views/error-page/401'),
   //   hidden: true
-  // },
+  // }, 
   {
     path: '/',
+    name: '概况纵览',
     component: Layout,
     redirect: '/dashboard',
+    meta: { title: '概况纵览', icon: 'dashboard', noCache: true },
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '概况纵览', icon: 'dashboard', affix: true }
+        meta: { title: '概况纵览', icon: 'dashboard' }
       }
     ]
   },
   // {
-  //   path: '/documentation',
-  //   component: Layout,
+  //   path: '/decoration',
+  //   name: '店铺装修',
+  //   component: () => import('@/views/shopboard/index'),
+  //   redirect: '/decoration',
+  //   meta: { title: '店铺装修', icon: 'dashboard', noCache: true },
   //   children: [
   //     {
-  //       path: 'index',
-  //       component: () => import('@/views/documentation/index'),
-  //       name: 'Documentation',
-  //       meta: { title: 'Documentation', icon: 'documentation', affix: true }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/guide',
-  //   component: Layout,
-  //   redirect: '/guide/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/guide/index'),
-  //       name: 'Guide',
-  //       meta: { title: 'Guide', icon: 'guide', noCache: true }
+  //       path: '/decoration/:id',
+  //       component: () => import('@/views/shopboard/index'),
+  //       name: 'decoration',
+  //       meta: { title: '店铺装修', icon: 'dashboard' }
   //     }
   //   ]
   // },
@@ -147,10 +144,24 @@ export const constantRoutes = [
         meta: { title: '商品档案', noCache: true }
       },
       {
+        path: 'comments',
+        component: () => import('@/views/commodity/comments'),
+        name: '查看评论',
+        hidden: true,
+        meta: { title: '查看评论', noCache: true }
+      },
+      {
         path: 'category',
         component: () => import('@/views/commodity/category'),
         name: '商品分组',
         meta: { title: '商品分组', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'content',
+        component: () => import('@/views/commodity/classGoodsManage'),
+        name: '内容管理',
+        meta: { title: '内容管理', noCache: true }
       },
       {
         hidden: true,
@@ -161,10 +172,24 @@ export const constantRoutes = [
       },
       {
         hidden: true,
+        path: 'editTextImage',
+        component: () => import('@/views/commodity/addTextImage'),
+        name: '编辑图文',
+        meta: { title: '编辑图文', noCache: true }
+      },
+      {
+        hidden: true,
         path: 'addVideo',
         component: () => import('@/views/commodity/addVideo'),
         name: '新增视频',
         meta: { title: '新增视频', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'editVideo',
+        component: () => import('@/views/commodity/addVideo'),
+        name: '编辑视频',
+        meta: { title: '编辑视频', noCache: true }
       },
       {
         hidden: true,
@@ -175,14 +200,29 @@ export const constantRoutes = [
       },
       {
         hidden: true,
+        path: 'editVoice',
+        component: () => import('@/views/commodity/addVoice'),
+        name: '编辑音频',
+        meta: { title: '编辑音频', noCache: true }
+      },
+      {
+        hidden: true,
         path: 'onAir',
         component: () => import('@/views/commodity/onAir'),
         name: '新增直播',
         meta: { title: '新增直播', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'editOnAir',
+        component: () => import('@/views/commodity/onAir'),
+        name: '编辑直播',
+        meta: { title: '编辑直播', noCache: true }
       }
     ]
   },
   {
+    hidden: true,
     path: '/shop',
     component: Layout,
     name: '我的店铺',
@@ -223,6 +263,20 @@ export const constantRoutes = [
         meta: { title: '员工管理', noCache: true }
       },
       {
+        hidden: true,
+        path: 'cruDetail',
+        component: () => import('@/views/profile/cruDetail'),
+        name: '员工详情',
+        meta: { title: '员工详情', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'roleDetail',
+        component: () => import('@/views/profile/roleDetail'),
+        name: '角色详情',
+        meta: { title: '角色详情', noCache: true }
+      },
+      {
         path: 'auth',
         component: () => import('@/views/profile/role'),
         name: '权限管理',
@@ -255,6 +309,111 @@ export const constantRoutes = [
         component: () => import('@/views/profile/addCru'),
         name: '编辑员工',
         meta: { title: '编辑员工', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/attestation',
+    component: () => import('@/views/shop/attestation'),
+    hidden: true
+  },
+  {
+    path: '/marketing',
+    component: Layout,
+    name: '营销管理',
+    redirect: '/marketing/index',
+    meta: { title: '营销管理', icon: 'directory', noCache: true },
+    children: [
+      {
+        hidden: true,
+        path: 'index',
+        component: () => import('@/views/marketing/index'),
+        name: '营销管理',
+        meta: { title: '营销管理', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'promotionStaff',
+        component: () => import('@/views/marketing/promotionStaff'),
+        name: '推广达人',
+        meta: { title: '推广达人', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'inviteCode',
+        component: () => import('@/views/marketing/inviteCode'),
+        name: '邀请码',
+        meta: { title: '邀请码', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'coupon',
+        component: () => import('@/views/marketing/coupon/list'),
+        name: '优惠券',
+        meta: { title: '优惠券', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'coupon/add',
+        component: () => import('@/views/marketing/coupon/add'),
+        name: '新增优惠券',
+        meta: { title: '新增优惠券', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'coupon/edit',
+        component: () => import('@/views/marketing/coupon/edit'),
+        name: '修改优惠券',
+        meta: { title: '修改优惠券', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'coupon/copy',
+        component: () => import('@/views/marketing/coupon/copy'),
+        name: '复制优惠券',
+        meta: { title: '复制优惠券', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'coupon/effectData',
+        component: () => import('@/views/marketing/coupon/effectData'),
+        name: '效果数据',
+        meta: { title: '效果数据', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'groupBuying',
+        component: () => import('@/views/marketing/groupBuying'),
+        name: '拼团',
+        meta: { title: '拼团', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'addGrouping',
+        component: () => import('@/views/marketing/addGrouping'),
+        name: '创建拼团',
+        meta: { title: '创建拼团', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'fission',
+        component: () => import('@/views/marketing/fission/list'),
+        name: '裂变',
+        meta: { title: '裂变', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'fission/add',
+        component: () => import('@/views/marketing/fission/add'),
+        name: '创建裂变',
+        meta: { title: '创建裂变', noCache: true }
+      },
+      {
+        hidden: true,
+        path: 'fission/edit',
+        component: () => import('@/views/marketing/fission/edit'),
+        name: '修改裂变',
+        meta: { title: '修改裂变', noCache: true }
       }
     ]
   }

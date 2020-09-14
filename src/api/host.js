@@ -1,3 +1,3 @@
-const host = 'http://49.234.156.48:8083/api'
+const host = 'http://eccs.com.cn/services/api'
 
 export default host

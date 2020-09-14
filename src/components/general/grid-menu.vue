@@ -1,57 +1,71 @@
 <template>
-  <div :class="['comp-content', component.active ? 'active' : '']"
-       :style="getStyle">
+  <div
+    :class="['comp-content', component.active ? 'active' : '']"
+    :style="getStyle"
+    style="background:#fff"
+  >
     <ul class="grid-menu">
-      <li class="grid-menu-item"
-           :style="getItemStyle"
-           v-for="item in items">
-        <img v-if="item.val" :src="item.val">
-        <div v-else class="image-placeholder"><i class="fa fa-image"></i></div>
-        <span v-if="item.text">{{item.text}}</span>
+      <li
+        v-for="item in items"
+        :key="item.text"
+        :style="getItemStyle"
+        class="grid-menu-item"
+      >
+        <img class="circle" v-if="item.val" :src="item.val">
+        <div v-else class="image-placeholder">
+          <i class="fa fa-circle" />
+        </div>
+        <span v-if="item.title">{{ item.title }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'GridMenu',
-    props: {
-      component: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        items: this.component.action.config
-      }
-    },
-    computed: {
-      getStyle() {
-        const ret = []
-        this.component.style.forEach((item) => {
-          const unit = item.unit || ''
-          item.val && ret.push(item.attr + ':' + item.val + unit)
-        })
-        return ret.join(';')
-      },
-      getItemStyle() {
-        const column = parseInt(this.component.base[0].val)
-        const num = this.items.length > column ? 100 / column : 100 / this.items.length
-        return 'width:' + num + '%;'
-      }
-    },
-    watch: {
-      component: {
-        handler() {
-          this.items = this.component.action.config
-        },
-        deep: true
-      }
-    },
-    methods: {
+export default {
+  name: 'GridMenu',
+  props: {
+    component: {
+      type: Object
     }
+  },
+  data() {
+    return {
+      action: this.component.action,
+      items: this.component.action.config
+    }
+  },
+  computed: {
+    getStyle() {
+      const ret = []
+      this.component.style.forEach((item) => {
+        const unit = item.unit || ''
+        item.val && ret.push(item.attr + ':' + item.val + unit)
+      })
+      return ret.join(';')
+    },
+    getItemStyle() {
+      // const column = parseInt(this.component.base[0].val)
+      // const num = this.items.length > column ? 100 / column : 100 / this.items.length
+      return 'width:' + (this.action.num === 3 ? 33.3 : 25) + '%;'
+    }
+  },
+  watch: {
+    component: {
+      handler() {
+        this.items = this.component.action.config
+        this.action = this.component.action
+      },
+      deep: true
+    }
+  },
+  created() {
+    
+  },
+  methods: {
+
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -72,17 +86,20 @@
       text-decoration: none;
       list-style-type: none;
 
+      .circle {
+        border-radius: 50%;
+      }
+
       > .image-placeholder {
         margin: 0 auto;
         width: 40px;
         height: 40px;
         line-height: 40px;
-        border: 1px solid #e8e8e8;
         text-align: center;
 
         > .fa {
           color: #83c0ff;
-          font-size: 20px;
+          font-size: 40px;
           vertical-align: middle;
         }
       }
@@ -95,7 +112,7 @@
       }
       > span {
         display: block;
-        margin: 5px auto 0 auto;
+        margin: 10px auto 0 auto;
         font-size: 12px;
         color: #0a1b2b;
       }

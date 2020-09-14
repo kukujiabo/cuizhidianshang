@@ -9,17 +9,16 @@
         <el-form
           ref="updatePhoneForm"
           :model="updateForm"
-          :rules="updateRules"
           class="login-form"
           autocomplete="on"
           :inline="false"
         >
-          <el-form-item label="输入新的微信号" prop="newPhone">
+          <el-form-item label="输入新的微信号" prop="newWechat">
             <el-input
-              ref="newPhone"
-              v-model="updateForm.newPhone"
+              ref="newWechat"
+              v-model="updateForm.newWxNo"
               placeholder="请输入微信号"
-              name="newPhone"
+              name="newWechat"
               type="text"
               tabindex="1"
               auto-complete="off"
@@ -74,36 +73,17 @@
 </style>
 
 <script>
-import { sendUpdatePhoneCode } from '@/api/user'
+import { sendUpdatePhoneCode, updateWechat } from '@/api/user'
 
 export default {
-  name: 'UpdatePhoneBox',
+  name: 'UpdateWechat',
   data() {
-    const validatePhone = (rule, value, callback) => {
-      if (value.length !== 11) {
-        callback(new Error('请正确填写11位手机号！'))
-      } else {
-        callback()
-      }
-    }
-    const validateVerifyCode = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请填写验证码！'))
-      } else {
-        callback()
-      }
-    }
     return {
       visible: false,
       sendBtnText: '获取验证码',
       sendBtnDisable: false,
       updateForm: {
-        newPhone: '',
-        verifyCode: ''
-      },
-      updateRules: {
-        newPhone: [{ required: true, trigger: 'blur', validator: validatePhone }],
-        verifyCode: [{ required: true, trigger: 'blur', validator: validateVerifyCode }]
+        newWxNo: ''
       }
     }
   },
@@ -114,47 +94,27 @@ export default {
     closeBox() {
       this.visible = false
     },
-    async sendCode() {
-      if (this.updateForm.newPhone.length !== 11) {
-        this.$message({ type: 'error', message: '请正确填写11位手机号！' })
+    async doUpdate() {
+      if (!this.updateForm.newWxNo) {
+        this.$message({ type: 'success', message: '微信号不能为空!' })
         return
       }
       try {
-        this.sendBtnDisable = true
-        await sendUpdatePhoneCode({ phone: this.updateForm.newPhone })
-        this.$message({ type: 'success', message: '验证码已发送！' })
-        let count = 60
-        const sendInterval = setInterval(_ => {
-          count--
-          if (count < 0) {
-            clearInterval(sendInterval)
-            this.sendBtnText = '获取验证码'
-            this.sendBtnDisable = false
-          } else {
-            this.sendBtnText = `${count}秒后重发`
-          }
-        }, 1000)
+        // const { success, message } = await updateWechat({ newWxNo: this.updateForm.newWxNo })
+        // if (success) {
+        //   this.$message({ type: 'success', message: '修改成功' })
+        //   this.closeBox()
+        // } else {
+        //   this.$message({ type: 'error', message })
+        // }
+        this.$store.dispatch('user/updateUserWxNo', this.updateForm).then(() => {
+          this.$message({ type: 'success', message: '微信号已修改！' })
+          this.closeBox()
+        })
       } catch (error) {
-        this.sendBtnDisable = false
-        this.$message({ type: 'error', message: error.message })
+        console.log(error)
+        this.$message({ type: 'error', message: '网络错误！' })
       }
-    },
-    async doUpdate() {
-      this.$refs.updatePhoneForm.validate(async valid => {
-        if (valid) {
-          try {
-            this.$store.dispatch('user/updatePhone', this.updateForm).then(() => {
-              this.$message({ type: 'success', message: '手机号已修改！' })
-              this.visible = false
-            })
-          } catch (error) {
-            this.$message({ type: 'error', message: error.message })
-            return false
-          }
-        } else {
-          return false
-        }
-      })
     }
   }
 }

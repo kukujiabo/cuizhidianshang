@@ -7,6 +7,22 @@ const postHeader = {
 }
 
 /**
+ * 移动素材
+ * @param {}} data 
+ */
+export async function moveMaterial(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/res/moveTo`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  })
+}
+
+/**
  * 新增分类
  * @param {*} data 
  */
@@ -16,6 +32,22 @@ export async function createMateiralClass(data) {
   }
   return request({
     url: `${host}/res/addcls`,
+    method: 'post',
+    headers: { ...headers, ...postHeader },
+    data
+  })
+}
+
+/**
+ * 删除分类
+ * @param {*} data 
+ */
+export async function removeMaterialClass(data) {
+  const headers = {
+    Authorization: getTokenType() + ' ' + getToken()
+  }
+  return request({
+    url: `${host}/res/removecls`,
     method: 'post',
     headers: { ...headers, ...postHeader },
     data
@@ -87,14 +119,14 @@ export async function getBlobFile(data) {
 }
 
 /**
- *  移动
+ * get capacity
  */
-export async function moveMaterial(data) {
+export async function getCapacity(data) {
   const headers = {
     Authorization: getTokenType() + ' ' + getToken()
   }
   return request({
-    url: `${host}/res/moveTo`,
+    url: `${host}/shop/spaceCapacity/getDetail`,
     method: 'post',
     headers: { ...headers, ...postHeader },
     data

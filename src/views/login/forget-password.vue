@@ -1,7 +1,7 @@
 <template>
   <div class="forget-container">
     <div class="top">
-      <img src="@/assets/loogo.png" class="logo" />
+      <img src="@/assets/logo.png" class="logo" />
     </div>
     <div class="content">
       <div class="goback" @click="toLogin">
@@ -24,7 +24,7 @@
           v-show="step === 1"
           ref="loginForm"
           :model="loginForm"
-          :rules="currentMode == 1 ? loginRules : loginRules2"
+          :rules="loginRules"
           class="login-form"
           autocomplete="on"
           label-position="left"
@@ -65,7 +65,6 @@
               >{{ loginSendBtnText }}</el-button>
             </el-form-item>
             <el-button
-              :loading="loading"
               type="primary"
               style="width:100%;height:48px;line-height:24px;"
               @click.native.prevent="handleNext"
@@ -288,6 +287,38 @@
 
 <script>
 import { sendForgetPasswordCode, updateForgetPassword } from '@/api/user'
+
+function passwordLevel(password) {
+    var Modes = 0;
+    for (var i = 0; i < password.length; i++) {
+        Modes |= CharMode(password.charCodeAt(i));
+    }
+    return bitTotal(Modes);
+ 
+    //CharMode函数
+    function CharMode(iN) {
+        if (iN >= 48 && iN <= 57)//数字
+            return 1;
+        if (iN >= 65 && iN <= 90) //大写字母
+            return 2;
+        if ((iN >= 97 && iN <= 122) || (iN >= 65 && iN <= 90)) //大小写
+            return 4;
+        else
+            return 8; //特殊字符
+    }
+ 
+    //bitTotal函数
+    function bitTotal(num) {
+        var modes = 0;
+        for (var i = 0; i < 4; i++) {
+            if (num & 1) modes++;
+            num >>>= 1;
+        }
+        console.log(modes)
+        return modes;
+    }
+}
+
 export default {
   data() {
     return {
@@ -320,6 +351,11 @@ export default {
       }
       if (passwordForm.newpassword !== passwordForm.confirmpassword) {
         this.$message({ type: 'error', message: '两次输入密码不一致！' })
+        return
+      }
+      
+      if (passwordLevel(passwordForm.newpassword) < 2) {
+        this.$message({ type: 'error', message: '密码必须包含字母、数字、特殊字符中的两种！' })
         return
       }
       this.confirmLoading = true

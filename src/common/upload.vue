@@ -1,290 +1,395 @@
 <template>
-  <div class="el-form-item small el-form-item--mini">
-    <label class="el-form-item__label" style="width:80px;">{{label}}：</label>
-    <div class="el-form-item__content" style="margin-left:80px;">
+  <div class="el-form-item small el-form-item--mini picker-dialog">
+    <div class="el-form-item__content">
       <div class="upload-container">
         <div class="el-upload el-upload--text">
-          <div class="el-upload-dragger"><i class="el-icon-upload"></i>
-            <div v-if="item.val" class="image-preview" :style="{ backgroundImage: 'url(' + item.val + ')' }">
-              <i class="fa fa-window-close" @click.stop="delImg(item)"></i>
+          <div class="el-upload-dragger" @click.prevent="showMaterialDialog()">
+            <i class="el-icon-upload"></i>
+            <div
+              v-if="item.val"
+              class="image-preview"
+              :class="{ circle: shape === 2 }"
+              :style="{ backgroundImage: 'url(' + item.val + ')' }"
+            >
             </div>
-            <div v-else class="el-upload__text">上传图片 或
-              <em><a href="javascript:;" @click.prevent="dialogShow=true">图片地址</a></em>
+            <div class="el-upload__text">
+              <em>
+                <a href="javascript:;">修改</a>
+              </em>
             </div>
           </div>
-          <input @change="upload" type="file" name="photoImg" class="upload-input">
+          <div class="upload-attrs">
+            <el-form size="mini" label-width="54px" label-position="left">
+              <el-form-item label="标题">
+                <el-input v-model="item.title" placeholder="选填" />
+              </el-form-item>
+              <el-form-item label="跳转链接">
+                <el-dropdown @command="emitCommend">
+                  <span class="el-dropdown-link jump-page-select">
+                    <span class="jump-page-tips">{{item.selectedPage}}</span>
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="group">商品分组</el-dropdown-item>
+                    <el-dropdown-item command="list">实物商品</el-dropdown-item>
+                    <el-dropdown-item command="sharecenter">推广中心</el-dropdown-item>
+                    <el-dropdown-item command="shareposter">海报分享</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-form-item>
+            </el-form>
+          </div>
+          <!-- <input @change="upload" type="file" name="photoImg" class="upload-input" /> -->
         </div>
-        <div v-if="item.limit" class="upload-tips">
-          <h3>图片限制</h3>
-          格式：jpeg/png/gif<br/>
-          大小：小于{{item.limit.s}}k<br/>
-          宽度：<font color="red">{{item.limit.w}}px</font><br/>
-          高度：<font color="red">{{item.limit.h}}px</font>
-        </div>
-        <div v-else class="upload-tips">
-          <h3>图片限制</h3>
-          格式：jpeg/png/gif<br/>
-          大小：jpeg/png小于100k，gif小于500k<br/>
-          宽度：小于750px
-        </div>
+        <i class="el-icon-error" @click.stop="remove(item)"></i>
       </div>
     </div>
-
-    <el-dialog id="netImgDialog"
-               title="网络图片"
-               :close-on-click-modal="false"
-               :append-to-body="true"
-               :visible="dialogShow"
-               @close="dialogShow=false"
-               width="680px">
-
-      <el-tabs v-model="currentTab" type="card" @tab-click="clickTab">
-
-        <el-tab-pane label="网络图片" name="outside">
-          <el-form label-width="100px" style="margin-top:20px;">
-            <el-form-item label="图片地址：">
-              <el-input placeholder="图片地址，例：https://www.example.com/text.png" v-model="imgUrl"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-
-        <el-tab-pane label="本站图片素材" name="inside">
-          <el-table
-            :data="tableData"
-            style="width: 100%">
-            <el-table-column
-              prop="name"
-              label="预览"
-              width="80">
-              <template slot-scope="scope">
-                <img style="max-width:50px;max-height:50px;" src="http://www.w3school.com.cn/i/eg_tulip.jpg">
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="date"
-              label="上传日期"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="图片地址">
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              label="操作"
-              width="60">
-              <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">选择</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-        </el-tab-pane>
-
-      </el-tabs>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="setImgUrl">确 定</el-button>
-      </div>
-    </el-dialog>
+    <div>
+      <el-dialog
+        id="netImgDialog"
+        :title="optionType === 1 ? '选择商品' : '选择素材' "
+        :close-on-click-modal="false"
+        :append-to-body="true"
+        :visible.sync="dialogShow"
+        width="1240px"
+        @close="dialogShow=false"
+      >
+        <div v-if="optionType === 1" class="zoom-in">
+          <select-goods v-if="commend === 'list'" @cancel="cancelDialog" @goodsselected="selectGoods" />
+          <select-by-group v-if="commend === 'group'" @cancel="cancelDialog" @goodsselected="selectGoods" />
+        </div>
+        <div v-if="optionType === 2" class="zoom-in">
+          <select-material @cancel="cancelDialog" @materialselected="selectMateiral" />
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="confirm">确定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'upload',
-    data() {
-      return {
-        currentTab: 'outside',
-        imgUrl: '',
-        dialogShow: false,
-        tableData: []
-      }
-    },
-    props: {
-      label: {
-        type: String
-      },
-      index: {
-        type: Number,
-        default: 0
-      },
-      item: {
-        type: Object
-      }
-    },
-    methods: {
-      upload(e) {
-        const file = e.target.files[0]
-        if (file) {
-          if (['image/gif', 'image/png', 'image/jpg', 'image/jpeg'].indexOf(file.type) > -1) {
-            // 获取图片宽高
-            const reader = new FileReader()
-            reader.onloadend = () => {
-              const img = new Image()
-              img.onload = () => {
-                let invalide = true
-                if (this.item.hasOwnProperty('limit')) {
-                  if (img.width !== this.item.limit.w) {
-                    invalide = false
-                    this.$alert('图片宽度必须为 ' + this.item.limit.w + 'px', '提示')
-                  }
-                  if (img.height !== this.item.limit.h) {
-                    invalide = false
-                    this.$alert('图片高度必须为 ' + this.item.limit.h + 'px', '提示')
-                  }
-                  if (file.size / 1024 > this.item.limit.s) {
-                    invalide = false
-                    this.$alert('图片大小不能超过 ' + this.item.limit.s + 'k', '提示')
-                  }
-                } else {
-                  if (img.width > 750) {
-                    invalide = false
-                    this.$alert('图片宽度不能超过750px', '提示')
-                  }
-                  if (file.type === 'image/gif') {
-                    if (file.size / 1024 > 2048) {
-                      invalide = false
-                      this.$alert('gif图片不能超过2048k', '提示')
-                    }
-                  } else {
-                    if (file.size / 1024 > 512) {
-                      invalide = false
-                      this.$alert('jpeg、png图片不能超过512k', '提示')
-                    }
-                  }
-                }
+import SelectMaterial from "@/common/selectMateiral"
+import SelectGoods from "@/common/selectGoods"
+import SelectByGroup from '@/common/selectByGroup'
+import { getMaterialList } from "@/api/material"
+import { Host } from "@/config"
 
-                if (invalide) {
-                  const width = 750
-                  const height = img.height * (750 / img.width).toFixed(4)
-                  this.item.width = width
-                  this.item.height = height
-                  this.item.val = img.src
-                  this.$emit('uploadSuccess', this.item, img, this.index)
-                }
-              }
-              img.src = reader.result
-              this.$emit('beforeUpload', file, this.item, img, this.index)
-            }
-            reader.onerror = (err) => {
-              console.log('reader error', err)
-            }
-            // 读出文件路径
-            reader.readAsDataURL(file)
-          } else {
-            this.$alert('图片格式须为jpg、jpeg、png、gif之一！', '提示')
-          }
-        }
-      },
-      setImgUrl() {
-        try {
-          const img = new Image()
-          img.onload = () => {
-            let invalide = true
-            if (this.item.hasOwnProperty('limit')) {
-              if (img.naturalWidth !== this.item.limit.w) {
-                invalide = false
-                this.$alert('图片宽度必须为 ' + this.item.limit.w + 'px', '提示')
-              }
-              if (img.naturalHeight !== this.item.limit.h) {
-                invalide = false
-                this.$alert('图片高度必须为 ' + this.item.limit.h + 'px', '提示')
-              }
-            } else {
-              if (img.naturalWidth > 750) {
-                invalide = false
-                this.$alert('图片宽度不能超过750px', '提示')
-              }
-            }
-            if (invalide) {
-              const width = 750
-              const height = img.naturalHeight * (750 / img.naturalWidth).toFixed(4)
-              this.item.width = width
-              this.item.height = height
-              this.item.val = img.src
-              this.dialogShow = false
-              this.$emit('uploadSuccess', this.item, img, this.index)
-            }
-          }
-          img.src = this.imgUrl
-        } catch (e) {
-          console.warn(e)
-        }
-      },
-      delImg(item) {
-        item.val = ''
-      },
-      clickTab(tab) {
-        this.currentTab = tab.name
-      }
+const goodsDetailPage = [
+  '/otherPage/pages/productInfo', // 图文
+  '/otherPage/pages/videoInfo', // 视频
+  '', // 直播
+  '', // 手机海报
+  '', // 
+  '/otherPage/pages/musicInfo', // 音频
+]
+
+export default {
+  name: "Upload",
+  components: {
+    SelectGoods,
+    SelectByGroup,
+    SelectMaterial,
+  },
+  data() {
+    console.log(this.item, 'item')
+    return {
+      Host: Host,
+      optionType: 1,
+      commend: 'list',
+      searchPicName: "",
+      currentTab: "goods",
+      imgUrl: "",
+      dialogShow: false,
+      tableData: [],
+      imgList: [],
+      selectedRow: {},
+      selectedCls: {},
+      selectedType: 0
+    };
+  },
+  props: {
+    label: {
+      type: String,
+    },
+    index: {
+      type: Number,
+      default: 0,
+    },
+    item: {
+      type: Object,
+    },
+    shape: {
+      type: Number,
+      default: 1
     }
-  }
+  },
+  created() {
+
+  },
+  methods: {
+    cancel() {
+      this.dialogShow = false
+    },
+    remove() {
+      this.$emit('removeitem', this.index)
+    },
+    showMaterialDialog() {
+      this.dialogShow = true
+      this.optionType = 2
+    },
+    showGoodsDialog() {
+      this.dialogShow = true
+      this.optionType = 1
+    },
+    // 选中商品
+    selectGoods({ row, cls }) {
+      this.selectedType = 1
+      this.selectedRow = row
+      this.selectedCls = cls
+    },
+    // 选中素材
+    selectMateiral({ row, cls }) {
+      this.selectedType = 2
+      this.selectedRow = row
+      this.selectedCls = cls
+    },
+    confirm() {
+      const row = this.selectedRow
+      const cls = this.selectedCls
+      if (this.selectedType === 1) {
+        console.log(goodsDetailPage[row.cType - 1])
+        this.item.link = goodsDetailPage[row.cType - 1] + '?id=' + row.id
+        this.item.selectedPage = '商品：' + row.title
+        this.dialogShow = false
+      } else if (this.selectedType === 2) {
+        this.item.val = Host + "/res/" + row.src
+        this.dialogShow = false
+      }
+    },
+    // 触发命令
+    emitCommend(evt) {
+      this.optionType = 1
+      this.commend = evt
+      switch (evt) {
+        case "group":
+        case "list":
+          this.dialogShow = true;
+          break;
+        case "share":
+          break;
+        case "poster":
+          break;
+      }
+    },
+    // 取消选择
+    cancelDialog() {
+      this.item.val = "";
+      this.item.ty = "";
+      this.item.id = "";
+      this.item.cls = 0;
+      this.dialogShow = false;
+    },
+    switchTab(evt) {},
+    handleClick(row) {
+      console.log(row);
+    },
+    async searchImage() {
+      if (!this.searchPicName) {
+        this.$message({
+          type: "error",
+          message: "图片名称必须输入",
+        });
+        return;
+      }
+      try {
+        const query = {
+          rType: 1,
+          searchOfFileName: this.searchPicName,
+          start: 1,
+          limit: 100,
+        };
+        const {
+          data: { list },
+        } = await getMaterialList(query);
+        this.imgList = list;
+      } catch (error) {
+        this.$message({ type: "error", message: "系统错误，请联系管理员！" });
+      }
+    },
+    setImgUrl() {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          let invalide = true;
+          if (this.item.hasOwnProperty("limit")) {
+            if (img.naturalWidth !== this.item.limit.w) {
+              invalide = false;
+              this.$alert("图片宽度必须为 " + this.item.limit.w + "px", "提示");
+            }
+            if (img.naturalHeight !== this.item.limit.h) {
+              invalide = false;
+              this.$alert("图片高度必须为 " + this.item.limit.h + "px", "提示");
+            }
+          } else {
+            if (img.naturalWidth > 750) {
+              invalide = false;
+              this.$alert("图片宽度不能超过750px", "提示");
+            }
+          }
+          if (invalide) {
+            const width = 750;
+            const height =
+              img.naturalHeight * (750 / img.naturalWidth).toFixed(4);
+            this.item.width = width;
+            this.item.height = height;
+            this.item.val = img.src;
+            this.dialogShow = false;
+            this.$emit("uploadSuccess", this.item, img, this.index);
+          }
+        };
+        img.src = this.imgUrl;
+      } catch (e) {
+        console.warn(e);
+      }
+    },
+    delImg(item) {
+      item.val = "";
+    },
+    clickTab(tab) {
+      this.currentTab = tab.name;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
-  #netImgDialog {
+#netImgDialog {
+  .el-dialog__body {
+    padding-top: 10px;
+  }
+}
 
-    .el-dialog__body {
-      padding-top: 10px;
+.upload-container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  .el-icon-error {
+    position: absolute;
+    right: -15px;
+    top: -5px;
+    color: #a1a1a1;
+  }
+  .upload-tips {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 5px;
+    color: #666;
+
+    h3 {
+      margin: 0;
     }
   }
-
-  .upload-container {
-    display: flex;
-
-    .upload-tips {
-      display: block;
+}
+.el-upload {
+  display: flex;
+  flex-direction: row;
+  .el-upload-dragger {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 6px 0 0 6px;
+    background-color: #f3f5f7;
+    .el-icon-upload {
+      margin: 10px 0 0 0;
+      font-size: 40px;
+    }
+    .el-upload__text {
       font-size: 12px;
-      line-height: 1.5;
-      padding: 5px;
-      color: #666;
-
-      h3 {
-        margin: 0;
+      background-color: #000;
+      opacity: 0.5;
+      a {
+        color: #fff !important;
       }
     }
   }
-
-  .el-upload-dragger {
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 150px;
-
-    .el-icon-upload {
-      margin-top: 20px;
+  .upload-attrs {
+    box-sizing: border-box;
+    padding: 10px;
+    height: 90px;
+    flex: 1;
+    .el-form {
+      padding-bottom: 0;
+      .el-form-item--mini {
+        margin-bottom: 6px;
+      }
     }
   }
+}
+.circle {
+  border-radius: 50%;
+}
+.image-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #ecf5ff;
 
-  .image-preview {
+  .fa-window-close {
     position: absolute;
     top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: #ecf5ff;
+    right: 0;
+    color: #666;
+    font-size: 22px;
+    z-index: 99;
+  }
+}
 
-    .fa-window-close {
-      position: absolute;
-      top: 0;
-      right: 0;
-      color: #666;
-      font-size: 22px;
-      z-index: 99;
+.upload-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 150px;
+  height: 115px;
+  cursor: pointer;
+}
+.el-dialog__wrapper {
+  .el-dialog {
+    margin-top: 8vh !important;
+    .el-dialog__body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .el-dialog__footer {
+      padding: 20px 0;
+      text-align: center;
     }
   }
-
-  .upload-input {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 150px;
-    height: 115px;
-    cursor: pointer;
+}
+.zoom-in {
+  background-color: #f3f5f7;
+  padding: 20px;
+}
+.jump-page-select {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .jump-page-tips {
+    font-size: 12px;
+    display: inline-block;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
   }
+}
 </style>

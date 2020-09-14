@@ -28,7 +28,8 @@
             <div class="config">
               <div class="func">功能</div>
               <span>
-                全选&nbsp;&nbsp;<el-checkbox @change="changeAll"></el-checkbox>
+                全选&nbsp;&nbsp;
+                <el-checkbox @change="changeAll"></el-checkbox>
               </span>
             </div>
           </el-form-item>
@@ -36,11 +37,9 @@
             <el-tree
               ref="authTree"
               show-checkbox
-              node-key="id"
-              node-va
+              node-key="keyCode"
+              default-expand-all
               :data="authData"
-              :default-expanded-keys="[2, 3]"
-              :default-checked-keys="[5]"
               :props="defaultProps"
               @check-change="treeChange"
             />
@@ -146,99 +145,130 @@
 </style>
 
 <script>
-import { addNewRole, getAllMenus, editRoleData } from '@/api/roles'
+import { addNewRole, getAllMenus, editRoleData } from "@/api/roles";
 
 export default {
   data() {
     return {
-      roleId: '',
-      content: '',
+      roleId: "",
+      content: "",
       fileList: [],
       form: {
-        name: '',
-        remark: ''
+        name: "",
+        remark: "",
       },
       allMenus: [],
       authForm: [],
       authData: [],
       defaultProps: {
-        label: 'name'
-      }
-    }
+        label: "name",
+      },
+      allCodes: []
+    };
   },
   created() {
-    this.getAllMenus()
+    this.getAllMenus();
   },
   methods: {
     treeChange(evt, checked) {
-      let authForm = this.authForm
+      let authForm = this.authForm;
       if (checked) {
-        authForm.push(evt.id)
+        authForm.push(evt.permissionCode ? evt.permissionCode : evt.code);
       } else {
-        authForm = authForm.filter(id => id !== evt.id)
+        authForm = authForm.filter((code) => code !== evt.code);
       }
-      this.authForm = authForm
+      this.authForm = authForm;
     },
     async confirm() {
-      const form = this.form
-      const authForm = this.authForm
+      const form = this.form;
+      const authForm = this.authForm;
       if (!form.name) {
-        this.$message({ type: 'error', message: '角色名称必须填写！' })
-        return
+        this.$message({ type: "error", message: "角色名称必须填写！" });
+        return;
       }
       if (!form.remark) {
-        this.$message({ type: 'error', message: '角色描述必须填写！' })
-        return
+        this.$message({ type: "error", message: "角色描述必须填写！" });
+        return;
       }
       const roleData = {
         name: form.name,
         remark: form.remark,
-        menus: authForm.map(id => ({ menuId: id }))
-      }
+        permissions: authForm.map((code) => ({ permissionCode: code })),
+      };
       if (!this.roleId) {
-        const { success } = await addNewRole(roleData)
+        const { success } = await addNewRole(roleData);
         if (success) {
-          this.$message({ type: 'success', message: '添加成功！' })
-          setTimeout(_ => {
-            this.$router.back()
-          }, 1500)
+          this.$message({ type: "success", message: "添加成功！" });
+          setTimeout((_) => {
+            this.$router.back();
+          }, 1500);
         } else {
-          this.$message({ type: 'error', message: '添加错误，请通知管理员！' })
+          this.$message({ type: "error", message: "添加错误，请通知管理员！" });
         }
       } else {
-        roleData.id = this.roleId
-        roleData.roleName = roleData.name
-        delete roleData.name
-        const { success } = await editRoleData(roleData)
+        roleData.id = this.roleId;
+        roleData.roleName = roleData.name;
+        delete roleData.name;
+        const { success } = await editRoleData(roleData);
         if (success) {
-          this.$message({ type: 'success', message: '修改成功！' })
+          this.$message({ type: "success", message: "修改成功！" });
         } else {
-          this.$message({ type: 'error', message: '修改错误，请通知管理员！' })
+          this.$message({ type: "error", message: "修改错误，请通知管理员！" });
         }
       }
     },
     cancel() {
-      this.$router.back()
+      this.$router.back();
     },
     changeAll(evt) {
       if (evt) {
-        // this.$refs.authTree.
+        this.$refs.authTree.setCheckedKeys(this.allCodes, false)
+      } else {
+        this.$refs.authTree.setCheckedKeys([], true)
       }
     },
     setData(data, menus) {
-      this.roleId = data.id
-      this.form.name = data.roleName
-      this.form.remark = data.remark
-      this.$refs.authTree.setCheckedKeys(menus.map(menu => menu.Id), true)
+      this.roleId = data.id;
+      this.form.name = data.roleName;
+      this.form.remark = data.remark;
+      const codes = []
+      this.getRoleAuthCode(menus, codes)
+      this.$refs.authTree.setChecked(codes[0], true)
+      codes.forEach(code => {
+        this.$refs.authTree.setChecked(code, true)
+      })
+    },
+    getRoleAuthCode(menus, codes) {
+      menus.forEach(menu => {
+        menu.permissionCode ? codes.push(menu.permissionCode) : codes.push(menu.code)
+        if (menu.children && menu.children.length > 0) {
+          this.getRoleAuthCode(menu.children, codes)
+        }
+      })
+    },
+    changeCode(data) {
+      data.forEach(d => {
+        if (d.permissionCode) {
+          d.keyCode = d.permissionCode
+        } else {
+          d.keyCode = d.code
+        }
+        this.allCodes.push(d.keyCode)
+        if (d.children && d.children.length > 0) {
+          this.changeCode(d.children)
+        }
+      })
     },
     async getAllMenus() {
       try {
-        const { data: { list }} = await getAllMenus()
-        this.authData = list
+        const { data } = await getAllMenus();
+        this.changeCode(data)
+        this.authData = data;
+        // console.log(data)
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

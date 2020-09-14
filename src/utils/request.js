@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import Cookies from 'js-cookie'
 
 let method = ""
 
@@ -9,7 +10,7 @@ let method = ""
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 50000 // request timeout
 })
 
 // request interceptor
@@ -52,11 +53,13 @@ service.interceptors.response.use(
     }
 
     if (!res.success) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+      if (res.message !== '未找到设计画面.') {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
@@ -88,6 +91,13 @@ service.interceptors.response.use(
 
 const req = (options) => {
   method = options.method
+  const headers = options.headers
+  if (headers) {
+    if (Cookies.get('appid')) {
+      headers.appid = Cookies.get('appid')
+      options.headers = headers
+    }
+  }
   return service(options)
 }
 

@@ -83,7 +83,9 @@
             :id="index"
             :label="item.label"
             :item="item"
-            v-on:uploadSuccess="uploadSuccess">
+            v-on:uploadSuccess="uploadSuccess"
+            @selectedSuccess="selectedImageSuccess"
+            >
     </upload>
 
     <el-form-item class="small" v-if="item.type == 'desc'" :label="item.label + '：'">
@@ -94,7 +96,7 @@
 </template>
 
 <script>
-  import upload from '@/common/upload.vue'
+  import upload from '@/common/navUpload.vue'
   export default {
     props: {
       item: {
@@ -108,6 +110,12 @@
       upload
     },
     methods: {
+      selectedImageSuccess({ item, config }) {
+        // console.log(item, config)
+        // item.id = config.id
+        // item.val = config.src
+        // console.log(item)
+      },
       setFont(item, attr) {
         if (attr === 'font-weight') {
           this.$set(item.val, 0, item.val[0] === '600' ? '400' : '600')

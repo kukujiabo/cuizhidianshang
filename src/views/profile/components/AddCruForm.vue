@@ -12,9 +12,9 @@
           <el-form-item class="upload-touxiang" prop="name" label="头像：">
             <el-upload
               ref="fileUploader"
-              name="file"
+              name="icon"
               class="avatar-uploader"
-              action="http://49.234.156.48:8083/api/auth/addPerson"
+              :action="Host + '/api/auth/addPerson'"
               accept="image/*"
               :auto-upload="false"
               :on-success="handleAvatarSuccess"
@@ -22,11 +22,12 @@
               :data="newCru"
               :on-change="imageSelectChange"
               :headers="{
-                Authorization: uploadToken
+                Authorization: uploadToken,
+                appid: appid
               }"
             >
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-              <img v-else src="@/assets/shangchuantouxiang.png" class="avatar" alt="上传头像"/>
+              <img v-else src="@/assets/shangchuantouxiang.png" class="avatar" alt="上传头像" />
               <div slot="tip" class="el-upload__tip">建议尺寸160*160，JPG/PNG格式，要求图片小于5M</div>
             </el-upload>
           </el-form-item>
@@ -43,12 +44,12 @@
               :rows="4"
             />
           </el-form-item>
-          <!-- <el-form-item prop="status" label="状态：">
-            <el-radio-group v-model="form.status">
+          <el-form-item prop="state" label="状态：">
+            <el-radio-group v-model="form.state">
               <el-radio :label="1">启用</el-radio>
               <el-radio :label="0">禁用</el-radio>
             </el-radio-group>
-          </el-form-item> -->
+          </el-form-item>
         </el-form>
       </div>
       <div style="height:30px" />
@@ -56,7 +57,11 @@
         <el-form required ref="form2" :model="form2" label-width="120px">
           <el-form-item prop="role" label="角色：">
             <el-checkbox-group v-model="form2.role">
-              <el-checkbox v-for="role in roleList" :key="role.id" :label="role.id">{{role.roleName}}</el-checkbox>
+              <el-checkbox
+                v-for="role in roleList"
+                :key="role.roleCode"
+                :label="role.roleCode"
+              >{{role.roleName}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
@@ -86,7 +91,7 @@
     overflow: hidden;
   }
   .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
+    border-color: #409eff;
   }
   .avatar-uploader-icon {
     font-size: 28px;
@@ -191,101 +196,141 @@
 </style>
 
 <script>
-import { getRoleList } from '@/api/roles'
-import { getToken, getTokenType } from '@/utils/auth'
+import Cookies from "js-cookie";
+import { getRoleList } from "@/api/roles";
+import { Host } from "@/config";
+import { getToken, getTokenType } from "@/utils/auth";
 export default {
   data() {
-    const token = getTokenType() + ' ' + getToken()
+    const token = getTokenType() + " " + getToken();
     return {
-      cruId: '',
+      Host: Host,
+      cruId: "",
+      appid: Cookies.get("appid"),
       uploadToken: token,
       roleList: [],
-      content: '',
+      content: "",
       fileList: [],
-      imageUrl: '',
+      imageUrl: "",
       form: {
-        name: '',
-        code: '',
-        phone: '',
-        describe: ''
+        name: "",
+        code: "",
+        phone: "",
+        describe: "",
+        state: 1,
       },
       form2: {
-        role: []
+        role: [],
       },
       newCru: {
-        name: '',
-        code: '',
-        phone: '',
-        describe: '',
-        roles: []
+        name: "",
+        code: "",
+        phone: "",
+        describe: "",
+        roles: [],
       },
-      selectedImage: null
-    }
+      selectedImage: null,
+    };
   },
   created() {
-    this.getRoleList({ start: 1, limit: 20 })
+    this.getRoleList({ start: 1, limit: 100 });
   },
   methods: {
     cancel() {
-      this.$router.back()
+      this.$router.back();
     },
     async confirm() {
-      const form = this.form
-      const form2 = this.form2
+      const form = this.form;
+      const form2 = this.form2;
       if (!form.name) {
-        this.$message({ type: 'error', message: '姓名必须填写！' })
-        return
+        this.$message({ type: "error", message: "姓名必须填写！" });
+        return;
       }
       if (form.phone && form.phone.length !== 11) {
-        this.$message({ type: 'error', message: '手机号格式错误！' })
-        return
+        this.$message({ type: "error", message: "手机号格式错误！" });
+        return;
       }
       const newCru = {
         name: form.name,
         code: form.code,
         describe: form.describe,
-        phone: form.phone
+        phone: form.phone,
+        state: form.state,
+      };
+      if (!this.cruId) {
+        form2.role.forEach((r, index) => newCru[`roles[${index}]`] = r)
+        this.newCru = newCru;
+        setTimeout((_) => this.$refs.fileUploader.submit(), 10)
+      } else {
+        const api = Host + "/api/auth/editPerson"
+        const xhr = new XMLHttpRequest()
+        xhr.withCredentials = false
+        xhr.open("POST", api)
+        xhr.setRequestHeader(
+          "Authorization",
+          getTokenType() + " " + getToken()
+        )
+        xhr.setRequestHeader("appid", Cookies.get("appid"))
+        xhr.onload = () => {
+          this.loading = false
+          if (xhr.status !== 200) {
+            return
+          }
+          const { success, message } = JSON.parse(xhr.responseText)
+          if (success) {
+            this.$message({ type: "success", message: "编辑成功！" })
+          } else {
+            this.$message({ type: "error", message: message })
+          }
+        }
+        const personForm = new FormData()
+        personForm.append("id", this.cruId)
+        for(let key in newCru) {
+          personForm.append(key, newCru[key])
+        }
+        if (this.selectedImage) {
+          personForm.append('icon', this.selectedImage.raw)
+        }
+        form2.role.forEach((r, index) => personForm.append(`roles[${index}]`, r))
+        this.loading = true
+        xhr.send(personForm)
       }
-      form2.role.forEach((r, index) => {
-        newCru[`roles[${index}]`] = r
-      })
-      this.newCru = newCru
-      setTimeout(_ => {
-        this.$refs.fileUploader.submit()
-      }, 10)
     },
     async getRoleList(query) {
       try {
-        const { data: { list }} = await getRoleList(query)
-        this.roleList = list
-      } catch (error) {
-
-      }
+        const {
+          data: { list },
+        } = await getRoleList(query);
+        this.roleList = list;
+        console.log(list, 'list')
+      } catch (error) {}
     },
     async handleAvatarSuccess({ success, message }) {
       if (success) {
-        this.$message({ type: 'success', message: '添加成功！' })
-        setTimeout(_ => {
-          this.$router.back()
-        }, 1500)
+        this.$message({ type: "success", message: "添加成功！" });
+        setTimeout((_) => {
+          this.$router.back();
+        }, 1500);
       } else {
-        this.$message({ type: 'error', message })
+        this.$message({ type: "error", message });
       }
     },
     handleAvatarError(err) {
-      console.log(err)
+      console.log(err);
     },
     imageSelectChange(evt) {
-      this.selectedImage = evt
+      this.selectedImage = evt;
+      this.imageUrl = URL.createObjectURL(evt.raw);
     },
-    setData(data) {
-      // console.log(data)
-      this.cruId = data.id
-      this.form.phone = data.phone
-      this.form.name = data.userName
-      this.form.code = data.userCode
-      // this.form2.roles = data.roles.map(role => roles)
-    }
-  }
-}
+    setData({ person, permission }) {
+      this.cruId = person.id
+      this.form.phone = person.phone
+      this.form.name = person.userName
+      this.form.code = person.userCode
+      this.form2.role = person.roles.map((role) => role.roleCode)
+      console.log(this.form2.role, 'roles')
+      this.imageUrl = Host + "/res/" + person.icon
+    },
+  },
+};
 </script>

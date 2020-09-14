@@ -5,7 +5,7 @@
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
-        <tags-view v-if="needTagsView" />
+        <!-- <tags-view v-if="needTagsView" /> -->
       </div>
       <app-main />
       <!-- <right-panel v-if="showSettings">
@@ -42,8 +42,8 @@ export default {
     }),
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
+        // hideSidebar: !this.sidebar.opened,
+        openSidebar: true,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
@@ -66,7 +66,7 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-
+    overflow-y: scroll;
     &.mobile.openSidebar {
       position: fixed;
       top: 0;

@@ -7,7 +7,7 @@
             <div class="avatar-wrapper">
               <el-upload
                 class="avatar-uploader"
-                action="http://49.234.156.48:8083/api/account/upIcon"
+                :action="Host + '/api/account/upIcon'"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :headers="{
@@ -21,9 +21,11 @@
             <el-form ref="form" :model="form">
               <el-form-item label="账号">
                 <el-input readonly :value="getUserCode" />
+                <a class="modify" href="javascript:void(0)" @click="showUpdateAccount">修改账号</a>
               </el-form-item>
               <el-form-item label="姓名">
                 <el-input readonly :value="getUserName" />
+                <a class="modify" href="javascript:void(0)" @click="showUpdateName">修改姓名</a>
               </el-form-item>
               <el-form-item label="手机号">
                 <el-input readonly :value="getPhone" />
@@ -34,7 +36,7 @@
                 <a class="modify" href="javascript:void(0)" @click="showUpdatePasswordBox">更换密码</a>
               </el-form-item>
               <el-form-item label="绑定微信">
-                <el-input readonly v-model="form.wechat" />
+                <el-input readonly v-model="getWxNo" />
                 <a class="modify" href="javascript:void(0)" @click="showUpdateWechat">更换绑定微信</a>
               </el-form-item>
             </el-form>
@@ -74,6 +76,8 @@
     <update-phone-box ref="updatePhoneBox" />
     <update-password ref="updatePasswordBox" />
     <update-wechat ref="updateWechatBox" />
+    <update-account ref="updateAccount" />
+    <update-name ref="updateName" />
   </div>
 </template>
 
@@ -174,22 +178,29 @@ import { mapGetters } from 'vuex'
 import UpdatePhoneBox from '@/components/UpdatePhone'
 import UpdatePassword from '@/components/UpdatePassword'
 import UpdateWechat from './components/UpdateWechat'
+import UpdateAccount from './components/UpdateAccount'
+import UpdateName from './components/UpdateName'
 import { getToken, getTokenType } from '@/utils/auth'
+import { Host } from '@/config'
+
 
 export default {
   name: 'Profile',
   components: {
+    UpdateName,
     UpdateWechat,
     UpdatePhoneBox,
-    UpdatePassword
+    UpdatePassword,
+    UpdateAccount
   },
   computed: {
-    ...mapGetters(['getPhone', 'getUserName', 'getUserCode', 'getUserIcon'])
+    ...mapGetters(['getPhone', 'getUserName', 'getUserCode', 'getUserIcon', 'getWxNo'])
   },
   data() {
     const token = getTokenType() + ' ' + getToken()
     return {
       user: {},
+      Host,
       uploadToken: token,
       activeName: 'first',
       activeTab: 'activity',
@@ -197,7 +208,7 @@ export default {
         Icon: '',
         account: '',
         name: '',
-        password: '',
+        password: '***********',
         phone: '',
         wechat: ''
       }
@@ -207,6 +218,9 @@ export default {
 
   },
   methods: {
+    handleClick() {
+
+    },
     showUpdatePhoneBox() {
       this.$refs.updatePhoneBox.show()
     },
@@ -218,6 +232,12 @@ export default {
     },
     handleAvatarSuccess({ success, data }) {
       this.$store.dispatch('user/getInfo')
+    },
+    showUpdateAccount() {
+      this.$refs.updateAccount.show()
+    },
+    showUpdateName() {
+      this.$refs.updateName.show()
     }
   }
 }

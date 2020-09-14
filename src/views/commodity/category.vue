@@ -3,13 +3,14 @@
     <div class="operation-btns">
       <el-button type="primary" @click="showCreateNewGroup">新建商品分组</el-button>
       <div>
-        <el-input v-model="groupListQuery.keywords" placeholder="搜索分组名称" class="input-with-select">
-          <el-button slot="append" type="primary">搜索</el-button>
+        <el-input v-model="listQuery.search" placeholder="搜索分组名称" class="input-with-select">
+          <el-button slot="append" type="primary" @click="() => queryGoodsGroup(listQuery)">搜索</el-button>
         </el-input>
       </div>
     </div>
     <div class="main-table">
       <el-table
+        size="large"
         stripe
         :data="list"
         class="content-table"
@@ -33,7 +34,7 @@
         <el-table-column align="right" label="操作">
           <template slot-scope="scope">
             <div style="padding-right:18px;">
-              <el-button type="text" @click="editContent(scope.row)">内容管理</el-button>
+              <el-button type="text" @click="contentManage(scope.row)">内容管理</el-button>
               <el-button type="text" @click="edit(scope.row)">编辑</el-button>
               <el-button type="text" @click="remove(scope.row)">删除</el-button>
             </div>
@@ -157,8 +158,8 @@ export default {
   },
   methods: {
     // 内容管理
-    editContent(row) {
-
+    contentManage(row) {
+      this.$router.push({ path: '/commodity/content?id=' + row.id + '&name=' + row.title })
     },
     // 编辑
     edit(row) {

@@ -36,7 +36,7 @@
 <script>
   import util from '@/utils/util.js'
   import compConfig from '@/config/comp.config.js'
-  import upload from '@/common/upload.vue'
+  import upload from '@/common/navUpload.vue'
 
   export default {
     data() {
