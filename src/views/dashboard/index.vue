@@ -11,7 +11,7 @@ import editorDashboard from './editor'
 import { getAppId } from '@/utils/auth'
 
 export default {
-  name: "index",
+  name: 'Index',
   components: { adminDashboard, editorDashboard },
   data() {
     return {

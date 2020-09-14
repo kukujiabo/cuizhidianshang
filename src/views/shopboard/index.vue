@@ -26,7 +26,7 @@
             <img v-if="getUserIcon" class="avatar" :src="getUserIcon">
             <img v-else class="avatar" src="@/assets/header.png">
             <div>
-              <p style="color:#fff;font-weight:900;font-size:18px;margin-top:7px">{{getUserPhone}}</p>
+              <p style="color:#fff;font-weight:900;font-size:18px;margin-top:7px">{{ getUserPhone }}</p>
               <div>
                 <el-button class="btn-setting" type="primary" plain @click="toSetting">设置</el-button>
               </div>
@@ -42,7 +42,7 @@
         <div class="list">
           <el-row :gutter="20">
             <el-col v-for="shop in getShopList" :key="shop.id" :xl="4" :lg="8" :md="12">
-              <shop-card :shop="shop" @selectshop="selectShop"></shop-card>
+              <shop-card :shop="shop" @selectshop="selectShop" />
             </el-col>
             <el-col :xl="4" :lg="8" :md="12">
               <el-card class="shop-card-active">
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div v-show="tab === 2">
-      <div class='new-shop'>
+      <div class="new-shop">
         <h2>店铺类型</h2>
         <div class="shop-types">
           <el-row :gutter="80">
@@ -82,10 +82,10 @@
             </el-col>
           </el-row>
         </div>
-        <div style="height:100px;"></div>
+        <div style="height:100px;" />
         <h2>店铺名称</h2>
         <div>
-          <el-input class="new-shop-name" placeholder="请输入新店铺名称" v-model="newShopName" />
+          <el-input v-model="newShopName" class="new-shop-name" placeholder="请输入新店铺名称" />
         </div>
         <div class="submit">
           <el-button @click="cancelNewShop">取消</el-button>
@@ -108,11 +108,11 @@
                 <el-option :value="2" label="材料" />
               </el-select> -->
             </el-form-item>
-              <div class="option-btns">
-                <el-button :plain="newShopForm.busType === 1" :type="newShopForm.busType === 1 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 1">我是装饰公司</el-button>
-                <el-button :plain="newShopForm.busType === 2" :type="newShopForm.busType === 3 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 2">我是代理商</el-button>
-                <el-button :plain="newShopForm.busType === 3" :type="newShopForm.busType === 4 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 3">我是品牌厂商</el-button>
-              </div>
+            <div class="option-btns">
+              <el-button :plain="newShopForm.busType === 1" :type="newShopForm.busType === 1 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 1">我是装饰公司</el-button>
+              <el-button :plain="newShopForm.busType === 2" :type="newShopForm.busType === 3 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 2">我是代理商</el-button>
+              <el-button :plain="newShopForm.busType === 3" :type="newShopForm.busType === 4 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 3">我是品牌厂商</el-button>
+            </div>
             <el-form-item required prop="name" label="店铺名称" />
             <div class="option-input">
               <el-input
@@ -139,7 +139,7 @@ import Cookies from 'js-cookie'
 
 export default {
   components: {
-    ShopCard 
+    ShopCard
   },
   computed: {
     ...mapGetters(['getShopList', 'getUserPhone', 'getUserIcon'])

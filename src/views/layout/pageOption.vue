@@ -4,7 +4,7 @@
       <el-button type="primary" plain @click="manageShopNav">店铺导航管理</el-button>
       <el-button @click="showMangeSubject">店铺主题管理</el-button>
     </div>
-    
+
     <div class="form-container">
       <h2>页面名称</h2>
 
@@ -46,11 +46,11 @@ import Home from '@/views/layout/components/home'
 import Message from '@/views/layout/components/message'
 import CarOption from '@/views/layout/components/carOption'
 import HaowuOption from '@/views/layout/components/haowuOption'
-import { getToken, getTokenType } from "@/utils/auth"
-import formItem from "@/common/formItem.vue"
-import { Host } from "@/config/index"
+import { getToken, getTokenType } from '@/utils/auth'
+import formItem from '@/common/formItem.vue'
+import { Host } from '@/config/index'
 export default {
-  name: "AppPageOption",
+  name: 'AppPageOption',
   components: {
     Me,
     Home,
@@ -62,30 +62,30 @@ export default {
   props: {
     pageKey: {
       type: String,
-      default: "",
+      default: ''
     },
     option: {
-      type: Object,
-    },
-  },
-  created() {
-    console.log(this.option);
+      type: Object
+    }
   },
   data() {
     return {
       Host,
-      token: getTokenType() + " " + getToken(),
-    };
+      token: getTokenType() + ' ' + getToken()
+    }
+  },
+  created() {
+    console.log(this.option)
   },
   methods: {
     manageShopNav() {
-      this.$bus.$emit("showManageShopNav");
+      this.$bus.$emit('showManageShopNav')
     },
     showMangeSubject() {
-      this.$bus.$emit("showManageSubject");
+      this.$bus.$emit('showManageSubject')
     }
-  },
-};
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

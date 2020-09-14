@@ -32,11 +32,11 @@
                 <a class="modify" href="javascript:void(0)" @click="showUpdatePhoneBox">更换手机号</a>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input readonly v-model="form.password" type="password" />
+                <el-input v-model="form.password" readonly type="password" />
                 <a class="modify" href="javascript:void(0)" @click="showUpdatePasswordBox">更换密码</a>
               </el-form-item>
               <el-form-item label="绑定微信">
-                <el-input readonly v-model="getWxNo" />
+                <el-input v-model="getWxNo" readonly />
                 <a class="modify" href="javascript:void(0)" @click="showUpdateWechat">更换绑定微信</a>
               </el-form-item>
             </el-form>
@@ -182,7 +182,6 @@ import UpdateAccount from './components/UpdateAccount'
 import UpdateName from './components/UpdateName'
 import { getToken, getTokenType } from '@/utils/auth'
 import { Host } from '@/config'
-
 
 export default {
   name: 'Profile',

@@ -11,7 +11,7 @@
             <el-radio label="large">大图</el-radio>
           </el-radio-group>
         </div>
-        <div class="class-wrapper" v-for="(cls, cindex) in list" :key="cls.key">
+        <div v-for="(cls, cindex) in list" :key="cls.key" class="class-wrapper">
           <div class="class-item">
             <div class="class-name">
               <el-form-item class="small" label="分类名称：">
@@ -19,23 +19,22 @@
                   v-model="cls.label"
                   placeholder="请填写分类名称（最长4个字符）"
                   :maxlength="4"
-                >
-                </el-input>
+                />
               </el-form-item>
             </div>
             <div class="add-goods-list" style="padding: 0">
               <div
-                class="good-info" 
-                style="margin-bottom:15px"
                 v-for="(good, index) in cls.children"
                 :key="good.key"
+                class="good-info"
+                style="margin-bottom:15px"
               >
                 <div class="type">
-                  {{goodsType[good.cType - 1]}}
+                  {{ goodsType[good.cType - 1] }}
                 </div>
-                <div class="name">{{good.title}}</div>
+                <div class="name">{{ good.title }}</div>
                 <div class="remove" @click="removeGoods(cindex, index)">
-                  <i class="el-icon-delete"></i>
+                  <i class="el-icon-delete" />
                 </div>
               </div>
             </div>
@@ -71,103 +70,103 @@
 </template>
 
 <script>
-  import util from '@/utils/util.js'
-  import upload from '@/common/navUpload.vue'
-  import compConfig from '@/config/comp.config.js'
-  import SelectGoods from "@/common/selectGoods";
-  export default {
-    components: {
-      upload,
-      SelectGoods
+import util from '@/utils/util.js'
+import upload from '@/common/navUpload.vue'
+import compConfig from '@/config/comp.config.js'
+import SelectGoods from '@/common/selectGoods'
+export default {
+  components: {
+    upload,
+    SelectGoods
+  },
+  props: {
+    items: {
+      type: Array
     },
-    data() {
-      return {
-        cindex: 0,
-        dialogShow: false,
-        list: this.items,
-        selectedGood: null,
-        defaultConf: util.copyObj(compConfig['fenlei']),
-        goodsType: [ '图文', '视频', '直播', '海报', '', '音频' ]
+    action: {
+      type: Object,
+      default: () => ({ display: 'list' })
+    }
+  },
+  data() {
+    return {
+      cindex: 0,
+      dialogShow: false,
+      list: this.items,
+      selectedGood: null,
+      defaultConf: util.copyObj(compConfig['fenlei']),
+      goodsType: ['图文', '视频', '直播', '海报', '', '音频']
+    }
+  },
+  watch: {
+    items(val) {
+      this.list = val
+    }
+  },
+  methods: {
+    cancel() {
+      this.dialogShow = false
+      this.selectedGood = null
+    },
+    selectGoods({ row }) {
+      console.log(row)
+      this.selectedGood = row
+    },
+    confirm() {
+      this.list[this.cindex].children.push(this.selectedGood)
+      this.selectedGood = null
+      this.dialogShow = false
+    },
+    upItem(idx) {
+      const tmp = util.copyObj(this.list[idx])
+      this.list.splice(idx, 1)
+      this.list.splice(idx - 1, 0, tmp)
+    },
+    removeGoods(cindex, index) {
+      this.list[cindex].children.splice(index, 1)
+    },
+    removeClass(index) {
+      this.$confirm('确认删除分类' + this.list[index].label + '吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(_ => {
+        this.$bus.$emit('removefenleiclass', { index, key: this.list[index].key })
+        this.list.splice(index, 1)
+      })
+    },
+    downItem(idx) {
+      const tmp = util.copyObj(this.list[idx])
+      this.list.splice(idx, 1)
+      this.list.splice(idx + 1, 0, tmp)
+    },
+    delItem(tab, idx) {
+      tab.children.splice(idx, 1)
+    },
+    addItem() {
+      if (this.list.length < 4) {
+        const newConfig = util.copyObj(this.defaultConf.action.config[0])
+        newConfig.key = this.list.length + 1
+        newConfig.label = '分类' + (this.list.length + 1)
+        this.list.push(newConfig)
+      } else {
+        this.$alert('最多添加4个分类！')
       }
     },
-    props: {
-      items: {
-        type: Array
-      },
-      action: {
-        type: Object,
-        default: () => ({ display: 'list' })
-      }
+    addGoods(cindex) {
+      this.cindex = cindex
+      this.dialogShow = true
     },
-    watch: {
-      items(val) {
-        this.list = val
-      }
-    },
-    methods: {
-      cancel() {
-        this.dialogShow = false
-        this.selectedGood = null
-      },
-      selectGoods({ row }) {
-        console.log(row)
-        this.selectedGood = row;
-      },
-      confirm() {
-        this.list[this.cindex].children.push(this.selectedGood)
-        this.selectedGood = null;
-        this.dialogShow = false;
-      },
-      upItem(idx) {
-        const tmp = util.copyObj(this.list[idx])
-        this.list.splice(idx, 1)
-        this.list.splice(idx - 1, 0, tmp)
-      },
-      removeGoods(cindex, index) {
-        this.list[cindex].children.splice(index, 1)
-      },
-      removeClass(index) {
-        this.$confirm('确认删除分类' + this.list[index].label + '吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(_ => {
-          this.$bus.$emit('removefenleiclass', { index, key: this.list[index].key })
-          this.list.splice(index, 1)
-        })
-      },
-      downItem(idx) {
-        const tmp = util.copyObj(this.list[idx])
-        this.list.splice(idx, 1)
-        this.list.splice(idx + 1, 0, tmp)
-      },
-      delItem(tab, idx) {
-        tab.children.splice(idx, 1)
-      },
-      addItem() {
-        if (this.list.length < 4) {
-          const newConfig = util.copyObj(this.defaultConf.action.config[0])
-          newConfig.key = this.list.length + 1
-          newConfig.label = '分类' + (this.list.length + 1)
-          this.list.push(newConfig)
-        } else {
-          this.$alert('最多添加4个分类！')
-        }
-      },
-      addGoods(cindex) {
-        this.cindex = cindex
-        this.dialogShow = true;
-      },
-      addClassItem(cls) {
-        // const newObj = util.copyObj(cls.children[0])
-        // newObj.key = cls.children.length,
-        // newObj.val = 'https://yangyuji.github.io/h5-factory/static/img/logo.png',
-        // newObj.title = '默认标题',
-        // newObj.desc = '默认文案描述，默认文案描述，默认文案描述默认文案描述',
-        // newObj.click = null
-        // cls.children.push(newObj)
-      }
+    addClassItem(cls) {
+      // const newObj = util.copyObj(cls.children[0])
+      // newObj.key = cls.children.length,
+      // newObj.val = 'https://yangyuji.github.io/h5-factory/static/img/logo.png',
+      // newObj.title = '默认标题',
+      // newObj.desc = '默认文案描述，默认文案描述，默认文案描述默认文案描述',
+      // newObj.click = null
+      // cls.children.push(newObj)
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

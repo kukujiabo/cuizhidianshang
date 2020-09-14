@@ -19,7 +19,8 @@
     <div class="btns">
       <el-popover
         placement="bottom"
-        trigger="click">
+        trigger="click"
+      >
         <img style="width:120px;height:120px" :src="Host + '/api/shop/qrCode/' + shopInfo.appId ">
         <el-button slot="reference" style="margin-right:10px">查看二维码</el-button>
       </el-popover>

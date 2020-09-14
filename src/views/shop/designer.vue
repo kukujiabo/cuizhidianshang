@@ -10,7 +10,7 @@
         @showPreview="showPreview"
         @switchPage="switchPage"
       />
-      <div class="scroll-y" ref="appPhone">
+      <div ref="appPhone" class="scroll-y">
 
         <!-- 直通车 -->
 
@@ -40,12 +40,12 @@
             <div class="shop-info">
               <img class="shoplogo" :src="currentPageOptions.brandInfo.logo || shopLogoHolder">
               <div style="margin-left:10px">
-                <h4 style="margin: 5px 0;">{{currentPageOptions.brandInfo.brandName || '请输入品牌名称'}}</h4>
-                <p style="margin: 5px 0;font-size:11px;color:#a1a1a1">{{currentPageOptions.brandInfo.brandDesc || '请输入品牌描述' }}</p>
+                <h4 style="margin: 5px 0;">{{ currentPageOptions.brandInfo.brandName || '请输入品牌名称' }}</h4>
+                <p style="margin: 5px 0;font-size:11px;color:#a1a1a1">{{ currentPageOptions.brandInfo.brandDesc || '请输入品牌描述' }}</p>
               </div>
             </div>
             <div class="goods-list">
-              <div class="goods-item" v-for="good in currentPageOptions.goodsList" :key="good.id">
+              <div v-for="good in currentPageOptions.goodsList" :key="good.id" class="goods-item">
                 <good :data="good" />
               </div>
             </div>
@@ -91,11 +91,11 @@
           </div>
 
           <div class="page-container" style="background-color:#fff;padding-top:0">
-            <div class="search-info" v-show="currentPageOptions.searchDisplay === 1">
+            <div v-show="currentPageOptions.searchDisplay === 1" class="search-info">
               <el-input readonly :placeholder="currentPageOptions.searchHolder" />
             </div>
             <div class="goods-list">
-              <div class="goods-item" v-for="good in currentPageOptions.goodsList" :key="good.id">
+              <div v-for="good in currentPageOptions.goodsList" :key="good.id" class="goods-item">
                 <haowu-good :data="good" />
               </div>
             </div>
@@ -115,7 +115,6 @@
         </div>
 
         <!-- 好物分享 END -->
-
 
         <!-- 消息 START -->
 
@@ -142,8 +141,8 @@
           </div>
 
           <div class="page-container">
-            <div class="message-item" v-for="message in messageList" :key="message.id">
-              <message :data="message"></message>
+            <div v-for="message in messageList" :key="message.id" class="message-item">
+              <message :data="message" />
             </div>
           </div>
 
@@ -190,7 +189,7 @@
             <div>
               <p class="user-name">可可豆</p>
               <div class="edit-user-info">
-                <i class="el-icon-edit"></i> 编辑个人资料
+                <i class="el-icon-edit" /> 编辑个人资料
               </div>
             </div>
             <div class="">
@@ -221,12 +220,12 @@
 
           <!-- 分享 -->
           <div class="item-list">
-            <div class="item" >
+            <div class="item">
               <div class="title">
-                <img class="icon" style="width:16px;height:16px" src="@/assets/hot.png"/>推广中心
+                <img class="icon" style="width:16px;height:16px" src="@/assets/hot.png">推广中心
               </div>
               <div class="red-pack">
-                <span v-if="currentPageOptions.inviteBonus.display === 1">{{currentPageOptions.inviteBonus.words}}</span>
+                <span v-if="currentPageOptions.inviteBonus.display === 1">{{ currentPageOptions.inviteBonus.words }}</span>
                 <img src="@/assets/right.png">
               </div>
             </div>
@@ -234,28 +233,28 @@
 
           <!-- 菜单 -->
           <div :class="currentPageOptions.items.layoutType === 1 ? 'item-list' : 'item-grid'">
-            <div class="item" v-if="currentPageOptions.items.menu.includes('money')">
+            <div v-if="currentPageOptions.items.menu.includes('money')" class="item">
               <div class="title">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 2" style="width:46px;height:46px" src="@/assets/wallet-row.png">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 1" style="width:16px;height:16px" src="@/assets/wallet.png">我的账户
+                <img v-if="currentPageOptions.items.layoutType === 2" class="icon" style="width:46px;height:46px" src="@/assets/wallet-row.png">
+                <img v-if="currentPageOptions.items.layoutType === 1" class="icon" style="width:16px;height:16px" src="@/assets/wallet.png">我的账户
               </div>
               <div class="arrow">
                 <img src="@/assets/right.png">
               </div>
             </div>
-            <div class="item" v-if="currentPageOptions.items.menu.includes('asset')">
+            <div v-if="currentPageOptions.items.menu.includes('asset')" class="item">
               <div class="title">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 2" style="width:46px;height:46px" src="@/assets/prize-row.png">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 1" style="width:18px;height:18px" src="@/assets/prize.png">赠送记录
+                <img v-if="currentPageOptions.items.layoutType === 2" class="icon" style="width:46px;height:46px" src="@/assets/prize-row.png">
+                <img v-if="currentPageOptions.items.layoutType === 1" class="icon" style="width:18px;height:18px" src="@/assets/prize.png">赠送记录
               </div>
               <div class="arrow">
                 <img src="@/assets/right.png">
               </div>
             </div>
-            <div class="item" v-if="currentPageOptions.items.menu.includes('rank')">
+            <div v-if="currentPageOptions.items.menu.includes('rank')" class="item">
               <div class="title">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 2" style="width:46px;height:46px" src="@/assets/favorite-row.png">
-                <img class="icon" v-if="currentPageOptions.items.layoutType === 1" style="width:18px;height:18px" src="@/assets/favorite.png">我的收藏
+                <img v-if="currentPageOptions.items.layoutType === 2" class="icon" style="width:46px;height:46px" src="@/assets/favorite-row.png">
+                <img v-if="currentPageOptions.items.layoutType === 1" class="icon" style="width:18px;height:18px" src="@/assets/favorite.png">我的收藏
               </div>
               <div class="arrow">
                 <img src="@/assets/right.png">
@@ -412,8 +411,8 @@
     </div>
 
     <preview-dialog :show.sync="previewShow" />
-    <app-opt v-if="currentConfig" :option="currentConfig" :pageOption="currentPageOptions" />
-    <app-page-opt v-else :option="currentPageOptions" :pageKey="currentPageKey" />
+    <app-opt v-if="currentConfig" :option="currentConfig" :page-option="currentPageOptions" />
+    <app-page-opt v-else :option="currentPageOptions" :page-key="currentPageKey" />
     <click-config
       :show.sync="clickShow"
       :option="currentConfig"
@@ -426,9 +425,7 @@
         <el-row>
           <el-col :span="12" style="display:relative">
             <div class="dialog-phone-container">
-              <div class="dialog-phone-wrapper">
-              
-              </div>
+              <div class="dialog-phone-wrapper" />
             </div>
           </el-col>
           <el-col :span="12">
@@ -503,8 +500,8 @@
         <el-button style="width:120px" type="primary" @click="confirmTabbar">确定</el-button>
       </div>
     </el-dialog>
-    <subject ref="subject"/>
-    <templates v-show="showTemplates" @selected="selectTemplate" @close="showTemplates = false"></templates>
+    <subject ref="subject" />
+    <templates v-show="showTemplates" @selected="selectTemplate" @close="showTemplates = false" />
   </div>
 </template>
 
@@ -551,12 +548,6 @@ const classifySubDisplayTypes = {
 
 export default {
   name: 'AppMain',
-  props: {
-    shopInfo: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   components: {
     Good,
     HaowuGood,
@@ -569,6 +560,12 @@ export default {
     appPageOpt,
     clickConfig,
     previewDialog
+  },
+  props: {
+    shopInfo: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data() {
     return {
@@ -727,13 +724,13 @@ export default {
     })
     this.currentHolder = document.getElementsByClassName('place-holder')[0]
     this.readLocalData()
-    this.showPageSet()    
+    this.showPageSet()
   },
   methods: {
     scrollPhone(evt) {
       console.log(evt)
     },
-    selectTemplate({ conf: { comp } }) {
+    selectTemplate({ conf: { comp }}) {
       console.log(comp)
       this.compList = comp
       this.pageCompList.index = comp
@@ -843,8 +840,8 @@ export default {
       compList.filter(comp => comp.type !== 'placeholder').forEach((comp, index) => {
         const newOption = { sort: index + 1 }
         const config = comp.action ? (comp.action.config || {}) : {}
-        switch(comp.type) {
-          case 'page-paragraph': //优惠券
+        switch (comp.type) {
+          case 'page-paragraph': // 优惠券
             // swiperSub
             newOption.subname = 'couponSub'
             newOption.isShow = comp.action.hideUsed
@@ -853,7 +850,7 @@ export default {
             config.forEach(conf => {
               newOption.couponArr.push(conf)
             })
-            break 
+            break
           case 'swiper-banner': // 轮播图
             // swiperSub
             newOption.subname = 'swiperSub'
@@ -890,8 +887,8 @@ export default {
               newOption[key] = []
               conf.children.forEach(itm => {
                 newOption[key].push({
-                  img: Host + '/res/' + itm.cover,   //列表图片
-                  title: itm.title,   //列表标题
+                  img: Host + '/res/' + itm.cover, // 列表图片
+                  title: itm.title, // 列表标题
                   productInfo: itm
                 })
               })
@@ -905,8 +902,8 @@ export default {
             newOption.advertisementArr = []
             config.forEach(conf => {
               newOption.advertisementArr.push({
-                img: conf.val,   //广告图片
-                title: conf.title,   //导航标题
+                img: conf.val, // 广告图片
+                title: conf.title, // 导航标题
                 link: conf.link// link:''   //跳转页面链接
               })
             })
@@ -916,7 +913,7 @@ export default {
             newOption.subname = 'searchSub'
             break
           case 'horizontal-list': // 直播
-            // 
+            //
             break
           case 'richtext': // 富文本
             // richSub
@@ -938,22 +935,22 @@ export default {
         const query = {
           shopId: this.shopInfo.id,
           partType: this.currentPageKey,
-          context: JSON.stringify({ 
-            front: compOptions, 
-            comp: this.compList, 
-            page: this.currentPageOptions 
+          context: JSON.stringify({
+            front: compOptions,
+            comp: this.compList,
+            page: this.currentPageOptions
           })
         }
 
         const upData = []
-        for(let key in this.pageCompList) {
+        for (const key in this.pageCompList) {
           const cmpOption = this.pageCompList[key]
           const transOptions = this.translateOptions(cmpOption)
-          const saveOptions = { 
-            front: transOptions, 
-            comp: cmpOption, 
+          const saveOptions = {
+            front: transOptions,
+            comp: cmpOption,
             page: this.pageConfig[key]
-          } 
+          }
           console.log(saveOptions, key)
           upData.push({
             shopId: this.shopInfo.id,
@@ -966,10 +963,10 @@ export default {
         //   upData.push({
         //     shopId: this.shopInfo.id,
         //     partType: this.currentPageKey,
-        //     context: JSON.stringify({ 
-        //       front: compOptions, 
-        //       comp: this.compList, 
-        //       page: this.currentPageOptions 
+        //     context: JSON.stringify({
+        //       front: compOptions,
+        //       comp: this.compList,
+        //       page: this.currentPageOptions
         //     })
         //   })
         // })
@@ -1140,7 +1137,7 @@ export default {
       if (!target) {
         return
       }
-      const rate = (e.clientY - target.offsetTop - 200 + this.$refs.appPhone.scrollTop)/target.offsetHeight
+      const rate = (e.clientY - target.offsetTop - 200 + this.$refs.appPhone.scrollTop) / target.offsetHeight
       if (rate < 0.5) {
         target.nextSibling.classList.remove('active')
         target.nextSibling.classList.add('inactive')
@@ -1437,7 +1434,7 @@ export default {
             }
           }
         }
-        
+
       }
       .person-info {
         height: 90px;
@@ -1828,6 +1825,6 @@ export default {
   to {
     border: 1px dashed #fff;
     height: 0px;
-  } 
+  }
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
   <div class="message-container">
-    <p class="title">{{data.title}}<p>
-    <p class="content">{{data.content}}</p>
+    <p class="title">{{ data.title }}</p><p /><p class="content">{{ data.content }}</p>
     <div class="bottom">
-      <span class="time">{{data.time}}</span>
-      <el-button round type="warning" plain size="mini" v-if="data.btnText">{{data.btnText}}</el-button>
+      <span class="time">{{ data.time }}</span>
+      <el-button v-if="data.btnText" round type="warning" plain size="mini">{{ data.btnText }}</el-button>
     </div>
   </div>
 </template>
@@ -41,7 +40,7 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({ 
+      default: () => ({
         title: '',
         content: '',
         time: '',

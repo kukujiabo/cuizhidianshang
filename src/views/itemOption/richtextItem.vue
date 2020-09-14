@@ -23,18 +23,18 @@ export default {
       default: () => ({})
     }
   },
+  data() {
+    return {
+      act: this.action
+    }
+  },
   watch: {
     'action.config': {
       handler: (val) => {
         // this.$bus.$emit('richtextchange', val)
       }
     }
-  },
-  data() {
-    return {
-      act: this.action
-    }
-  },
+  }
 }
 </script>
 <style lang="scss">

@@ -1,12 +1,12 @@
 <template>
   <div class="login-container">
     <div class="login-image">
-      <div class="image-container"></div>
+      <div class="image-container" />
     </div>
     <div class="login-info">
       <div class="login-form-container">
         <div class="logo">
-          <img src="@/assets/logo.png" />
+          <img src="@/assets/logo.png">
         </div>
 
         <!-- 注册 -->

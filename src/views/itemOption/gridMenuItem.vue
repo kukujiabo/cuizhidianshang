@@ -4,7 +4,7 @@
       <div class="option-config-container">
         <p style="font-size:12px;color:#a1a1a1">建议上传尺寸为1:1，JPG、PNG、GIF格式，大小不超过2M</p>
       </div>
-      <div class="divider"></div>
+      <div class="divider" />
       <div class="option-config-container">
         <div class="line-options">
           <el-form>
@@ -18,7 +18,7 @@
           </el-form>
         </div>
       </div>
-      <div class="divider"></div>
+      <div class="divider" />
       <div class="option-config-container">
         <div
           ref="itemlist"
@@ -28,10 +28,10 @@
           @dragend="onDragEnd"
         >
           <div
-            class="form-list-panel"
             v-for="(item, idx) in items"
-            :data-key="item.key"
             :key="item.key"
+            class="form-list-panel"
+            :data-key="item.key"
             :draggable="true"
           >
             <upload
@@ -41,7 +41,7 @@
               :shape="2"
               option-type="grid-menu-item"
               @removeitem="removeItem"
-              />
+            />
           </div>
           <div class="add-option" style="height:50px">
             <el-button type="text" icon="el-icon-plus" @click="addItem">添加图文导航</el-button>
@@ -53,51 +53,51 @@
 </template>
 
 <script>
-import { createUniqueString } from "@/utils/index";
-import util from "@/utils/util.js";
-import compConfig from "@/config/comp.config.js";
-import upload from "@/common/navUpload.vue";
+import { createUniqueString } from '@/utils/index'
+import util from '@/utils/util.js'
+import compConfig from '@/config/comp.config.js'
+import upload from '@/common/navUpload.vue'
 export default {
-  name: 'grid-menu-item',
-  data() {
-    return {
-      target: null,
-      optionType: 2,
-      defaultConf: util.copyObj(compConfig["grid-menu"]),
-      items: this.grids,
-      num: "3",
-      option: this.option,
-    };
-  },
+  name: 'GridMenuItem',
   components: {
-    upload,
+    upload
   },
   props: {
     action: {
       type: Object,
-      default: () => ({ num: 3 }),
+      default: () => ({ num: 3 })
     },
     grids: {
-      type: Array,
-    },
+      type: Array
+    }
+  },
+  data() {
+    return {
+      target: null,
+      optionType: 2,
+      defaultConf: util.copyObj(compConfig['grid-menu']),
+      items: this.grids,
+      num: '3',
+      option: this.option
+    }
   },
   watch: {
     grids: {
       handler(val) {
-        this.items = val;
+        this.items = val
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     removeItem(index) {
       this.items.splice(index, 1)
     },
     onDragStart(event) {
-      this.draging = event.target;
+      this.draging = event.target
     },
     onDragOver(event) {
-      this.target = this.getParent(event.target);
+      this.target = this.getParent(event.target)
       if (!this.target) {
         return
       }
@@ -112,9 +112,9 @@ export default {
     },
     onDragEnd(event) {
     },
-    _index(el){
-      let domData=Array.from(this.$refs.itemlist.childNodes)
-      return domData.findIndex(i=>i.getAttribute('data-key') === el.getAttribute('data-key'))
+    _index(el) {
+      const domData = Array.from(this.$refs.itemlist.childNodes)
+      return domData.findIndex(i => i.getAttribute('data-key') === el.getAttribute('data-key'))
     },
     getParent(node) {
       if (node.className !== 'form-list-panel') {
@@ -124,22 +124,22 @@ export default {
       }
     },
     showClick(banner, idx) {
-      this.$bus.$emit("click:show", idx, ["outside"]);
+      this.$bus.$emit('click:show', idx, ['outside'])
     },
     delItem(idx) {
-      this.items.splice(idx, 1);
+      this.items.splice(idx, 1)
     },
     addItem() {
       if (this.items.length < 10) {
-        const item = this.defaultConf.action.config[0];
-        item.key = createUniqueString();
-        this.items.push(util.copyObj(item));
+        const item = this.defaultConf.action.config[0]
+        item.key = createUniqueString()
+        this.items.push(util.copyObj(item))
       } else {
-        this.$alert("最多添加10个点击项！");
+        this.$alert('最多添加10个点击项！')
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

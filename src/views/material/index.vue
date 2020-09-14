@@ -7,20 +7,21 @@
       <div class="capacity">
         <div class="capacity-tips" style="height:66px">
           <div>
-            <span>空间容量：{{capacity.usedAmount}} MB/{{(capacity.amount/1024).toFixed(2)}} GB</span>
+            <span>空间容量：{{ capacity.usedAmount }} MB/{{ (capacity.amount/1024).toFixed(2) }} GB</span>
             <el-popover
               placement="bottom-end"
               width="200"
               trigger="hover"
-              content="当前店铺为基础版，（试用版 10GB,高级版200GB、旗舰版 1000GB）。">
-              <el-button icon="el-icon-question" type="text" slot="reference"></el-button>
+              content="当前店铺为基础版，（试用版 10GB,高级版200GB、旗舰版 1000GB）。"
+            >
+              <el-button slot="reference" icon="el-icon-question" type="text" />
             </el-popover>
           </div>
-          <div> 
+          <div>
             <el-popover
               placement="bottom"
               trigger="hover"
-              >
+            >
               <div>
                 <h4 style="margin:5px 0">素材大小</h4>
                 <el-table
@@ -32,17 +33,19 @@
                 >
                   <el-table-column width="36" property="date" label="color">
                     <template slot-scope="scope">
-                      <div :style="{ 
-                        width:'12px',
-                        height:'12px',
-                        'background-color': scope.row.color
-                      }"></div>
+                      <div
+                        :style="{
+                          width:'12px',
+                          height:'12px',
+                          'background-color': scope.row.color
+                        }"
+                      />
                     </template>
                   </el-table-column>
-                  <el-table-column width="72" property="name" label="名称"></el-table-column>
+                  <el-table-column width="72" property="name" label="名称" />
                   <el-table-column align="right" width="72" property="size" label="大小">
                     <template slot-scope="scope">
-                      <span>共{{scope.row.size}}M</span>
+                      <span>共{{ scope.row.size }}M</span>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -89,7 +92,7 @@
                       :data="treeData"
                       @node-click="(node) => handleNodeClick(node, 1)"
                     >
-                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                      <span slot-scope="{ node, data }" class="custom-tree-node">
                         <span style="display:flex;flex-direction:row;align-items:center">
                           <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
                           {{ node.label }}
@@ -100,8 +103,7 @@
                             size="mini"
                             icon="el-icon-error"
                             @click.prevent="() => removeGroup(node, data, 1)"
-                            >
-                          </el-button>
+                          />
                         </span>
                       </span>
                     </el-tree>
@@ -206,13 +208,13 @@
                     <span class="section-title">音频分组</span>
                   </div>
                   <div class="tree-node">
-                    <img class="plus" src="@/assets/plus.png" @click="showClassDialog(2)" />
+                    <img class="plus" src="@/assets/plus.png" @click="showClassDialog(2)">
                     <el-tree
                       :props="defaultProps"
                       :data="treeData2"
                       @node-click="(node) => handleNodeClick(node, 2)"
-                      >
-                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                    >
+                      <span slot-scope="{ node, data }" class="custom-tree-node">
                         <span style="display:flex;flex-direction:row;align-items:center">
                           <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
                           {{ node.label }}
@@ -223,8 +225,7 @@
                             size="mini"
                             icon="el-icon-error"
                             @click.prevent="() => removeGroup(node, data, 2)"
-                            >
-                          </el-button>
+                          />
                         </span>
                       </span>
                     </el-tree>
@@ -262,7 +263,7 @@
                         <img class="row-image" style="box-sizing:border-box;cursor:pointer" src="@/assets/playmedia.png" @click="play(scope.row.src)">
                         <audio :id="scope.row.src" :src="Host + '/res/' + scope.row.src" />
                         <div class="row-info">
-                          <span>{{scope.row.title}}</span>
+                          <span>{{ scope.row.title }}</span>
                         </div>
                       </div>
                     </template>
@@ -275,8 +276,8 @@
                   <el-table-column prop="createDate" label="上传时间" min-width="160px" />
                   <el-table-column prop="isNet" label="状态" min-width="100px">
                     <template slot-scope="scope">
-                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
-                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                      <span v-if="scope.row.isNet === 0" class="process-success">正常</span>
+                      <span v-if="scope.row.isNet === 1" class="process-fail">失效</span>
                     </template>
                   </el-table-column>
                   <el-table-column align="right" label="操作" min-width="190px">
@@ -335,8 +336,8 @@
                       :props="defaultProps"
                       :data="treeData3"
                       @node-click="(node) => handleNodeClick(node, 3)"
-                      >
-                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                    >
+                      <span slot-scope="{ node, data }" class="custom-tree-node">
                         <span style="display:flex;flex-direction:row;align-items:center">
                           <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
                           {{ node.label }}
@@ -347,8 +348,7 @@
                             size="mini"
                             icon="el-icon-error"
                             @click.prevent="() => removeGroup(node, data, 3)"
-                            >
-                          </el-button>
+                          />
                         </span>
                       </span>
                     </el-tree>
@@ -383,9 +383,9 @@
                   <el-table-column prop="image" label="视频" min-width="300px">
                     <template slot-scope="scope">
                       <div class="row-image-info">
-                        <img class="row-image" src="@/assets/playmedia.png" />
+                        <img class="row-image" src="@/assets/playmedia.png">
                         <div class="row-info">
-                          <span>{{scope.row.title}}</span>
+                          <span>{{ scope.row.title }}</span>
                         </div>
                       </div>
                     </template>
@@ -398,8 +398,8 @@
                   <el-table-column prop="createDate" label="上传时间" min-width="160px" />
                   <el-table-column prop="isNet" label="状态" min-width="100px">
                     <template slot-scope="scope">
-                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
-                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                      <span v-if="scope.row.isNet === 0" class="process-success">正常</span>
+                      <span v-if="scope.row.isNet === 1" class="process-fail">失效</span>
                     </template>
                   </el-table-column>
                   <el-table-column align="right" label="操作" min-width="190px">
@@ -459,8 +459,8 @@
                       :props="defaultProps"
                       :data="treeData4"
                       @node-click="(node) => handleNodeClick(node, 4)"
-                      >
-                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                    >
+                      <span slot-scope="{ node, data }" class="custom-tree-node">
                         <span style="display:flex;flex-direction:row;align-items:center">
                           <img style="width:16px;margin-right:5px" src="@/assets/sucai.png">
                           {{ node.label }}
@@ -471,8 +471,7 @@
                             size="mini"
                             icon="el-icon-error"
                             @click.prevent="() => removeGroup(node, data, 4)"
-                            >
-                          </el-button>
+                          />
                         </span>
                       </span>
                     </el-tree>
@@ -510,7 +509,7 @@
                         <img v-if="scope.row.title.indexOf('pdf') > 0" class="row-image" src="@/assets/pdf.png">
                         <img v-if="scope.row.title.indexOf('epub') > 0" class="row-image" src="@/assets/epub.png">
                         <div class="row-info">
-                          <span>{{scope.row.title}}</span>
+                          <span>{{ scope.row.title }}</span>
                         </div>
                       </div>
                     </template>
@@ -523,8 +522,8 @@
                   <el-table-column prop="createDate" label="上传时间" min-width="160px" />
                   <el-table-column prop="isNet" label="状态" min-width="100px">
                     <template slot-scope="scope">
-                      <span class="process-success" v-if="scope.row.isNet === 0">正常</span>
-                      <span class="process-fail" v-if="scope.row.isNet === 1">失效</span>
+                      <span v-if="scope.row.isNet === 0" class="process-success">正常</span>
+                      <span v-if="scope.row.isNet === 1" class="process-fail">失效</span>
                     </template>
                   </el-table-column>
                   <el-table-column align="right" label="操作" min-width="190px">
@@ -626,7 +625,7 @@
             >
               <div v-if="classIndex === 1">
                 <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
               </div>
               <el-button v-if="classIndex > 1" slot="trigger" size="small" plain type="primary">选取文件</el-button>
               <div v-if="classIndex === 1" slot="tip" class="el-upload__tip">
@@ -687,7 +686,7 @@
             >
               <div v-if="classIndex === 1">
                 <img v-if="editFormData.src" :src="editFormData.file ? editFormData.src : Host + '/res/' + editFormData.src" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
               </div>
               <el-button v-if="classIndex > 1" slot="trigger" size="small" plain type="primary">选取文件</el-button>
               <div v-if="classIndex === 1" slot="tip" class="el-upload__tip">
@@ -916,7 +915,7 @@
           border: 0;
           padding: 0;
         }
-        
+
       }
       .submit {
         padding-top: 30px;
@@ -941,7 +940,7 @@
 </style>
 
 <script>
-import { 
+import {
   createMateiralClass,
   moveMaterial,
   getMaterialClass,
@@ -970,7 +969,7 @@ export default {
         { name: '图片', size: 200, color: 'red' },
         { name: '音频', size: 200, color: 'yellow' },
         { name: '视频', size: 200, color: 'purple' },
-        { name: '电子书', size: 200, color: 'green' },
+        { name: '电子书', size: 200, color: 'green' }
       ],
       capacity: {
         amount: 0,
@@ -1006,11 +1005,11 @@ export default {
         checkStrictly: true
       },
       classRules: {
-        title: [{ required: true, message: "分类名称必须填写" }]
+        title: [{ required: true, message: '分类名称必须填写' }]
       },
       classIndex: 1,
-      classForm: { pId: 0, title: "", content: "" },
-      classDialogTitle: "",
+      classForm: { pId: 0, title: '', content: '' },
+      classDialogTitle: '',
       classDialog: false,
       classOptions: [],
       treeData: [],
@@ -1022,15 +1021,15 @@ export default {
       audioDocuments: [],
       videoDocuments: [],
       eBookDocuments: [],
-      activeName: "first",
+      activeName: 'first',
       listTextImageTotal: 0,
       listAudioTotal: 0,
       listVideoTotal: 0,
       listEbookTotal: 0,
       imagePage: 1,
       listTextImageQuery: {
-        status: "",
-        keywords: "",
+        status: '',
+        keywords: '',
         page: 1,
         pageSize: 20
       },
@@ -1103,7 +1102,7 @@ export default {
         this.capacityData[2].size = data.resourceFileTypeSpaceCapacity.video
         this.capacityData[3].size = data.resourceFileTypeSpaceCapacity.ebook
       } catch (error) {
-        
+
       }
     },
     removeGroup(node, data, index) {
@@ -1118,7 +1117,7 @@ export default {
               type: 'success',
               message: '分类已删除'
             })
-            switch(index) {
+            switch (index) {
               case 1:
                 this.getImageClass()
                 break
@@ -1134,7 +1133,7 @@ export default {
             }
           }
         } catch (error) {
-          
+
         }
       })
     },
@@ -1222,7 +1221,7 @@ export default {
       this.moveNode = node
     },
     showMovement() {
-      switch(this.activeName) {
+      switch (this.activeName) {
         case 'first':
           if (this.imageSelection.length === 0) {
             this.$message({ type: 'error', message: '请先选择素材！' })
@@ -1436,7 +1435,7 @@ export default {
     },
     clearDataChildren(arr) {
       arr.forEach(a => this.removeChildren(a))
-      arr.unshift({"id": 0,"pId":0,"title":"全部","content":"全部分组","children":[]})
+      arr.unshift({ 'id': 0, 'pId': 0, 'title': '全部', 'content': '全部分组', 'children': [] })
       return arr
     },
     removeChildren(data) {
@@ -1494,7 +1493,7 @@ export default {
       }
     },
     /**
-     * 查询视频列表 
+     * 查询视频列表
      */
     async getVideoList(query) {
       try {
@@ -1600,27 +1599,27 @@ export default {
      */
     showClassDialog(index) {
       if (index === 1) {
-        this.classDialogTitle = "新增图片分类";
+        this.classDialogTitle = '新增图片分类'
         this.classOptions = this.treeData
       } else if (index === 2) {
-        this.classDialogTitle = "新增音频分类";
+        this.classDialogTitle = '新增音频分类'
         this.classOptions = this.treeData2
       } else if (index === 3) {
-        this.classDialogTitle = "新增视频分类";
+        this.classDialogTitle = '新增视频分类'
         this.classOptions = this.treeData3
       } else if (index === 4) {
-        this.classDialogTitle = "新增电子书分类";
+        this.classDialogTitle = '新增电子书分类'
         this.classOptions = this.treeData4
       }
-      this.classIndex = index;
-      this.classDialog = true;
+      this.classIndex = index
+      this.classDialog = true
     },
     /**
      * 取消新增分类
      */
     cancelAddClass() {
-      this.$refs.classForm.resetFields();
-      this.classDialog = false;
+      this.$refs.classForm.resetFields()
+      this.classDialog = false
     },
     /**
      * 新增分类
@@ -1682,7 +1681,7 @@ export default {
         const link = document.createElement('a')
         link.style.display = 'none'
         link.href = url
-        link.setAttribute('download', row.title )// 文件名
+        link.setAttribute('download', row.title)// 文件名
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link) // 下载完成移除元素
@@ -1712,13 +1711,13 @@ export default {
       })
     },
     toCreateTextImage() {
-      this.$router.push({ path: "/commodity/addTextImage" });
+      this.$router.push({ path: '/commodity/addTextImage' })
     },
     toCreateVideo() {
-      this.$router.push({ path: "/commodity/addVideo" });
+      this.$router.push({ path: '/commodity/addVideo' })
     },
     toCreateOnAir() {
-      this.$router.push({ path: "/commodity/onAir" });
+      this.$router.push({ path: '/commodity/onAir' })
     },
     batchRemoveImage() {
       if (this.imageSelection.length === 0) {

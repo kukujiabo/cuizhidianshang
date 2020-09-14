@@ -19,7 +19,7 @@
             <span>账号</span>
           </div>
           <div class="content">
-            <span>{{cruinfo.userCode}}</span>
+            <span>{{ cruinfo.userCode }}</span>
           </div>
         </div>
         <div class="info">
@@ -27,7 +27,7 @@
             <span>姓名</span>
           </div>
           <div class="content">
-            <span>{{cruinfo.userName}}</span>
+            <span>{{ cruinfo.userName }}</span>
           </div>
         </div>
         <div class="info">
@@ -35,7 +35,7 @@
             <span>手机号</span>
           </div>
           <div class="content">
-            <span>{{cruinfo.phone}}</span>
+            <span>{{ cruinfo.phone }}</span>
           </div>
         </div>
         <div class="info">
@@ -43,7 +43,7 @@
             <span>头像</span>
           </div>
           <div class="content">
-            <img :src="Host + '/res/' + cruinfo.icon" class="head" />
+            <img :src="Host + '/res/' + cruinfo.icon" class="head">
           </div>
         </div>
         <div class="info">
@@ -51,7 +51,7 @@
             <span>员工描述</span>
           </div>
           <div class="content">
-            <span>{{cruinfo.describe}}</span>
+            <span>{{ cruinfo.describe }}</span>
           </div>
         </div>
       </div>
@@ -127,8 +127,8 @@
 }
 </style>
 <script>
-import { getCruDetail } from "@/api/roles";
-import { Host } from "@/config";
+import { getCruDetail } from '@/api/roles'
+import { Host } from '@/config'
 export default {
   data() {
     return {
@@ -136,22 +136,22 @@ export default {
       cruinfo: {},
       permission: {},
       defaultProps: {
-        label: "name",
-      },
-    };
+        label: 'name'
+      }
+    }
   },
   async created() {
-    this.id = this.$route.query.id;
+    this.id = this.$route.query.id
     const {
-      data: { person, permissions },
-    } = await getCruDetail(this.id);
-    this.cruinfo = person;
-    this.permission = permissions;
+      data: { person, permissions }
+    } = await getCruDetail(this.id)
+    this.cruinfo = person
+    this.permission = permissions
   },
   methods: {
     goback() {
       this.$router.back()
     }
-  },
-};
+  }
+}
 </script>

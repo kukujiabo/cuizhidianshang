@@ -37,12 +37,12 @@
             @dragend="onDragEnd"
           >
             <div
-              class="form-list-panel"
-              style="margin-top: 0;margin-bottom:8px;"
               v-for="(item, idx) in list"
               :key="item.key"
+              class="form-list-panel"
+              style="margin-top: 0;margin-bottom:8px;"
             >
-              <upload :index="idx" :item="item" @removeitem="removeItem"></upload>
+              <upload :index="idx" :item="item" @removeitem="removeItem" />
             </div>
             <div class="add-option" style="height:50px">
               <el-button type="text" icon="el-icon-plus" @click="addItem">添加图文</el-button>
@@ -55,30 +55,30 @@
 </template>
 
 <script>
-import util from "@/utils/util.js"
-import upload from "@/common/navUpload.vue"
-import compConfig from "@/config/comp.config.js"
-import { createUniqueString } from "@/utils/index"
+import util from '@/utils/util.js'
+import upload from '@/common/navUpload.vue'
+import compConfig from '@/config/comp.config.js'
+import { createUniqueString } from '@/utils/index'
 export default {
   components: {
-    upload,
+    upload
+  },
+  props: {
+    items: {
+      type: Array
+    },
+    action: {
+      type: Object,
+      default: () => ({ display: 1 })
+    }
   },
   data() {
     return {
       list: this.items,
-      defaultConf: util.copyObj(compConfig["fenlei"]),
+      defaultConf: util.copyObj(compConfig['fenlei']),
       draging: null,
       target: null
-    };
-  },
-  props: {
-    items: {
-      type: Array,
-    },
-    action: {
-      type: Object,
-      default: () => ({ display: 1 }),
-    },
+    }
   },
   methods: {
     removeItem(index) {
@@ -86,10 +86,10 @@ export default {
       this.list.splice(index, 1)
     },
     onDragStart(event) {
-      this.draging = event.target;
+      this.draging = event.target
     },
     onDragOver(event) {
-      this.target = this.getParent(event.target);
+      this.target = this.getParent(event.target)
       if (!this.target) {
         return
       }
@@ -105,9 +105,9 @@ export default {
     onDragEnd(event) {
 
     },
-    _index(el){
-      let domData=Array.from(this.$refs.itemlist.childNodes)
-      return domData.findIndex(i=>i.getAttribute('data-key') === el.getAttribute('data-key'))
+    _index(el) {
+      const domData = Array.from(this.$refs.itemlist.childNodes)
+      return domData.findIndex(i => i.getAttribute('data-key') === el.getAttribute('data-key'))
     },
     getParent(node) {
       if (node.className !== 'form-list-panel') {
@@ -117,29 +117,29 @@ export default {
       }
     },
     upItem(idx) {
-      const tmp = util.copyObj(this.list[idx]);
-      this.list.splice(idx, 1);
-      this.list.splice(idx - 1, 0, tmp);
+      const tmp = util.copyObj(this.list[idx])
+      this.list.splice(idx, 1)
+      this.list.splice(idx - 1, 0, tmp)
     },
     removeClass(index) {
-      this.$confirm("确认删除分类" + this.list[index].label + "吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm('确认删除分类' + this.list[index].label + '吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
       }).then((_) => {
-        this.$bus.$emit("removefenleiclass", {
+        this.$bus.$emit('removefenleiclass', {
           index,
-          key: this.list[index].key,
-        });
-        this.list.splice(index, 1);
-      });
+          key: this.list[index].key
+        })
+        this.list.splice(index, 1)
+      })
     },
     downItem(idx) {
-      const tmp = util.copyObj(this.list[idx]);
-      this.list.splice(idx, 1);
-      this.list.splice(idx + 1, 0, tmp);
+      const tmp = util.copyObj(this.list[idx])
+      this.list.splice(idx, 1)
+      this.list.splice(idx + 1, 0, tmp)
     },
     delItem(idx) {
-      this.list.splice(idx, 1);
+      this.list.splice(idx, 1)
     },
     addItem() {
       // if (this.list.length < 4) {
@@ -149,9 +149,9 @@ export default {
       // const newConfig = util.copyObj(this.defaultConf.action.config[0]);
       // newConfig.key = this.list.length + 1;
       // this.list.push(newConfig);
-      const item = this.defaultConf.action.config[0];
-      item.key = createUniqueString();
-      this.list.push(util.copyObj(item));
+      const item = this.defaultConf.action.config[0]
+      item.key = createUniqueString()
+      this.list.push(util.copyObj(item))
     },
     addClassItem(cls) {
       // const newObj = util.copyObj(this.list[0]);
@@ -160,9 +160,9 @@ export default {
       //   (newObj.desc = "默认文案描述，默认文案描述，默认文案描述默认文案描述"),
       //   (newObj.click = null);
       // this.list.push(newObj);
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

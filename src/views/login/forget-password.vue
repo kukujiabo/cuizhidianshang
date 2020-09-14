@@ -1,7 +1,7 @@
 <template>
   <div class="forget-container">
     <div class="top">
-      <img src="@/assets/logo.png" class="logo" />
+      <img src="@/assets/logo.png" class="logo">
     </div>
     <div class="content">
       <div class="goback" @click="toLogin">
@@ -115,7 +115,7 @@
             >下一步</el-button>
           </div>
         </el-form>
-        <div class="finish" v-if="step === 3">
+        <div v-if="step === 3" class="finish">
           <img class="finish-icon" src="@/assets/finish.png">
           <p>修改完成，请重新登录</p>
           <el-button
@@ -289,34 +289,32 @@
 import { sendForgetPasswordCode, updateForgetPassword } from '@/api/user'
 
 function passwordLevel(password) {
-    var Modes = 0;
-    for (var i = 0; i < password.length; i++) {
-        Modes |= CharMode(password.charCodeAt(i));
+  var Modes = 0
+  for (var i = 0; i < password.length; i++) {
+    Modes |= CharMode(password.charCodeAt(i))
+  }
+  return bitTotal(Modes)
+
+  // CharMode函数
+  function CharMode(iN) {
+    if (iN >= 48 && iN <= 57)// 数字
+    { return 1 }
+    if (iN >= 65 && iN <= 90) // 大写字母
+    { return 2 }
+    if ((iN >= 97 && iN <= 122) || (iN >= 65 && iN <= 90)) // 大小写
+    { return 4 } else { return 8 } // 特殊字符
+  }
+
+  // bitTotal函数
+  function bitTotal(num) {
+    var modes = 0
+    for (var i = 0; i < 4; i++) {
+      if (num & 1) modes++
+      num >>>= 1
     }
-    return bitTotal(Modes);
- 
-    //CharMode函数
-    function CharMode(iN) {
-        if (iN >= 48 && iN <= 57)//数字
-            return 1;
-        if (iN >= 65 && iN <= 90) //大写字母
-            return 2;
-        if ((iN >= 97 && iN <= 122) || (iN >= 65 && iN <= 90)) //大小写
-            return 4;
-        else
-            return 8; //特殊字符
-    }
- 
-    //bitTotal函数
-    function bitTotal(num) {
-        var modes = 0;
-        for (var i = 0; i < 4; i++) {
-            if (num & 1) modes++;
-            num >>>= 1;
-        }
-        console.log(modes)
-        return modes;
-    }
+    console.log(modes)
+    return modes
+  }
 }
 
 export default {
@@ -353,7 +351,7 @@ export default {
         this.$message({ type: 'error', message: '两次输入密码不一致！' })
         return
       }
-      
+
       if (passwordLevel(passwordForm.newpassword) < 2) {
         this.$message({ type: 'error', message: '密码必须包含字母、数字、特殊字符中的两种！' })
         return

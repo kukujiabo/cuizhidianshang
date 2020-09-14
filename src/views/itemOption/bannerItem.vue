@@ -9,24 +9,24 @@
           @dragstart="onDragStart"
           @dragover="onDragOver"
           @dragend="onDragEnd"
-          > 
+        >
           <div
-            class="form-list-panel"
             v-for="(slide, idx) in slides"
-            :data-key="slide.key"
             :key="slide.key"
+            class="form-list-panel"
+            :data-key="slide.key"
             :draggable="true"
           >
             <upload
               :label="'图片' + (idx + 1)"
               :index="idx"
               :item="slide"
-              v-on:uploadSuccess="uploadSuccess"
+              @uploadSuccess="uploadSuccess"
               @removeitem="removeItem"
-            ></upload>
+            />
             <template v-if="slide.click">
               <el-form-item class="small" label="跳转到：">
-                <span style="word-break: break-all;">{{slide.click.href}}</span>
+                <span style="word-break: break-all;">{{ slide.click.href }}</span>
               </el-form-item>
             </template>
           </div>
@@ -40,76 +40,76 @@
 </template>
 
 <script>
-import util from "@/utils/util.js";
-import { createUniqueString } from "@/utils/index";
-import compConfig from "@/config/comp.config.js";
-import upload from "@/common/navUpload.vue";
+import util from '@/utils/util.js'
+import { createUniqueString } from '@/utils/index'
+import compConfig from '@/config/comp.config.js'
+import upload from '@/common/navUpload.vue'
 
 export default {
-  data() {
-    return {
-      defaultConf: util.copyObj(compConfig["swiper-banner"]),
-      slides: this.banners,
-      draging: null,
-      target: null
-    }
-  },
   components: {
-    upload,
+    upload
   },
   props: {
     domId: {
       type: String
     },
     banners: {
-      type: Array,
-    },
+      type: Array
+    }
+  },
+  data() {
+    return {
+      defaultConf: util.copyObj(compConfig['swiper-banner']),
+      slides: this.banners,
+      draging: null,
+      target: null
+    }
   },
   watch: {
     banners: {
       handler(val) {
-        this.slides = val;
+        this.slides = val
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     removeItem(index) {
       this.banners.splice(index, 1)
     },
     showClick(banner, idx) {
-      this.$bus.$emit("click:show", idx, ["outside", "code"]);
+      this.$bus.$emit('click:show', idx, ['outside', 'code'])
     },
     upBanner(idx) {
-      const tmp = util.copyObj(this.slides[idx]);
-      this.slides.splice(idx, 1);
-      this.slides.splice(idx - 1, 0, tmp);
+      const tmp = util.copyObj(this.slides[idx])
+      this.slides.splice(idx, 1)
+      this.slides.splice(idx - 1, 0, tmp)
     },
     downBanner(idx) {
-      const tmp = util.copyObj(this.slides[idx]);
-      this.slides.splice(idx, 1);
-      this.slides.splice(idx + 1, 0, tmp);
+      const tmp = util.copyObj(this.slides[idx])
+      this.slides.splice(idx, 1)
+      this.slides.splice(idx + 1, 0, tmp)
     },
     delBanner(idx) {
-      this.slides.splice(idx, 1);
+      this.slides.splice(idx, 1)
     },
     addBanner() {
       if (this.slides.length < 10) {
-        const item = this.defaultConf.action.config[0];
-        item.key = createUniqueString();
-        this.slides.push(util.copyObj(item));
+        const item = this.defaultConf.action.config[0]
+        item.key = createUniqueString()
+        this.slides.push(util.copyObj(item))
       } else {
-        this.$alert("最多添加10个图片项！");
+        this.$alert('最多添加10个图片项！')
       }
     },
     uploadSuccess(item, img, idx) {
-      console.log("uploadSuccess", item);
+      console.log('uploadSuccess', item)
     },
     onDragStart(event) {
-      this.draging = event.target;
+      this.draging = event.target
     },
     onDragOver(event) {
-      this.target = this.getParent(event.target);
+      this.target = this.getParent(event.target)
       if (!this.target) {
         return
       }
@@ -123,11 +123,11 @@ export default {
       }
     },
     onDragEnd(event) {
-      
+
     },
-    _index(el){
-      let domData=Array.from(this.$refs.itemlist.childNodes)
-      return domData.findIndex(i=>i.getAttribute('data-key') === el.getAttribute('data-key'))
+    _index(el) {
+      const domData = Array.from(this.$refs.itemlist.childNodes)
+      return domData.findIndex(i => i.getAttribute('data-key') === el.getAttribute('data-key'))
     },
     getParent(node) {
       if (node.className !== 'form-list-panel') {
@@ -136,8 +136,8 @@ export default {
         return node
       }
     }
-  },
-};
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

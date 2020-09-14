@@ -2,7 +2,7 @@
   <div class="goods-item-container">
     <img class="goods-img" :src="Host + '/res/' + data.cover">
     <div class="info">
-      <p class="title">{{goodsType[data.cType - 1]}} | {{data.title}}</p>
+      <p class="title">{{ goodsType[data.cType - 1] }} | {{ data.title }}</p>
       <div class="price-view">
         <p class="price">¥ 99</p>
         <p class="views">312 人浏览</p>
@@ -51,7 +51,7 @@
 }
 </style>
 <script>
-import { Host } from '@/config' 
+import { Host } from '@/config'
 export default {
   props: {
     data: {
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       Host,
-      goodsType: [ '图文', '视频', '直播', '海报', '', '音频' ]
+      goodsType: ['图文', '视频', '直播', '海报', '', '音频']
     }
   },
   methods: {

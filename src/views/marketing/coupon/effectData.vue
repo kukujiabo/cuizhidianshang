@@ -8,7 +8,7 @@
 <template>
   <div>
     <div style="padding: 30px;background-color:#fff">
-      <el-button icon="el-icon-arrow-left" @click="goBack">返回列表</el-button> 
+      <el-button icon="el-icon-arrow-left" @click="goBack">返回列表</el-button>
     </div>
     <el-card title shadow="never" class="lee border-none">
       <div slot="header" class="clearfix">

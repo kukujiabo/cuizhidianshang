@@ -60,8 +60,8 @@
             <el-form-item prop="shop_logo" label="店铺LOGO：">
               <div class="shop-info-image">
                 <div class="shop-image">
-                  <img v-if="shopInfo.logoSrc" :src="Host + '/res/' + shopInfo.logoSrc" />
-                  <img v-else src="@/assets/emptyqrcode.jpg" />
+                  <img v-if="shopInfo.logoSrc" :src="Host + '/res/' + shopInfo.logoSrc">
+                  <img v-else src="@/assets/emptyqrcode.jpg">
                 </div>
                 <div>
                   <el-upload
@@ -85,8 +85,8 @@
             <el-form-item prop="shop_logo" label="店铺分享语：">
               <div class="shop-info-image">
                 <div class="shop-image">
-                  <img v-if="shopInfo.shareLogoSrc" :src="Host + '/res/' + shopInfo.shareLogoSrc" />
-                  <img v-else src="@/assets/emptyqrcode.jpg" />
+                  <img v-if="shopInfo.shareLogoSrc" :src="Host + '/res/' + shopInfo.shareLogoSrc">
+                  <img v-else src="@/assets/emptyqrcode.jpg">
                   <div class="info">
                     <span class="title">{{ shopInfo.shareTitle }}</span>
                     <span class="tips">{{ shopInfo.shareRemark }}</span>
@@ -100,8 +100,8 @@
             <el-form-item prop="  shop_logo" label="直播间公告：">
               <div class="shop-info-image">
                 <div class="shop-image">
-                  <img v-if="brandForm.shop_logo" :src="brandForm.shop_logo" />
-                  <img v-else src="@/assets/emptyqrcode.jpg" />
+                  <img v-if="brandForm.shop_logo" :src="brandForm.shop_logo">
+                  <img v-else src="@/assets/emptyqrcode.jpg">
                   <div class="info">
                     <span class="title">张向东</span>
                     <span class="tips">欢迎进入直播间：1、进入直播间请注意语言用词…</span>
@@ -188,7 +188,7 @@
                 :auto-upload="false"
                 :on-change="changeShareImage"
               >
-                <img v-if="shareForm.shareLogoSrc" :src="shareForm.shareLogoSrc" class="avatar" />
+                <img v-if="shareForm.shareLogoSrc" :src="shareForm.shareLogoSrc" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
               </el-upload>
             </el-form-item>
@@ -213,17 +213,53 @@
   </div>
 </template>
 <script>
-import { Host } from "@/config";
-import { getToken, getTokenType } from "@/utils/auth";
-import { editName, getCertify } from "@/api/shop";
-import clipboard from "@/utils/clipboard";
+import { Host } from '@/config'
+import { getToken, getTokenType } from '@/utils/auth'
+import { editName, getCertify } from '@/api/shop'
+import clipboard from '@/utils/clipboard'
 
 export default {
   props: {
     shopInfo: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
+  },
+  data() {
+    const shareForm = {
+      shareLogoSrc: this.shopInfo.shareLogoSrc
+        ? Host + '/res/' + this.shopInfo.shareLogoSrc
+        : '',
+      shareLogo: null,
+      shareTitle: this.shopInfo.shareTitle,
+      shareRemark: this.shopInfo.shareRemark
+    }
+    return {
+      shopLink: 'https://eccs.com.cn/s/#/?AppId=' + this.shopInfo.url,
+      showShopSetting: false,
+      showShopShare: false,
+      token: getTokenType() + ' ' + getToken(),
+      Host: Host,
+      logoData: {
+        shopId: this.shopInfo.id
+      },
+      shareForm: shareForm,
+      shopForm: {
+        shop_name: '',
+        shop_link: '',
+        shop_appid: '',
+        business_type: 1,
+        shop_authentication: ''
+      },
+      brandForm: {
+        shop_logo: ''
+      },
+      messageForm: {
+        getterMessage1: false,
+        activityMessage: false,
+        getterMessage2: false
+      }
+    }
   },
   created() {
     console.log(this.shopInfo, 'created----')
@@ -235,153 +271,117 @@ export default {
   mounted() {
     // this.getCertify1();
   },
-  data() {
-    const shareForm = {
-      shareLogoSrc: this.shopInfo.shareLogoSrc
-        ? Host + "/res/" + this.shopInfo.shareLogoSrc
-        : "",
-      shareLogo: null,
-      shareTitle: this.shopInfo.shareTitle,
-      shareRemark: this.shopInfo.shareRemark,
-    };
-    return {
-      shopLink: "https://eccs.com.cn/s/#/?AppId=" + this.shopInfo.url,
-      showShopSetting: false,
-      showShopShare: false,
-      token: getTokenType() + " " + getToken(),
-      Host: Host,
-      logoData: {
-        shopId: this.shopInfo.id,
-      },
-      shareForm: shareForm,
-      shopForm: {
-        shop_name: "",
-        shop_link: "",
-        shop_appid: "",
-        business_type: 1,
-        shop_authentication: "",
-      },
-      brandForm: {
-        shop_logo: "",
-      },
-      messageForm: {
-        getterMessage1: false,
-        activityMessage: false,
-        getterMessage2: false,
-      },
-    };
-  },
   methods: {
     async getCertify1() {
-      let data = await getCertify(this.shopInfo.id);
+      const data = await getCertify(this.shopInfo.id)
       if ((data.data.success = true)) {
-        console.log(data.data);
+        console.log(data.data)
         if (data.data.certifyType === 1) {
-          this.shopForm.shop_authentication = data.data.userName;
+          this.shopForm.shop_authentication = data.data.userName
         }
         if (data.data.certifyType === 2) {
-          this.shopForm.shop_authentication = data.data.organizationName;
+          this.shopForm.shop_authentication = data.data.organizationName
         }
         if (data.data.certifyType === 3) {
-          this.shopForm.shop_authentication = data.data.organizationName;
+          this.shopForm.shop_authentication = data.data.organizationName
         }
       }
     },
     handleClipLink(evt) {
-      clipboard(this.shopLink, event);
+      clipboard(this.shopLink, event)
     },
     handleClipAppId(evt) {
-      clipboard(this.shopInfo.appId, event);
+      clipboard(this.shopInfo.appId, event)
     },
     avatarUploaded({ success }) {
       if (success) {
-        this.$emit("refreshshop");
+        this.$emit('refreshshop')
       }
     },
     editShopName() {
-      this.$prompt("请输入店铺名称", "修改店铺名称", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-      }).then(async ({ value }) => {
+      this.$prompt('请输入店铺名称', '修改店铺名称', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(async({ value }) => {
         if (!value) {
-          this.$message({ type: "error", message: "必须输入名称！" });
-          return;
+          this.$message({ type: 'error', message: '必须输入名称！' })
+          return
         }
         try {
           const { success, message } = await editName({
             shopId: this.shopInfo.id,
-            name: value,
-          });
-          console.log(success);
+            name: value
+          })
+          console.log(success)
           if (success) {
-            this.$message({ type: "success", message: "修改成功！" });
-            this.$emit("refreshshop");
+            this.$message({ type: 'success', message: '修改成功！' })
+            this.$emit('refreshshop')
           } else {
-            this.$message({ type: "error", message });
+            this.$message({ type: 'error', message })
           }
         } catch (error) {
-          this.$message({ type: "error", message: "修改失败，请联系管理员！" });
+          this.$message({ type: 'error', message: '修改失败，请联系管理员！' })
         }
-      });
+      })
     },
     shareUpdateHandler() {},
     cancelShareUpdate() {
-      this.$refs.shareUpdateForm.resetFields();
-      this.showShopShare = false;
+      this.$refs.shareUpdateForm.resetFields()
+      this.showShopShare = false
     },
     confirmShareUpdate() {
       if (!this.shareForm.shareTitle) {
-        this.$message({ type: "error", message: "分享标题必须填写" });
-        return;
+        this.$message({ type: 'error', message: '分享标题必须填写' })
+        return
       }
       if (!this.shareForm.shareRemark) {
-        this.$message({ type: "error", message: "分享描述必须填写" });
-        return;
+        this.$message({ type: 'error', message: '分享描述必须填写' })
+        return
       }
-      const xhr = new XMLHttpRequest();
-      xhr.withCredentials = false;
-      xhr.open("POST", "http://eccs.com.cn/services/api/shop/upShare");
-      xhr.setRequestHeader("Authorization", getTokenType() + " " + getToken());
+      const xhr = new XMLHttpRequest()
+      xhr.withCredentials = false
+      xhr.open('POST', 'http://eccs.com.cn/services/api/shop/upShare')
+      xhr.setRequestHeader('Authorization', getTokenType() + ' ' + getToken())
       xhr.onload = () => {
-        this.loading = false;
+        this.loading = false
         if (xhr.status !== 200) {
-          return;
+          return
         }
-        const { success, message } = JSON.parse(xhr.responseText);
+        const { success, message } = JSON.parse(xhr.responseText)
         if (success) {
-          this.$message({ type: "success", message: "修改成功！" });
-          this.showShopShare = false;
-          this.$emit("refreshshop");
+          this.$message({ type: 'success', message: '修改成功！' })
+          this.showShopShare = false
+          this.$emit('refreshshop')
         } else {
-          this.$message({ type: "error", message });
+          this.$message({ type: 'error', message })
         }
-      };
-      const shareForm = new FormData();
+      }
+      const shareForm = new FormData()
 
       // 基本信息
       if (this.shareForm.shareLogo) {
         shareForm.append(
-          "shareLogo",
+          'shareLogo',
           this.shareForm.shareLogo,
           this.shareForm.shareLogo.filename
-        );
+        )
       }
-      shareForm.append("shareTitle", this.shareForm.shareTitle);
-      shareForm.append("shareRemark", this.shareForm.shareRemark);
-      shareForm.append("shopId", this.shopInfo.id);
-      xhr.send(shareForm);
+      shareForm.append('shareTitle', this.shareForm.shareTitle)
+      shareForm.append('shareRemark', this.shareForm.shareRemark)
+      shareForm.append('shopId', this.shopInfo.id)
+      xhr.send(shareForm)
     },
     changeShareImage(file) {
-      this.shareForm.shareLogo = file.raw;
-      this.shareForm.shareLogoSrc = URL.createObjectURL(file.raw);
+      this.shareForm.shareLogo = file.raw
+      this.shareForm.shareLogoSrc = URL.createObjectURL(file.raw)
     },
     gotoMenu() {
-      this.id = this.shopInfo.id;
-      this.name = this.shopInfo.name;
-      this.$router.push("/attestation?id=" + this.id + "&name=" + this.name);
-    },
-  },
-};
+      this.id = this.shopInfo.id
+      this.name = this.shopInfo.name
+      this.$router.push('/attestation?id=' + this.id + '&name=' + this.name)
+    }
+  }
+}
 </script>
 <style lang="scss">
 @import "~@/styles/index.scss";

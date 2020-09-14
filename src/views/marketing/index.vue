@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     toPage(index) {
-      switch(index) {
+      switch (index) {
         case 1:
           this.$router.push({ path: '/marketing/promotionStaff' })
           break
@@ -105,7 +105,7 @@ export default {
         case 4:
           this.$router.push({ path: '/marketing/groupBuying' })
           break
-        case 5: 
+        case 5:
           this.$router.push({ path: '/marketing/fission' })
           break
       }

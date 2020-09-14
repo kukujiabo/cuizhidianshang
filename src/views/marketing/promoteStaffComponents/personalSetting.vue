@@ -7,13 +7,13 @@
       <el-form label-width="90px">
         <el-form-item label="按钮文案：">
           <el-radio-group v-model="form.promote_mode">
-            <el-radio :label="1">参与推广</el-radio> 
+            <el-radio :label="1">参与推广</el-radio>
             <el-radio :label="2">自定义</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label=" ">
           <div>
-            <el-input style="width:300px" placeholder="自定义文案" v-model="form.wenan" />
+            <el-input v-model="form.wenan" style="width:300px" placeholder="自定义文案" />
             <p style="color:#a1a1a1;font-size:12px">根据《微信外部链接内容管理规范》，文章不允许有明确提示和暗示金钱奖励的字段，可自定义文字，不超过5个字</p>
           </div>
         </el-form-item>
@@ -26,7 +26,7 @@
       <p>自定义海报，点击可对海报进行编辑，最多添加三张</p>
       <div>
         <div class="up-img" @click="addImage">
-          <i class="el-icon-plus"></i>
+          <i class="el-icon-plus" />
         </div>
       </div>
     </div>
@@ -35,9 +35,7 @@
         <div class="zoom-in">
           <el-row>
             <el-col :span="6">
-              <div class="img-container">
-
-              </div>
+              <div class="img-container" />
             </el-col>
             <el-col :span="18">
               <el-form label-width="150px">
@@ -49,20 +47,20 @@
                     :on-success="uploadSuccess"
                     :limit="1"
                     :show-file-list="false"
-                    >
+                  >
                     <el-button plain size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">建议尺寸750x1334px或9:16， JPG、PNG格式，图片小于1M</div>
                   </el-upload>
                 </el-form-item>
                 <el-form-item label="用户头像昵称：">
                   <el-radio-group v-model="form.promote_mode">
-                    <el-radio :label="1">显示</el-radio> 
+                    <el-radio :label="1">显示</el-radio>
                     <el-radio :label="2">隐藏</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="昵称文字颜色：">
                   <el-radio-group v-model="form.promote_mode">
-                    <el-radio :label="1">黑色</el-radio> 
+                    <el-radio :label="1">黑色</el-radio>
                     <el-radio :label="2">白色</el-radio>
                   </el-radio-group>
                 </el-form-item>
@@ -122,6 +120,6 @@ export default {
     uploadSuccess(evt) {
 
     }
-  } 
+  }
 }
 </script>

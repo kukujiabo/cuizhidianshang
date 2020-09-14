@@ -2,7 +2,7 @@
   <div>
     <el-form ref="options-form" :inline="false">
       <el-form-item>
-        <el-input v-model="option.pageName"></el-input>
+        <el-input v-model="option.pageName" />
       </el-form-item>
     </el-form>
   </div>

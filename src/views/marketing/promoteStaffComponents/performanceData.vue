@@ -5,8 +5,8 @@
         <el-button type="primary">导出excel表</el-button>
       </div>
       <div class="search-options">
-        <el-select v-model="listQuery.option"></el-select>
-        <div class="divi"></div>
+        <el-select v-model="listQuery.option" />
+        <div class="divi" />
         <el-input v-model="listQuery.search" placeholder="搜索图文名称">
           <el-button slot="append">搜索</el-button>
         </el-input>
@@ -27,30 +27,30 @@
           'font-size':'16px',
           'color':'#666'
         }"
-        >
-        <el-table-column label="序号"></el-table-column>
-        <el-table-column label="推广员昵称"></el-table-column>
-        <el-table-column label="姓名"></el-table-column>
-        <el-table-column label="手机号码"></el-table-column>
-        <el-table-column label="直接推广订单数"></el-table-column>
-        <el-table-column min-width="100px" label="直接推广订单总额（元）"></el-table-column>
-        <el-table-column label="间接推广订单数"></el-table-column>
-        <el-table-column label="佣金比例"></el-table-column>
-        <el-table-column min-width="100px" label="间接推广订单总额（元）"></el-table-column>
-        <el-table-column label="累计收益（元）"></el-table-column>
+      >
+        <el-table-column label="序号" />
+        <el-table-column label="推广员昵称" />
+        <el-table-column label="姓名" />
+        <el-table-column label="手机号码" />
+        <el-table-column label="直接推广订单数" />
+        <el-table-column min-width="100px" label="直接推广订单总额（元）" />
+        <el-table-column label="间接推广订单数" />
+        <el-table-column label="佣金比例" />
+        <el-table-column min-width="100px" label="间接推广订单总额（元）" />
+        <el-table-column label="累计收益（元）" />
       </el-table>
     </div>
-      <div class="page">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[20, 30, 50, 100]"
-          :page-size="listQuery.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
-      </div>
+    <div class="page">
+      <el-pagination
+        :current-page="currentPage"
+        :page-sizes="[20, 30, 50, 100]"
+        :page-size="listQuery.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 <style lang="scss">

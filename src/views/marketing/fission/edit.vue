@@ -126,7 +126,8 @@
                   :show-file-list="false"
                   :limit="1"
                   :file-list="backImgFileList"
-                  :on-change="backImgChangeFile" accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
+                  :on-change="backImgChangeFile"
+                  accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
                 >
                   <el-button type="info" plain size="small">点击上传</el-button>
                   <div slot="tip" class="el-upload__tip">点击上传图片，建议尺寸750*1334px或9:16，jpg\png格式，图片小于1M </div>
@@ -183,7 +184,8 @@
                 :show-file-list="false"
                 :limit="1"
                 :file-list="fileList"
-                :on-change="changeFile" accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
+                :on-change="changeFile"
+                accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
               >
                 <el-button type="info" plain size="small">点击上传</el-button>
                 <div slot="tip" class="el-upload__tip">建议尺寸132px*132px的正方形二维码图片，JPG/PNG格式，图片小于1M.建议上传群二维码/公众号二维码等</div>

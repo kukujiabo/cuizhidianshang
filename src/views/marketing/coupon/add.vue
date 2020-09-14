@@ -58,7 +58,7 @@
                 </div>
               </div>
             </el-form-item>
-            <el-form-item required prop="reduction" label="优惠内容：" v-show="coupontype==1">
+            <el-form-item v-show="coupontype==1" required prop="reduction" label="优惠内容：">
               <span class="input-left">减</span>
               <el-input
                 v-model="form.reduction"
@@ -69,7 +69,7 @@
                 <span slot="suffix">元</span>
               </el-input>
             </el-form-item>
-            <el-form-item required prop="discount" label="优惠内容：" v-show="coupontype==2">
+            <el-form-item v-show="coupontype==2" required prop="discount" label="优惠内容：">
               <span class="input-left">打</span>
               <el-input
                 v-model="form.discount"
@@ -79,17 +79,16 @@
               >
                 <span slot="suffix">折</span>
               </el-input>
-			  <el-form-item style="margin-top: 30px;" prop="mostfavorable">
-			    <el-checkbox v-model="form.maxcoupon" :true-label="1" :false-label="0" >最多优惠
-				  <el-input
-                v-model="form.favorable"
-                style="width: 200px;"
-                show-word-limit
-                placeholder="请输入金额"
-                :disabled="form.maxcoupon===1? false: true"
-              >
-              </el-input></el-checkbox>
-			  </el-form-item>
+              <el-form-item style="margin-top: 30px;" prop="mostfavorable">
+                <el-checkbox v-model="form.maxcoupon" :true-label="1" :false-label="0">最多优惠
+                  <el-input
+                    v-model="form.favorable"
+                    style="width: 200px;"
+                    show-word-limit
+                    placeholder="请输入金额"
+                    :disabled="form.maxcoupon===1? false: true"
+                  /></el-checkbox>
+              </el-form-item>
             </el-form-item>
             <el-form-item required prop="issueQty" label="发行量：">
               <el-input
@@ -277,7 +276,7 @@ export default {
   data() {
     return {
       Host: Host,
-	  coupontype:1,
+	  coupontype: 1,
       form: {
         /* 优惠券名称*/
         title: '',
@@ -319,9 +318,9 @@ export default {
         goodsType: 1,
         /* 商品id*/
         includeGoods: [],
-		//折扣
-		// 优惠卷
-		maxcoupon:0
+        // 折扣
+        // 优惠卷
+        maxcoupon: 0
       },
       goods: [],
       rules: {
@@ -386,13 +385,13 @@ export default {
         }
       }
     },
-	clickcoupon(index){
-		this.coupontype=index
-		console.log(index,123123123)
-	},
-	maxcoupon(e){
-		console.log(123123)
-	}
+    clickcoupon(index) {
+      this.coupontype = index
+      console.log(index, 123123123)
+    },
+    maxcoupon(e) {
+      console.log(123123)
+    }
   }
 }
 </script>

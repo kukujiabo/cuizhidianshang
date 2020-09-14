@@ -2,7 +2,7 @@
   <div>
     <el-form ref="options-form" :inline="false">
       <el-form-item>
-        <el-input v-model="option.pageName"></el-input>
+        <el-input v-model="option.pageName" />
       </el-form-item>
     </el-form>
     <div class="section-line">
@@ -23,8 +23,8 @@
                     Authorization: token
                   }"
                 >
-                  <img v-if="option.brandInfo.logo" :src="option.brandInfo.logo" class="avatar" />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-if="option.brandInfo.logo" :src="option.brandInfo.logo" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon" />
                 </el-upload>
                 <p class="upload-tips">建议上传：图片尺寸1:1，JPG、PNG格式，大 小不超过2M</p>
               </div>
@@ -34,36 +34,36 @@
           <div>
             <el-form-item label="品牌名称">
               <el-input
+                v-model="option.brandInfo.brandName"
                 style="width:260px"
                 placeholder="请输入品牌名称"
-                v-model="option.brandInfo.brandName"
               />
             </el-form-item>
           </div>
           <div>
             <el-form-item label="品牌介绍">
               <el-input
+                v-model="option.brandInfo.brandDesc"
                 style="width:260px"
                 placeholder="请输入品牌介绍"
-                v-model="option.brandInfo.brandDesc"
               />
             </el-form-item>
           </div>
         </el-form>
       </div>
     </div>
-    <div style="border-top:0.5px solid #e1e1e1"></div>
+    <div style="border-top:0.5px solid #e1e1e1" />
     <div class="section-line">
       <h2>添加商品</h2>
       <div style="padding: 0 25px;">
         <div class="add-goods-list">
-          <div class="good-info" v-for="(good, index) in option.goodsList" :key="good.id">
+          <div v-for="(good, index) in option.goodsList" :key="good.id" class="good-info">
             <div class="type">
-              {{goodsType[good.cType - 1]}}
+              {{ goodsType[good.cType - 1] }}
             </div>
-            <div class="name">{{good.title}}</div>
+            <div class="name">{{ good.title }}</div>
             <div class="remove" @click="removeGoods(index)">
-              <i class="el-icon-delete"></i>
+              <i class="el-icon-delete" />
             </div>
           </div>
         </div>
@@ -178,59 +178,59 @@
 }
 </style>
 <script>
-import { getToken, getTokenType } from "@/utils/auth";
-import SelectGoods from "@/common/selectGoods";
-import { Host } from "@/config/index";
+import { getToken, getTokenType } from '@/utils/auth'
+import SelectGoods from '@/common/selectGoods'
+import { Host } from '@/config/index'
 export default {
   components: {
-    SelectGoods,
+    SelectGoods
   },
   props: {
     option: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   data() {
     return {
       Host,
       dialogShow: false,
       selectedGood: null,
-      token: getTokenType() + " " + getToken(),
-      goodsType: [ '图文', '视频', '直播', '海报', '', '音频' ]
-    };
+      token: getTokenType() + ' ' + getToken(),
+      goodsType: ['图文', '视频', '直播', '海报', '', '音频']
+    }
   },
   methods: {
     addGoods() {
-      this.dialogShow = true;
+      this.dialogShow = true
     },
     removeGoods(idx) {
       this.option.goodsList.splice(idx, 1)
     },
     selectGoods({ row }) {
       console.log(row)
-      this.selectedGood = row;
+      this.selectedGood = row
     },
     confirm() {
-      this.option.goodsList.push(this.selectedGood);
-      this.selectedGood = null;
-      this.dialogShow = false;
+      this.option.goodsList.push(this.selectedGood)
+      this.selectedGood = null
+      this.dialogShow = false
     },
     cancel() {
-      this.selectedGood = null;
-      this.dialogShow = false;
+      this.selectedGood = null
+      this.dialogShow = false
     },
     cancelDialog() {},
-    handleBrandAvatarSuccess({ success, data: { url } }) {
+    handleBrandAvatarSuccess({ success, data: { url }}) {
       if (success) {
-        this.option.brandInfo.logo = Host + url;
+        this.option.brandInfo.logo = Host + url
       } else {
         this.$message({
-          type: "error",
-          message: "上传logo，请联系系统管理员！",
-        });
+          type: 'error',
+          message: '上传logo，请联系系统管理员！'
+        })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>

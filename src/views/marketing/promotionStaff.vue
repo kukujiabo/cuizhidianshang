@@ -26,12 +26,12 @@
       </el-tab-pane>
       <el-tab-pane label="业绩统计" name="fifth">
         <div class="operation">
-          <performance-data />  
+          <performance-data />
         </div>
       </el-tab-pane>
       <el-tab-pane label="推广设置" name="sixth">
         <div class="operation">
-          <promote-settings />  
+          <promote-settings />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -323,11 +323,11 @@ export default {
     },
     copyShareLink() {
       this.$refs.copyInput.select()
-      document.execCommand("copy");
+      document.execCommand('copy')
       this.$message({
         type: 'success',
         message: '分享链接已复制'
-      }) 
+      })
     },
     clearPosterFields() {
       this.newPostForm.coverUrl = ''
@@ -366,7 +366,7 @@ export default {
         this.$message({ type: 'error', message: '海报图片必须上传！' })
         return
       }
-      const api = Host + (this.newPostForm.id ? '/api/goods/upPoster' : '/api/goods/addPoster') 
+      const api = Host + (this.newPostForm.id ? '/api/goods/upPoster' : '/api/goods/addPoster')
       const xhr = new XMLHttpRequest()
       xhr.withCredentials = false
       xhr.open('POST', api)
@@ -500,7 +500,7 @@ export default {
           this.remove(row, index)
           break
         case 'c':
-          this.$router.push({ path: '/commodity/comments', query: { type: index } })
+          this.$router.push({ path: '/commodity/comments', query: { type: index }})
           break
         case 's':
           this.stop(row, index)

@@ -10,7 +10,7 @@
       />
       <span>{{ id ? '编辑' : '添加员工' }}</span>
     </div>
-    <add-role-form ref="addCruForm"  />
+    <add-role-form ref="addCruForm" />
   </div>
 </template>
 

@@ -176,38 +176,38 @@
                       v-model="CommoditFiles"
                       active-color="#1f71f"
                       @change="(evt) => switchAuth(evt, menu.code, menu.children)"
-                      />
+                    />
                     <el-switch
                       v-if="menu.code === 'MarketingManage'"
                       v-model="MarketingManage"
                       active-color="#1f71f"
                       @change="(evt) => switchAuth(evt, menu.code, menu.children)"
-                      />
+                    />
                     <el-switch
                       v-if="menu.code === 'MaterialManage'"
                       v-model="MaterialManage"
                       active-color="#1f71f"
                       @change="(evt) => switchAuth(evt, menu.code, menu.children)"
-                      />
+                    />
                     <el-switch
                       v-if="menu.code === 'SetupManage'"
                       v-model="SetupManage"
                       active-color="#1f71f"
                       @change="(evt) => switchAuth(evt, menu.code, menu.children)"
-                      />
+                    />
                     <el-switch
                       v-if="menu.code === 'ShopDecoration'"
                       v-model="ShopDecoration"
                       active-color="#1f71f"
                       @change="(evt) => switchAuth(evt, menu.code, menu.children)"
-                      />
+                    />
                   </div>
                 </div>
                 <div class="section-options">
                   <el-tree
+                    :ref="menu.code"
                     show-checkbox
                     node-key="code"
-                    :ref="menu.code"
                     :props="defaultProps"
                     :data="menu.children"
                     :default-expand-all="true"
@@ -352,7 +352,7 @@ const routerPath = {
   '/profile/cur': 'second',
   '/profile/auth': 'third'
 }
-import { 
+import {
   getRoleList,
   removeRole,
   getCruList,
@@ -537,7 +537,7 @@ export default {
           this.$set(this.menuSwitch, m.code, true)
           this.filterAllCode(m)
         })
-        for(let key in this.checkedKeys) {
+        for (const key in this.checkedKeys) {
           this.$refs[key][0].setCheckedKeys(this.checkedKeys[key])
         }
         this.$forceUpdate()
@@ -561,7 +561,7 @@ export default {
      */
     async getRoleList(query) {
       try {
-        for(let key in query) {
+        for (const key in query) {
           if (query[key] === '' || query[key] === undefined) {
             delete query[key]
           }

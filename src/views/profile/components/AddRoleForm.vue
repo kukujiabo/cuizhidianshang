@@ -5,7 +5,7 @@
         <span class="section-title">基本信息</span>
       </div>
       <div class="inner-form-wrapper">
-        <el-form required ref="form" :model="form" label-width="120px">
+        <el-form ref="form" required :model="form" label-width="120px">
           <el-form-item prop="name" label="角色名称：">
             <el-input v-model="form.name" maxlength="45" show-word-limit placeholder="例如行政，财务" />
           </el-form-item>
@@ -23,13 +23,13 @@
       </div>
       <div style="height:30px" />
       <div class="inner-form-wrapper" style="border-bottom:0">
-        <el-form required ref="authForm" :model="form" label-width="120px">
+        <el-form ref="authForm" required :model="form" label-width="120px">
           <el-form-item label="权限配置：">
             <div class="config">
               <div class="func">功能</div>
               <span>
                 全选&nbsp;&nbsp;
-                <el-checkbox @change="changeAll"></el-checkbox>
+                <el-checkbox @change="changeAll" />
               </span>
             </div>
           </el-form-item>
@@ -145,80 +145,80 @@
 </style>
 
 <script>
-import { addNewRole, getAllMenus, editRoleData } from "@/api/roles";
+import { addNewRole, getAllMenus, editRoleData } from '@/api/roles'
 
 export default {
   data() {
     return {
-      roleId: "",
-      content: "",
+      roleId: '',
+      content: '',
       fileList: [],
       form: {
-        name: "",
-        remark: "",
+        name: '',
+        remark: ''
       },
       allMenus: [],
       authForm: [],
       authData: [],
       defaultProps: {
-        label: "name",
+        label: 'name'
       },
       allCodes: []
-    };
+    }
   },
   created() {
-    this.getAllMenus();
+    this.getAllMenus()
   },
   methods: {
     treeChange(evt, checked) {
-      let authForm = this.authForm;
+      let authForm = this.authForm
       if (checked) {
-        authForm.push(evt.permissionCode ? evt.permissionCode : evt.code);
+        authForm.push(evt.permissionCode ? evt.permissionCode : evt.code)
       } else {
-        authForm = authForm.filter((code) => code !== evt.code);
+        authForm = authForm.filter((code) => code !== evt.code)
       }
-      this.authForm = authForm;
+      this.authForm = authForm
     },
     async confirm() {
-      const form = this.form;
-      const authForm = this.authForm;
+      const form = this.form
+      const authForm = this.authForm
       if (!form.name) {
-        this.$message({ type: "error", message: "角色名称必须填写！" });
-        return;
+        this.$message({ type: 'error', message: '角色名称必须填写！' })
+        return
       }
       if (!form.remark) {
-        this.$message({ type: "error", message: "角色描述必须填写！" });
-        return;
+        this.$message({ type: 'error', message: '角色描述必须填写！' })
+        return
       }
       const roleData = {
         name: form.name,
         remark: form.remark,
-        permissions: authForm.map((code) => ({ permissionCode: code })),
-      };
+        permissions: authForm.map((code) => ({ permissionCode: code }))
+      }
       if (!this.roleId) {
-        const { success } = await addNewRole(roleData);
+        const { success } = await addNewRole(roleData)
         if (success) {
-          this.$message({ type: "success", message: "添加成功！" });
+          this.$message({ type: 'success', message: '添加成功！' })
           setTimeout((_) => {
-            this.$router.back();
-          }, 1500);
+            this.$router.back()
+          }, 1500)
         } else {
-          this.$message({ type: "error", message: "添加错误，请通知管理员！" });
+          this.$message({ type: 'error', message: '添加错误，请通知管理员！' })
         }
       } else {
-        roleData.id = this.roleId;
-        roleData.roleName = roleData.name;
-        delete roleData.name;
-        const { success } = await editRoleData(roleData);
+        roleData.id = this.roleId
+        roleData.roleName = roleData.name
+        delete roleData.name
+        const { success } = await editRoleData(roleData)
         if (success) {
-          this.$message({ type: "success", message: "修改成功！" });
+          this.$message({ type: 'success', message: '修改成功！' })
         } else {
-          this.$message({ type: "error", message: "修改错误，请通知管理员！" });
+          this.$message({ type: 'error', message: '修改错误，请通知管理员！' })
         }
       }
     },
     cancel() {
-      this.$router.back();
+      this.$router.back()
     },
     changeAll(evt) {
       if (evt) {
@@ -228,9 +228,9 @@ export default {
       }
     },
     setData(data, menus) {
-      this.roleId = data.id;
-      this.form.name = data.roleName;
-      this.form.remark = data.remark;
+      this.roleId = data.id
+      this.form.name = data.roleName
+      this.form.remark = data.remark
       const codes = []
       this.getRoleAuthCode(menus, codes)
       this.$refs.authTree.setChecked(codes[0], true)
@@ -261,14 +261,14 @@ export default {
     },
     async getAllMenus() {
       try {
-        const { data } = await getAllMenus();
+        const { data } = await getAllMenus()
         this.changeCode(data)
-        this.authData = data;
+        this.authData = data
         // console.log(data)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>

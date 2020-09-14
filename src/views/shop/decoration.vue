@@ -12,7 +12,7 @@
         <span :class="shopOptionIndex === 2 ? 'active' : ''">店铺设置</span>
       </div>
     </div>
-    <settings :shop-info="shopInfo" v-show="shopOptionIndex === 2" @refreshshop="handleRefreshShop" />
+    <settings v-show="shopOptionIndex === 2" :shop-info="shopInfo" @refreshshop="handleRefreshShop" />
     <designer v-show="shopOptionIndex === 1" :shop-info="shopInfo" />
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       shopId: '',
-      shopOptionIndex: 1,
+      shopOptionIndex: 1
       // shopInfo: {}
     }
   },

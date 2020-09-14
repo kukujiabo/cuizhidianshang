@@ -37,7 +37,7 @@
     <div class="ps-dialog">
       <el-dialog width="770px" title="查看模版" :visible.sync="showTemplate">
         <div class="zoom-in">
-          <div class="tmp" v-html="form.content"></div>
+          <div class="tmp" v-html="form.content" />
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancel">取 消</el-button>

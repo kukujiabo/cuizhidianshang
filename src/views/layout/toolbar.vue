@@ -13,8 +13,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :span="12">
-    </el-col>
+    <el-col :span="12" />
   </el-row>
 </template>
 

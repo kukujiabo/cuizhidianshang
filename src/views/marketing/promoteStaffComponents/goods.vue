@@ -5,8 +5,8 @@
         <el-button type="primary">添加商品</el-button>
       </div>
       <div class="search-options">
-        <el-select v-model="listQuery.option"></el-select>
-        <div class="divi"></div>
+        <el-select v-model="listQuery.option" />
+        <div class="divi" />
         <el-input v-model="listQuery.search" placeholder="搜索图文名称">
           <el-button slot="append">搜索</el-button>
         </el-input>
@@ -27,26 +27,26 @@
           'font-size':'16px',
           'color':'#666'
         }"
-        >
-        <el-table-column label="商品名称"></el-table-column>
-        <el-table-column label="商品类型"></el-table-column>
-        <el-table-column label="商品价格"></el-table-column>
-        <el-table-column label="是否参与推广"></el-table-column>
-        <el-table-column label="直接/简介推广佣金"></el-table-column>
-        <el-table-column label="状态"></el-table-column>
+      >
+        <el-table-column label="商品名称" />
+        <el-table-column label="商品类型" />
+        <el-table-column label="商品价格" />
+        <el-table-column label="是否参与推广" />
+        <el-table-column label="直接/简介推广佣金" />
+        <el-table-column label="状态" />
       </el-table>
     </div>
-      <div class="page">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[20, 30, 50, 100]"
-          :page-size="listQuery.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
-      </div>
+    <div class="page">
+      <el-pagination
+        :current-page="currentPage"
+        :page-sizes="[20, 30, 50, 100]"
+        :page-size="listQuery.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 <style lang="scss">

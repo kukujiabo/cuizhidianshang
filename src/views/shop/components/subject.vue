@@ -8,16 +8,16 @@
               <h4>主题配色方案</h4>
               <div class="color-list">
                 <div
-                  class="colors"
                   v-for="color in colors"
                   :key="color"
+                  class="colors"
                   :style="{ backgroundColor: color }"
                   @click="selectColor(color)"
                 >
-                  <i v-if="color === selectedColor" class="el-icon-success" style="font-size:24px;color:#fff"></i>
+                  <i v-if="color === selectedColor" class="el-icon-success" style="font-size:24px;color:#fff" />
                 </div>
                 <div class="colors user-color">
-                  <el-color-picker v-model="selfDefineColor" @active-change="changeColor"></el-color-picker>
+                  <el-color-picker v-model="selfDefineColor" @active-change="changeColor" />
                   <div class="color-tips">自定义颜色</div>
                 </div>
               </div>
@@ -30,12 +30,12 @@
                 class="page"
                 src="@/assets/subject-index.png"
                 :style="{ backgroundColor: selectedColor }"
-              />
+              >
               <img
                 class="page"
                 src="@/assets/subject-detail.png"
                 :style="{ backgroundColor: selectedColor }"
-              />
+              >
             </div>
           </el-col>
         </el-row>
@@ -117,7 +117,7 @@
 }
 </style>
 <script>
-import { saveShopDesign, getShopDesign } from "@/api/shop"
+import { saveShopDesign, getShopDesign } from '@/api/shop'
 import Cookies from 'js-cookie'
 
 export default {
@@ -125,52 +125,52 @@ export default {
     return {
       shopid: Cookies.get('shopid'),
       showDialog: false,
-      selfDefineColor: "#ffffff",
-      selectedColor: "#222220",
+      selfDefineColor: '#ffffff',
+      selectedColor: '#222220',
       colors: [
-        "#222220",
-        "#4452E4",
-        "#00C802",
-        "#1F71FF",
-        "#F13F37",
-        "#F5A90F",
-        "#FA6400",
-        "#2AB7F3",
-        "#9C80FF",
-        "#F36A8E",
-      ],
-    };
+        '#222220',
+        '#4452E4',
+        '#00C802',
+        '#1F71FF',
+        '#F13F37',
+        '#F5A90F',
+        '#FA6400',
+        '#2AB7F3',
+        '#9C80FF',
+        '#F36A8E'
+      ]
+    }
   },
   methods: {
     // 选择颜色
     selectColor(color) {
-      this.selectedColor = color;
+      this.selectedColor = color
     },
     // 显示
     show() {
       this.getStyleDesign()
-      this.showDialog = true;
+      this.showDialog = true
     },
     // 隐藏
     hide() {
-      this.showDialog = false;
+      this.showDialog = false
     },
     // 改变自定义颜色
     changeColor(color) {
-      this.selectedColor = color;
+      this.selectedColor = color
     },
     // 查询主题配置
     async getStyleDesign() {
-      const options = { shopId: this.shopid, partType: "subject" };
+      const options = { shopId: this.shopid, partType: 'subject' }
       try {
-        const { data: { context } } = await getShopDesign(options)
+        const { data: { context }} = await getShopDesign(options)
         const { color } = JSON.parse(context)
         this.selectedColor = color
         if (!this.colors.includes(color)) {
           this.selfDefineColor = color
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
     // 保存主题
@@ -180,7 +180,7 @@ export default {
         partType: 'subject',
         context: JSON.stringify({
           color: this.selectedColor
-        }),
+        })
       }
       const subjectArray = [subjectStyles]
       try {
@@ -194,7 +194,7 @@ export default {
       } catch (error) {
         this.$message({ type: 'error', message: error.getMessage() })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>

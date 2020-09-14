@@ -1,21 +1,21 @@
 <template>
   <div class="templates-container">
-    <div class="template-mask"></div>
+    <div class="template-mask" />
     <div class="template-wrapper">
       <div class="title">
         <h2>模版中心</h2>
-        <i class="el-icon-close" @click="emitClose"></i>
+        <i class="el-icon-close" @click="emitClose" />
       </div>
       <div class="template-list">
         <div
           v-for="temp in templateList"
-          class="tmp"
           :key="temp.id"
+          class="tmp"
           :style="{ backgroundImage: `url(${temp.img})` }"
           @mouseenter="temp.showChoose = true"
           @mouseleave="temp.showChoose = false"
-          >
-          <div v-if="temp.showChoose" class="temp-mask"></div>
+        >
+          <div v-if="temp.showChoose" class="temp-mask" />
           <div v-if="temp.showChoose" class="temp-select">
             <el-button size="mini" type="primary" @click="chooseTemplate(temp)">选用模板</el-button>
           </div>
@@ -150,8 +150,8 @@ export default {
       this.$emit('close')
     },
     async getTemplateList() {
-      const { data: { list } } = await queryTemplates(this.listQuery)
-      for(let tmp of list) {
+      const { data: { list }} = await queryTemplates(this.listQuery)
+      for (const tmp of list) {
         const configs = JSON.parse(tmp.context)
         this.templateList.push({ id: tmp.id, img: tmp.backImg, showChoose: false, conf: configs })
       }

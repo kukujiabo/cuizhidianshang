@@ -6,7 +6,7 @@
         <div class="shop-list">
           <el-row :gutter="20">
             <el-col v-for="shop in shopList" :key="shop.id" :xl="4" :lg="8" :md="12">
-              <shop-card :shop="shop" @selectshop="switchShop(shop)"></shop-card>
+              <shop-card :shop="shop" @selectshop="switchShop(shop)" />
             </el-col>
             <el-col :xl="4" :lg="8" :md="12">
               <el-card class="shop-card-active">
@@ -28,13 +28,12 @@
             prop="pId"
             :model="newShopForm"
           >
-            <el-form-item prop="busType" required label="店铺类型">
-            </el-form-item>
-              <div class="option-btns">
-                <el-button :plain="newShopForm.busType === 1" :type="newShopForm.busType === 1 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 1">我是装饰公司</el-button>
-                <el-button :plain="newShopForm.busType === 2" :type="newShopForm.busType === 2 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 2">我是代理商</el-button>
-                <el-button :plain="newShopForm.busType === 3" :type="newShopForm.busType === 3 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 3">我是品牌厂商</el-button>
-              </div>
+            <el-form-item prop="busType" required label="店铺类型" />
+            <div class="option-btns">
+              <el-button :plain="newShopForm.busType === 1" :type="newShopForm.busType === 1 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 1">我是装饰公司</el-button>
+              <el-button :plain="newShopForm.busType === 2" :type="newShopForm.busType === 2 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 2">我是代理商</el-button>
+              <el-button :plain="newShopForm.busType === 3" :type="newShopForm.busType === 3 ? 'primary' : ''" class="option-btn" @click="newShopForm.busType = 3">我是品牌厂商</el-button>
+            </div>
             <el-form-item required prop="name" label="店铺名称" />
             <div class="option-input">
               <el-input
@@ -199,7 +198,7 @@ export default {
       setAppId(shop.appId)
       setShopId(shop.id)
       setShopName(shop.name)
-      this.$message({ type: 'success', message: '已切换到店铺：' + shop.name})
+      this.$message({ type: 'success', message: '已切换到店铺：' + shop.name })
       this.$router.push({ path: '/' })
     },
     // 查询所有店铺

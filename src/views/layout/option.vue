@@ -6,39 +6,39 @@
     </div>
     <el-form ref="options-form" style="padding:0" label-width="66px">
       <div style="padding-top:12px;color:#000">
-        <h2>{{option.title}}</h2>
+        <h2>{{ option.title }}</h2>
       </div>
       <div class="option-list">
         <template v-if="option.action">
           <template v-if="option.action.type === 'image-click'">
-            <image-click :action="option.action" :items="option.action.config"></image-click>
+            <image-click :action="option.action" :items="option.action.config" />
           </template>
           <template v-if="option.action.type === 'swiper-click'">
-            <banner-item :domId="option.domId" :banners="option.action.config"></banner-item>
+            <banner-item :dom-id="option.domId" :banners="option.action.config" />
           </template>
           <template v-if="option.action.type === 'bottom-menu-click'">
-            <bottom-menu-item :items="option.action.config"></bottom-menu-item>
+            <bottom-menu-item :items="option.action.config" />
           </template>
           <template v-if="option.action.type === 'floor-menu-click'">
-            <floor-menu-item :menus="option.action.config"></floor-menu-item>
+            <floor-menu-item :menus="option.action.config" />
           </template>
           <template v-if="option.action.type === 'left-scroll-click'">
-            <scroll-item :scrolls="option.action.config"></scroll-item>
+            <scroll-item :scrolls="option.action.config" />
           </template>
           <template v-if="option.action.type === 'horizontal-item-click'">
-            <horizontal-item :items="option.action.config"></horizontal-item>
+            <horizontal-item :items="option.action.config" />
           </template>
           <template v-if="option.action.type === 'richtext'">
-            <richtext-item :action="option.action"></richtext-item>
+            <richtext-item :action="option.action" />
           </template>
           <template v-if="option.action.type === 'fenlei-item-click'">
-            <fenlei-item :action="option.action" :items="option.action.config"></fenlei-item>
+            <fenlei-item :action="option.action" :items="option.action.config" />
           </template>
           <template v-if="option.action.type === 'vertical-item-click'">
-            <vertical-item :items="option.action.config"></vertical-item>
+            <vertical-item :items="option.action.config" />
           </template>
           <template v-if="option.action.type === 'form-submit'">
-            <input-item :forms="option.action.config"></input-item>
+            <input-item :forms="option.action.config" />
           </template>
           <template v-if="option.action.type === 'timeout-click'">
             <timeout-item
@@ -46,7 +46,7 @@
               :end="option.style[0].val"
               :img="option.style[1].val"
               :times="option.action.config"
-            ></timeout-item>
+            />
             <el-button
               icon="el-icon-plus"
               :disabled="!option.style[1].val"
@@ -55,16 +55,16 @@
             >时间项配置</el-button>
           </template>
           <template v-if="option.action.type === 'grid-menu-click'">
-            <grid-menu-item :action="option.action" :grids.sync="option.action.config"></grid-menu-item>
+            <grid-menu-item :action="option.action" :grids.sync="option.action.config" />
           </template>
           <template v-if="option.action.type === 'marquee-click'">
-            <marquee-item :marquees="option.action.config"></marquee-item>
+            <marquee-item :marquees="option.action.config" />
           </template>
           <template v-if="option.action.type === 'page-paragraph'">
-            <page-paragraph-item :action="option.action"></page-paragraph-item>
+            <page-paragraph-item :action="option.action" />
           </template>
           <template v-if="option.action.type === 'page-faq-list'">
-            <page-faq-item :paragraphs="option.action.config"></page-faq-item>
+            <page-faq-item :paragraphs="option.action.config" />
           </template>
         </template>
       </div>
@@ -73,31 +73,25 @@
 </template>
 
 <script>
-import formItem from "@/common/formItem.vue";
-import imageClick from "@/views/itemOption/imageClick.vue";
-import timeoutItem from "@/views/itemOption/timeoutItem.vue";
-import bannerItem from "@/views/itemOption/bannerItem.vue";
-import bottomMenuItem from "@/views/itemOption/bottomMenuItem.vue";
-import floorMenuItem from "@/views/itemOption/floorMenuItem.vue";
-import horizontalItem from "@/views/itemOption/horizontalItem.vue";
-import fenleiItem from "@/views/itemOption/fenleiItem.vue";
-import verticalItem from "@/views/itemOption/verticalItem.vue";
-import scrollItem from "@/views/itemOption/scrollItem.vue";
-import inputItem from "@/views/itemOption/inputItem.vue";
-import gridMenuItem from "@/views/itemOption/gridMenuItem.vue";
-import marqueeItem from "@/views/itemOption/marqueeItem.vue";
-import pageParagraphItem from "@/views/itemOption/pageParagraphItem.vue";
-import pageFaqItem from "@/views/itemOption/pageFaqItem.vue";
-import richtextItem from "@/views/itemOption/richtextItem";
+import formItem from '@/common/formItem.vue'
+import imageClick from '@/views/itemOption/imageClick.vue'
+import timeoutItem from '@/views/itemOption/timeoutItem.vue'
+import bannerItem from '@/views/itemOption/bannerItem.vue'
+import bottomMenuItem from '@/views/itemOption/bottomMenuItem.vue'
+import floorMenuItem from '@/views/itemOption/floorMenuItem.vue'
+import horizontalItem from '@/views/itemOption/horizontalItem.vue'
+import fenleiItem from '@/views/itemOption/fenleiItem.vue'
+import verticalItem from '@/views/itemOption/verticalItem.vue'
+import scrollItem from '@/views/itemOption/scrollItem.vue'
+import inputItem from '@/views/itemOption/inputItem.vue'
+import gridMenuItem from '@/views/itemOption/gridMenuItem.vue'
+import marqueeItem from '@/views/itemOption/marqueeItem.vue'
+import pageParagraphItem from '@/views/itemOption/pageParagraphItem.vue'
+import pageFaqItem from '@/views/itemOption/pageFaqItem.vue'
+import richtextItem from '@/views/itemOption/richtextItem'
 
 export default {
-  name: "AppOption",
-  data() {
-    return {
-      imageClickShow: false,
-      timeoutClickShow: false,
-    };
-  },
+  name: 'AppOption',
   components: {
     formItem,
     imageClick,
@@ -114,26 +108,32 @@ export default {
     pageParagraphItem,
     pageFaqItem,
     fenleiItem,
-    richtextItem,
+    richtextItem
   },
   props: {
     option: {
-      type: Object,
+      type: Object
     },
     pageOption: {
       type: Object,
       default: () => ({})
     }
   },
-  methods: {
-    manageShopNav() {
-      this.$bus.$emit("showManageShopNav");
-    },
-    showSubjectManage() {
-      this.$bus.$emit("showManageSubject")
+  data() {
+    return {
+      imageClickShow: false,
+      timeoutClickShow: false
     }
   },
-};
+  methods: {
+    manageShopNav() {
+      this.$bus.$emit('showManageShopNav')
+    },
+    showSubjectManage() {
+      this.$bus.$emit('showManageSubject')
+    }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

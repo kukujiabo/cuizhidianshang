@@ -1,7 +1,7 @@
 <template>
   <div style="padding:40px">
     <div class="back">
-      <el-button icon="el-icon-arrow-left" size="mini" @click="back"></el-button>
+      <el-button icon="el-icon-arrow-left" size="mini" @click="back" />
       <strong style="font-size:20px;">创建拼团</strong>
     </div>
     <el-card>
@@ -24,7 +24,7 @@
         </el-form>
       </div>
     </el-card>
-    <div style="height:20px;"></div>
+    <div style="height:20px;" />
     <el-card>
       <div slot="header" class="clearfix">
         <span class="section-title">拼团信息</span>
@@ -33,7 +33,7 @@
         <el-form :inline="true" label-width="120px">
           <div>
             <el-form-item label="拼团活动时间：" required>
-              <el-date-picker></el-date-picker>&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;<el-date-picker></el-date-picker>
+              <el-date-picker />&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;<el-date-picker />
             </el-form-item>
           </div>
           <div>

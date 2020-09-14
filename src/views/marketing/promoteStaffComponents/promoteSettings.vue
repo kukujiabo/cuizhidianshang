@@ -121,20 +121,20 @@
 }
 </style>
 <script>
-import PromoteRules from "./promoteRules";
-import RecruSetting from "./recruSetting";
-import PersonalSetting from "./personalSetting";
+import PromoteRules from './promoteRules'
+import RecruSetting from './recruSetting'
+import PersonalSetting from './personalSetting'
 export default {
   components: {
     PromoteRules,
     RecruSetting,
-    PersonalSetting,
+    PersonalSetting
   },
   data() {
     return {
-      tab: 1,
-    };
+      tab: 1
+    }
   },
-  methods: {},
-};
+  methods: {}
+}
 </script>

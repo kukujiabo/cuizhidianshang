@@ -10,7 +10,7 @@
       />
       <span>返回上一页</span>
     </div>
-    <profile-setting></profile-setting>
+    <profile-setting />
   </div>
 </template>
 <style lang="scss">

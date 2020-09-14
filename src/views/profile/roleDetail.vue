@@ -19,7 +19,7 @@
             <span>角色名称</span>
           </div>
           <div class="content">
-            <span>{{roleName}}</span>
+            <span>{{ roleName }}</span>
           </div>
         </div>
         <div class="info">
@@ -27,7 +27,7 @@
             <span>角色描述</span>
           </div>
           <div class="content">
-            <span>{{remark}}</span>
+            <span>{{ remark }}</span>
           </div>
         </div>
       </div>
@@ -103,8 +103,8 @@
 }
 </style>
 <script>
-import { getCruDetail, getRolePermissionByCode } from "@/api/roles";
-import { Host } from "@/config";
+import { getCruDetail, getRolePermissionByCode } from '@/api/roles'
+import { Host } from '@/config'
 export default {
   data() {
     return {
@@ -114,9 +114,9 @@ export default {
       remark: '',
       permission: {},
       defaultProps: {
-        label: "name",
-      },
-    };
+        label: 'name'
+      }
+    }
   },
   async created() {
     const { id, roleCode, roleName, remark } = this.$route.query
@@ -124,12 +124,12 @@ export default {
     this.roleName = roleName
     this.remark = remark
     const { data } = await getRolePermissionByCode({ roleCode })
-    this.permission = data;
+    this.permission = data
   },
   methods: {
     goback() {
       this.$router.back()
     }
-  },
-};
+  }
+}
 </script>

@@ -16,9 +16,9 @@
           <el-select v-model="listQuery.option" style="width:150px">
             <el-option :value="1" label="全部达人">全部达人</el-option>
           </el-select>
-          <div class="divi"></div>
-          <el-date-picker v-model="listQuery.enter_date" placeholder="加入时间" style="width:150px"/>
-          <div class="divi"></div>
+          <div class="divi" />
+          <el-date-picker v-model="listQuery.enter_date" placeholder="加入时间" style="width:150px" />
+          <div class="divi" />
           <el-input v-model="listQuery.search" style="width:452px">
             <el-button slot="append">搜索</el-button>
           </el-input>
@@ -38,29 +38,30 @@
             'padding-left':'15px',
             'font-size':'16px',
             'color':'#666'
-          }">
-          <el-table-column width="72px" type="selection"></el-table-column>
-          <el-table-column label="头像/昵称"></el-table-column>
-          <el-table-column label="姓名"></el-table-column>
-          <el-table-column label="手机号"></el-table-column>
-          <el-table-column label="上级达人"></el-table-column>
-          <el-table-column label="累计客户（人）"></el-table-column>
-          <el-table-column label="累计邀请（人）"></el-table-column>
-          <el-table-column label="累计收益（元）"></el-table-column>
-          <el-table-column label="加入时间"></el-table-column>
-          <el-table-column label="操作"></el-table-column>
+          }"
+        >
+          <el-table-column width="72px" type="selection" />
+          <el-table-column label="头像/昵称" />
+          <el-table-column label="姓名" />
+          <el-table-column label="手机号" />
+          <el-table-column label="上级达人" />
+          <el-table-column label="累计客户（人）" />
+          <el-table-column label="累计邀请（人）" />
+          <el-table-column label="累计收益（元）" />
+          <el-table-column label="加入时间" />
+          <el-table-column label="操作" />
         </el-table>
       </div>
       <div class="page">
         <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-sizes="[20, 30, 50, 100]"
           :page-size="listQuery.limit"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </el-card>
   </div>
